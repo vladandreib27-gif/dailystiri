@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ȘtiriRO — Template Canva</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --dark: #111111;
+    --red: #d62828;
+    --gold: #f7b731;
+    --white: #ffffff;
+    --grey: #888;
+    --border: #ddd;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Sora', sans-serif;
+    color: var(--dark);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--dark);
+    color: var(--white);
+    padding: 18px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    color: var(--gold);
+  }
+
+  .logo span { color: var(--white); }
+
+  .header-sub {
+    font-size: 0.75rem;
+    color: #666;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 50px 24px;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    letter-spacing: 2px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  h1 span { color: var(--red); }
+
+  .sub {
+    color: var(--grey);
+    font-size: 0.9rem;
+    margin-bottom: 50px;
+  }
+
+  /* Tab nav */
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid var(--dark);
+    margin-bottom: 40px;
+  }
+
+  .tab {
+    padding: 12px 28px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    font-family: 'Sora', sans-serif;
+    color: var(--grey);
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+  }
+
+  .tab.active {
+    color: var(--dark);
+    border-bottom-color: var(--red);
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Template previews */
+  .templates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+
+  .template-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .template-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+  }
+
+  .template-card.selected {
+    border: 2px solid var(--red);
+  }
+
+  /* Template 1 — Breaking Dark */
+  .tpl-1 {
+    background: #0d0d0d;
+    aspect-ratio: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    overflow: hidden;
+  }
+
+  .tpl-1::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: var(--red);
+  }
+
+  .tpl-1 .tag {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+
+  .tpl-1 .title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  .tpl-1 .logo-sm {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.8rem;
+    color: #444;
+    letter-spacing: 2px;
+  }
+
+  .tpl-1 .accent-line {
+    position: absolute;
+    left: 20px;
+    top: 30px;
+    width: 2px;
+    height: 60px;
+    background: var(--gold);
+  }
+
+  /* Template 2 — Clean White */
+  .tpl-2 {
+    background: var(--white);
+    aspect-ratio: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 22px;
+    border-top: 6px solid var(--dark);
+  }
+
+  .tpl-2 .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .tpl-2 .logo-sm {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    color: var(--dark);
+  }
+
+  .tpl-2 .date-sm {
+    font-size: 0.6rem;
+    color: var(--grey);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .tpl-2 .title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+    line-height: 1.1;
+    color: var(--dark);
+  }
+
+  .tpl-2 .pill {
+    display: inline-block;
+    background: var(--red);
+    color: var(--white);
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 2px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .tpl-2 .source {
+    font-size: 0.65rem;
+    color: var(--grey);
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+  }
+
+  /* Template 3 — Gold Accent */
+  .tpl-3 {
+    background: var(--dark);
+    aspect-ratio: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 24px;
+    overflow: hidden;
+  }
+
+  .tpl-3::after {
+    content: '📰';
+    position: absolute;
+    right: -10px;
+    bottom: -10px;
+    font-size: 5rem;
+    opacity: 0.04;
+  }
+
+  .tpl-3 .number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    color: var(--gold);
+    opacity: 0.2;
+    position: absolute;
+    top: 10px;
+    right: 16px;
+    line-height: 1;
+  }
+
+  .tpl-3 .tag {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+
+  .tpl-3 .title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+
+  .tpl-3 .bar {
+    width: 40px;
+    height: 3px;
+    background: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .tpl-3 .logo-sm {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    color: #555;
+  }
+
+  .template-label {
+    padding: 14px 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .template-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .template-desc {
+    font-size: 0.75rem;
+    color: var(--grey);
+  }
+
+  /* Canva Steps */
+  .steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .step {
+    display: flex;
+    gap: 24px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--red);
+    line-height: 1;
+    min-width: 50px;
+  }
+
+  .step-content h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .step-content p {
+    font-size: 0.85rem;
+    color: #555;
+    line-height: 1.6;
+  }
+
+  .step-content code {
+    background: var(--dark);
+    color: var(--gold);
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    font-family: monospace;
+  }
+
+  .canva-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 24px;
+    padding: 14px 28px;
+    background: var(--dark);
+    color: var(--white);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .canva-btn:hover { background: var(--red); }
+
+  /* Specs table */
+  .specs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+
+  .spec-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px;
+  }
+
+  .spec-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--grey);
+    margin-bottom: 6px;
+  }
+
+  .spec-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+  }
+
+  .spec-note {
+    font-size: 0.75rem;
+    color: var(--grey);
+    margin-top: 4px;
+  }
+
+  .color-palette {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+
+  .color-swatch {
+    width: 60px;
+    text-align: center;
+  }
+
+  .swatch-box {
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .swatch-hex {
+    font-size: 0.65rem;
+    color: var(--grey);
+    font-family: monospace;
+  }
+
+  .swatch-name {
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 16px 20px; }
+    .container { padding: 30px 16px; }
+    .tab { padding: 10px 16px; font-size: 0.75rem; }
+    .step { flex-direction: column; gap: 8px; }
+    .step-num { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Știri<span>RO</span></div>
+  <div class="header-sub">Kit Design Social Media</div>
+</header>
+
+<div class="container">
+  <h1>Template<span>uri</span><br>Canva</h1>
+  <p class="sub">3 template-uri gata de folosit + ghid pas cu pas</p>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('previews', this)">Preview Templateuri</button>
+    <button class="tab" onclick="switchTab('guide', this)">Ghid Canva</button>
+    <button class="tab" onclick="switchTab('specs', this)">Specificații Design</button>
+  </div>
+
+  <!-- TAB 1: Previews -->
+  <div class="tab-content active" id="tab-previews">
+    <p style="font-size:0.85rem;color:var(--grey);margin-bottom:24px">Alege un stil pentru brandul tău. Toate sunt recreate ușor în Canva.</p>
+    <div class="templates-grid">
+
+      <!-- Template 1 -->
+      <div class="template-card" onclick="selectTemplate(this)">
+        <div class="tpl-1">
+          <div class="accent-line"></div>
+          <div class="tag">⚡ Breaking News</div>
+          <div class="title">TITLUL ȘTIRII<br>MERGE AICI</div>
+          <div class="logo-sm">ȘTIRIRO</div>
+        </div>
+        <div class="template-label">
+          <div class="template-name">🖤 Breaking Dark</div>
+          <div class="template-desc">Fundal negru, accent roșu. Ideal pentru știri urgente.</div>
+        </div>
+      </div>
+
+      <!-- Template 2 -->
+      <div class="template-card" onclick="selectTemplate(this)">
+        <div class="tpl-2">
+          <div class="header-row">
+            <div class="logo-sm">ȘTIRIRO</div>
+            <div class="date-sm">20 APR 2026</div>
+          </div>
+          <div>
+            <div class="pill">Știre zilei</div>
+            <div class="title">TITLUL ȘTIRII<br>MERGE AICI</div>
+          </div>
+          <div class="source">sursă: digi24.ro • știriro.ro</div>
+        </div>
+        <div class="template-label">
+          <div class="template-name">🤍 Clean Ziar</div>
+          <div class="template-desc">Alb cu accente negre. Aspect de ziar, serios și credibil.</div>
+        </div>
+      </div>
+
+      <!-- Template 3 -->
+      <div class="template-card" onclick="selectTemplate(this)">
+        <div class="tpl-3">
+          <div class="number">01</div>
+          <div class="tag">📰 România Azi</div>
+          <div class="bar"></div>
+          <div class="title">TITLUL ȘTIRII<br>MERGE AICI</div>
+          <div class="logo-sm">ȘTIRIRO</div>
+        </div>
+        <div class="template-label">
+          <div class="template-name">✨ Gold Editorial</div>
+          <div class="template-desc">Negru cu aur. Aspect premium, pentru știri importante.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:4px;padding:20px;font-size:0.85rem;line-height:1.7;color:#555">
+      💡 <strong>Sfat:</strong> Alege <strong>un singur template</strong> și folosește-l consecvent. Consistența vizuală construiește brand recognition — urmăritorii vor recunoaște postările tale înainte să citească textul.
+    </div>
+  </div>
+
+  <!-- TAB 2: Ghid Canva -->
+  <div class="tab-content" id="tab-guide">
+    <a href="https://canva.com" target="_blank" class="canva-btn">🎨 Deschide Canva.com</a>
+
+    <div class="steps-list" style="margin-top:40px">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-content">
+          <h3>Creează un design nou</h3>
+          <p>Pe Canva.com apasă <code>+ Creare design</code> → selectează <code>Post Instagram (1080×1080px)</code>. Dacă vrei și pentru Stories, fă separat <code>1080×1920px</code>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-content">
+          <h3>Setează fundalul</h3>
+          <p>Apasă pe fundal → <code>Culoare</code> → introdu codul hex. Dark template: <code>#0d0d0d</code>. Clean template: <code>#ffffff</code>. Gold template: <code>#111111</code>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-content">
+          <h3>Adaugă elementele de brand</h3>
+          <p>Adaugă un dreptunghi roșu (<code>#d62828</code>) de 1080×8px sus ca linie accent. Adaugă logo-ul/numele contului în colț jos. Dimensiune text logo: 28-32px, font <code>Bebas Neue</code> (disponibil gratuit în Canva).</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-content">
+          <h3>Adaugă textul știrii</h3>
+          <p>Titlu: font <code>Bebas Neue</code>, 80-100px, culoare albă sau neagră (după fundal). Tag categorie: 20px, <code>Sora</code> sau <code>Montserrat</code>, culoare accent roșu sau auriu.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">05</div>
+        <div class="step-content">
+          <h3>Salvează ca template</h3>
+          <p>Click dreapta pe design → <code>Salvează ca template</code>. Data viitoare folosești <code>Duplicate page</code> și schimbi doar textul. Fiecare postare îți ia sub 2 minute.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">06</div>
+        <div class="step-content">
+          <h3>Exportă și publică</h3>
+          <p>Descarcă ca <code>PNG</code> (calitate maximă). Postează pe Instagram direct sau programează cu <code>Meta Business Suite</code> (gratuit) pentru toate platformele deodată.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: Specificații -->
+  <div class="tab-content" id="tab-specs">
+
+    <div class="section-label" style="font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--red);font-weight:700;margin-bottom:16px">Dimensiuni</div>
+    <div class="specs-grid">
+      <div class="spec-card">
+        <div class="spec-label">Post Instagram / Facebook</div>
+        <div class="spec-value">1080 × 1080</div>
+        <div class="spec-note">px • format pătrat</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Story / Reels Cover</div>
+        <div class="spec-value">1080 × 1920</div>
+        <div class="spec-note">px • format vertical 9:16</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Cover Facebook Page</div>
+        <div class="spec-value">820 × 312</div>
+        <div class="spec-note">px • format orizontal</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Format export</div>
+        <div class="spec-value">PNG</div>
+        <div class="spec-note">calitate maximă, sub 8MB</div>
+      </div>
+    </div>
+
+    <div class="section-label" style="font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--red);font-weight:700;margin-bottom:16px;margin-top:30px">Paletă culori brand</div>
+    <div class="color-palette">
+      <div class="color-swatch">
+        <div class="swatch-box" style="background:#0d0d0d"></div>
+        <div class="swatch-name">Negru</div>
+        <div class="swatch-hex">#0d0d0d</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-box" style="background:#d62828"></div>
+        <div class="swatch-name">Roșu</div>
+        <div class="swatch-hex">#d62828</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-box" style="background:#f7b731"></div>
+        <div class="swatch-name">Auriu</div>
+        <div class="swatch-hex">#f7b731</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-box" style="background:#ffffff;border:1px solid #ddd"></div>
+        <div class="swatch-name">Alb</div>
+        <div class="swatch-hex">#ffffff</div>
+      </div>
+      <div class="color-swatch">
+        <div class="swatch-box" style="background:#f5f0e8"></div>
+        <div class="swatch-name">Crem</div>
+        <div class="swatch-hex">#f5f0e8</div>
+      </div>
+    </div>
+
+    <div class="section-label" style="font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--red);font-weight:700;margin-bottom:16px;margin-top:30px">Fonturi recomandate (gratuite Canva)</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+      <div class="spec-card">
+        <div class="spec-label">Titluri / Logo</div>
+        <div class="spec-value" style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem">Bebas Neue</div>
+        <div class="spec-note">Bold, impactant, jurnalistic</div>
+      </div>
+      <div class="spec-card">
+        <div class="spec-label">Text / Subtitluri</div>
+        <div class="spec-value" style="font-size:1rem;font-weight:600">Sora / Montserrat</div>
+        <div class="spec-note">Lizibil, modern, curat</div>
+      </div>
+    </div>
+
+    <div style="background:#fff8f0;border-left:4px solid var(--red);padding:16px 20px;margin-top:30px;font-size:0.85rem;line-height:1.7;color:#555;border-radius:0 4px 4px 0">
+      📐 <strong>Regula de aur:</strong> Lasă minim <strong>80px margine</strong> pe toate laturile. Textul prea aproape de margine arată neprofesionist și se poate tăia pe unele dispozitive.
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function selectTemplate(card) {
+    document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+  }
+</script>
+</body>
+</html>

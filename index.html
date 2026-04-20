@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ce Trebuie Să Știi Azi — Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b0b0f;
+  --surface: #13131a;
+  --card: #18181f;
+  --border: #25252f;
+  --accent: #e63946;
+  --gold: #f4c430;
+  --text: #f0eee8;
+  --muted: #5a5a72;
+  --green: #2ecc71;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 36px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: rgba(11,11,15,0.96);
+  backdrop-filter: blur(14px);
+  z-index: 200;
+}
+
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+}
+.logo span { color: var(--accent); }
+
+.live-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+}
+.live-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%      { opacity:0.4; transform:scale(0.7); }
+}
+
+/* ── LAYOUT ── */
+.app {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  min-height: calc(100vh - 63px);
+}
+
+/* ── LEFT PANEL ── */
+.left {
+  border-right: 1px solid var(--border);
+  padding: 32px 28px;
+  overflow-y: auto;
+  background: var(--surface);
+}
+
+.panel-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  margin-bottom: 4px;
+  line-height: 1.1;
+}
+.panel-title em { color: var(--accent); font-style: italic; }
+
+.panel-sub {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+
+/* Date */
+.date-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+  padding: 10px 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.78rem;
+}
+.date-bar input {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  outline: none;
+  cursor: pointer;
+}
+
+/* News inputs */
+.news-list { display: flex; flex-direction: column; gap: 12px; }
+
+.news-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  position: relative;
+  transition: border-color 0.2s;
+}
+.news-item:focus-within { border-color: var(--accent); }
+
+.news-num {
+  position: absolute;
+  top: 12px; left: 14px;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--accent);
+  opacity: 0.25;
+  line-height: 1;
+}
+
+.news-cat {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+  padding-left: 28px;
+  flex-wrap: wrap;
+}
+.cat-btn {
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.65rem;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+.cat-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+.news-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  resize: none;
+  outline: none;
+  min-height: 54px;
+  padding-left: 28px;
+}
+.news-input::placeholder { color: var(--muted); }
+
+.impact-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding-left: 28px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.impact-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.impact-stars { display: flex; gap: 3px; }
+.star {
+  width: 16px; height: 16px;
+  background: var(--border);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-size: 0; /* hide text */
+}
+.star.on { background: var(--gold); }
+
+/* Format selector */
+.format-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 22px 0;
+}
+.fmt-btn {
+  padding: 12px 8px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.fmt-btn .fmt-icon { font-size: 1.2rem; display:block; margin-bottom:4px; }
+.fmt-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(230,57,70,0.08); }
+
+/* Generate button */
+.gen-btn {
+  width: 100%;
+  padding: 15px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.3px;
+}
+.gen-btn:hover:not(:disabled) { background: #ff4757; transform: translateY(-1px); }
+.gen-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+/* ── RIGHT PANEL ── */
+.right {
+  padding: 32px 36px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.placeholder-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  text-align: center;
+  gap: 12px;
+}
+.placeholder-state .big-icon { font-size: 3.5rem; opacity: 0.3; }
+.placeholder-state p { font-size: 0.85rem; line-height: 1.6; max-width: 280px; }
+
+/* ── OUTPUT TABS ── */
+.out-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+}
+.out-tab {
+  padding: 10px 20px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.2s;
+}
+.out-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.out-pane { display: none; }
+.out-pane.active { display: block; }
+
+/* ── CAROUSEL PREVIEW ── */
+.carousel-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.slides-viewport {
+  overflow: hidden;
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.slides-track {
+  display: flex;
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+
+.slide {
+  min-width: 100%;
+  aspect-ratio: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 28px;
+  overflow: hidden;
+  background: #0d0d12;
+}
+
+/* Slide 0 — cover */
+.slide-cover { background: var(--bg); }
+.slide-cover .cover-noise {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    45deg, transparent, transparent 2px,
+    rgba(255,255,255,0.01) 2px, rgba(255,255,255,0.01) 4px
+  );
+}
+.slide-cover .cover-line {
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: var(--accent);
+}
+.slide-cover .cover-date {
+  font-size: 0.65rem; text-transform: uppercase;
+  letter-spacing: 3px; color: var(--muted); margin-bottom: 10px;
+}
+.slide-cover .cover-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem; font-weight: 900; line-height: 1.05;
+  margin-bottom: 6px;
+}
+.slide-cover .cover-title em { color: var(--accent); font-style: italic; }
+.slide-cover .cover-sub {
+  font-size: 0.75rem; color: var(--muted);
+}
+.slide-cover .cover-count {
+  position: absolute; bottom: 28px; right: 28px;
+  font-family: 'Playfair Display', serif;
+  font-size: 5rem; font-weight: 900;
+  color: var(--accent); opacity: 0.08; line-height: 1;
+}
+
+/* News slides */
+.slide-news { background: #0d0d12; }
+.slide-news .s-accent-bar {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+}
+.slide-news .s-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 5rem; font-weight: 900;
+  color: white; opacity: 0.04;
+  position: absolute; top: 16px; right: 20px; line-height:1;
+}
+.slide-news .s-cat {
+  font-size: 0.6rem; text-transform: uppercase;
+  letter-spacing: 2.5px; font-weight: 700;
+  margin-bottom: 10px;
+}
+.slide-news .s-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem; font-weight: 700;
+  line-height: 1.25; margin-bottom: 10px;
+}
+.slide-news .s-body {
+  font-size: 0.78rem; color: #aaa; line-height: 1.55;
+}
+.slide-news .s-logo {
+  position: absolute; top: 20px; left: 20px;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.7rem; font-weight: 700;
+  color: #333; letter-spacing: 1px;
+}
+
+/* Outro slide */
+.slide-outro { background: var(--accent); }
+.slide-outro .o-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem; font-weight: 900;
+  line-height: 1.1; margin-bottom: 10px; color: white;
+}
+.slide-outro .o-sub { font-size: 0.8rem; color: rgba(255,255,255,0.7); }
+.slide-outro .o-logo {
+  position: absolute; top: 24px; right: 24px;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.85rem; font-weight: 900; color: rgba(255,255,255,0.3);
+}
+
+/* Carousel nav */
+.c-nav {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; margin-top: 14px;
+}
+.c-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--border); cursor: pointer; transition: all 0.2s;
+}
+.c-dot.active { background: var(--accent); transform: scale(1.4); }
+.c-arrow {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 50%; width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 0.85rem; color: var(--text);
+  transition: all 0.2s;
+}
+.c-arrow:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Caption box */
+.caption-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px;
+  margin-top: 16px;
+  max-width: 420px;
+  margin-left: auto; margin-right: auto;
+}
+.caption-label {
+  font-size: 0.65rem; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--muted); font-weight: 700;
+  margin-bottom: 10px; display: flex; justify-content: space-between;
+  align-items: center;
+}
+.caption-text {
+  font-size: 0.82rem; line-height: 1.7; color: var(--text);
+  white-space: pre-wrap;
+}
+
+/* ── SINGLE IMAGE PREVIEW ── */
+.img-preview {
+  max-width: 420px;
+  margin: 0 auto;
+  aspect-ratio: 1;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  position: relative;
+  background: #0d0d12;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 28px;
+}
+.img-preview .top-bar {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.img-preview .brand-tag {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.75rem; font-weight: 700;
+  color: var(--accent); letter-spacing: 1px;
+}
+.img-preview .date-tag {
+  font-size: 0.65rem; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.img-preview .center-block { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 14px; }
+.img-preview .img-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem; font-weight: 900;
+  line-height: 1.1; color: white;
+}
+.img-preview .img-headline em { color: var(--accent); font-style: italic; }
+.img-preview .news-bullets { display: flex; flex-direction: column; gap: 10px; }
+.img-preview .news-bullet {
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.img-preview .bullet-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem; font-weight: 900;
+  color: var(--accent); min-width: 18px; line-height: 1.2;
+}
+.img-preview .bullet-text {
+  font-size: 0.75rem; color: #ccc; line-height: 1.4;
+}
+.img-preview .bottom-bar {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.img-preview .swipe-hint {
+  font-size: 0.6rem; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.img-top-line {
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--accent);
+}
+
+/* ── REEL SCRIPT ── */
+.reel-wrap { max-width: 520px; margin: 0 auto; }
+
+.reel-header {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px 10px 0 0;
+  padding: 14px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.reel-title-label {
+  font-size: 0.7rem; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--accent); font-weight: 700;
+}
+.reel-duration {
+  font-size: 0.72rem; color: var(--muted);
+  background: var(--bg); padding: 3px 10px; border-radius: 20px;
+}
+
+.reel-scenes { display: flex; flex-direction: column; }
+
+.scene {
+  background: var(--card);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 18px;
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.scene-timing {
+  text-align: center;
+}
+.scene-time {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.9rem; font-weight: 700;
+  color: var(--accent); display: block;
+}
+.scene-dur {
+  font-size: 0.6rem; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.scene-label {
+  font-size: 0.65rem; text-transform: uppercase;
+  letter-spacing: 1.5px; font-weight: 700;
+  color: var(--muted); margin-bottom: 4px;
+}
+.scene-text {
+  font-size: 0.82rem; line-height: 1.55; color: var(--text);
+}
+.scene-visual {
+  font-size: 0.72rem; color: var(--muted); margin-top: 6px;
+  font-style: italic;
+}
+.scene:last-child { border-radius: 0 0 10px 10px; }
+
+/* Copy buttons */
+.copy-row {
+  display: flex; gap: 8px; margin-top: 12px;
+  justify-content: center;
+}
+.copy-btn {
+  padding: 8px 18px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.75rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+}
+.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+.copy-btn.ok { border-color: var(--green); color: var(--green); }
+
+/* Loader */
+.loader {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 60px; gap: 16px;
+}
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loader p { font-size: 0.82rem; color: var(--muted); }
+
+/* Category colors */
+.cat-politica  { color: #e63946; }
+.cat-economie  { color: #f4c430; }
+.cat-social    { color: #2ecc71; }
+.cat-international { color: #3498db; }
+.cat-meteo     { color: #9b59b6; }
+.cat-default   { color: #aaa; }
+
+.bar-politica     { background: #e63946; }
+.bar-economie     { background: #f4c430; }
+.bar-social       { background: #2ecc71; }
+.bar-international{ background: #3498db; }
+.bar-meteo        { background: #9b59b6; }
+.bar-default      { background: #aaa; }
+
+@media (max-width: 780px) {
+  .app { grid-template-columns: 1fr; }
+  .left { border-right: none; border-bottom: 1px solid var(--border); }
+  header { padding: 14px 18px; }
+  .right { padding: 24px 18px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Ce Trebuie Să <span>Știi</span> Azi</div>
+  <div class="live-badge"><div class="live-dot"></div> Generator AI</div>
+</header>
+
+<div class="app">
+  <!-- ══ LEFT ══ -->
+  <div class="left">
+    <h2 class="panel-title">Știrile<br><em>zilei</em></h2>
+    <p class="panel-sub">Adaugă 3–5 știri importante. AI-ul generează carousel, imagine și script reel.</p>
+
+    <div class="date-bar">
+      📅 <input type="date" id="dateInput">
+    </div>
+
+    <div class="news-list" id="newsList">
+      <!-- items injected by JS -->
+    </div>
+
+    <div style="margin-top:10px">
+      <button onclick="addNews()" style="width:100%;padding:10px;background:transparent;border:1px dashed var(--border);border-radius:8px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
+        + Adaugă știre
+      </button>
+    </div>
+
+    <div style="margin-top:22px">
+      <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);font-weight:700;margin-bottom:10px">Format de generat</div>
+      <div class="format-grid">
+        <button class="fmt-btn active" data-fmt="carousel" onclick="selectFmt(this)">
+          <span class="fmt-icon">📱</span>Carousel
+        </button>
+        <button class="fmt-btn" data-fmt="image" onclick="selectFmt(this)">
+          <span class="fmt-icon">🖼️</span>Imagine
+        </button>
+        <button class="fmt-btn" data-fmt="reel" onclick="selectFmt(this)">
+          <span class="fmt-icon">🎬</span>Reel
+        </button>
+      </div>
+    </div>
+
+    <button class="gen-btn" id="genBtn" onclick="generate()">⚡ Generează conținut</button>
+  </div>
+
+  <!-- ══ RIGHT ══ -->
+  <div class="right" id="rightPanel">
+    <div class="placeholder-state" id="placeholder">
+      <div class="big-icon">📰</div>
+      <p>Adaugă știrile zilei și apasă <strong>Generează</strong> — AI-ul construiește totul în câteva secunde.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──
+const cats = ['Politică','Economie','Social','Internațional','Meteo'];
+const catKeys = ['politica','economie','social','international','meteo'];
+let newsItems = [];
+let currentFmt = 'carousel';
+let currentSlide = 0;
+let totalSlides = 0;
+let generated = null;
+
+// ── INIT ──
+const today = new Date();
+document.getElementById('dateInput').value = today.toISOString().split('T')[0];
+addNews(); addNews(); addNews();
+
+function addNews() {
+  if (newsItems.length >= 5) return;
+  const id = Date.now() + Math.random();
+  newsItems.push({ id, cat: 0, text: '', impact: 3 });
+  renderNewsList();
+}
+
+function renderNewsList() {
+  const list = document.getElementById('newsList');
+  list.innerHTML = newsItems.map((item, i) => `
+    <div class="news-item" id="ni_${item.id}">
+      <div class="news-num">${i+1}</div>
+      <div class="news-cat">
+        ${cats.map((c,ci) => `
+          <button class="cat-btn ${item.cat===ci?'active':''}"
+            onclick="setCat(${item.id},${ci})">${c}</button>
+        `).join('')}
+      </div>
+      <textarea class="news-input"
+        placeholder="Descrie știrea pe scurt..."
+        oninput="setText(${item.id},this.value)"
+        rows="3">${item.text}</textarea>
+      <div class="impact-row">
+        <span class="impact-label">Impact</span>
+        <div class="impact-stars">
+          ${[1,2,3,4,5].map(s=>`
+            <div class="star ${item.impact>=s?'on':''}"
+              onclick="setImpact(${item.id},${s})" title="${s}"></div>
+          `).join('')}
+        </div>
+        ${newsItems.length>1?`
+          <div style="margin-left:auto;cursor:pointer;color:var(--muted);font-size:0.75rem"
+            onclick="removeNews(${item.id})">✕</div>
+        `:''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function setCat(id, ci) {
+  newsItems.find(n=>n.id===id).cat = ci;
+  renderNewsList();
+}
+function setText(id, v) {
+  newsItems.find(n=>n.id===id).text = v;
+}
+function setImpact(id, v) {
+  newsItems.find(n=>n.id===id).impact = v;
+  renderNewsList();
+}
+function removeNews(id) {
+  newsItems = newsItems.filter(n=>n.id!==id);
+  renderNewsList();
+}
+function selectFmt(btn) {
+  document.querySelectorAll('.fmt-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFmt = btn.dataset.fmt;
+}
+
+// ── DATE FORMAT ──
+function fmtDate(str) {
+  const d = new Date(str+'T00:00:00');
+  return d.toLocaleDateString('ro-RO',{day:'numeric',month:'long',year:'numeric'});
+}
+
+// ── GENERATE ──
+async function generate() {
+  const valid = newsItems.filter(n=>n.text.trim().length>5);
+  if (valid.length < 1) return;
+
+  const btn = document.getElementById('genBtn');
+  btn.disabled = true;
+
+  const right = document.getElementById('rightPanel');
+  right.innerHTML = `<div class="loader"><div class="spinner"></div><p>AI-ul analizează și construiește...</p></div>`;
+
+  const dateStr = document.getElementById('dateInput').value;
+  const dateLabel = fmtDate(dateStr);
+
+  // Build prompt
+  const newsText = valid.map((n,i)=>
+    `${i+1}. [${cats[n.cat]}] ${n.text} (impact: ${n.impact}/5)`
+  ).join('\n');
+
+  const prompt = `Ești un editor de știri pentru un cont de social media din România numit "Ce Trebuie Să Știi Azi".
+
+Data: ${dateLabel}
+Știrile zilei:
+${newsText}
+
+Generează conținut în format JSON cu această structură exactă (fără markdown, doar JSON pur):
+{
+  "caption_carousel": "caption complet pentru Instagram cu emoji-uri, 150-200 cuvinte, hashtag-uri la final",
+  "caption_image": "caption scurt pentru postarea cu imaginea, 80-100 cuvinte, energic, cu hashtag-uri",
+  "reel_script": [
+    {"moment": "0-3s", "voiceover": "text vorbit", "visual": "descriere vizual"},
+    {"moment": "3-8s", "voiceover": "text vorbit", "visual": "descriere vizual"},
+    {"moment": "8-18s", "voiceover": "text vorbit", "visual": "descriere vizual"},
+    {"moment": "18-28s", "voiceover": "text vorbit", "visual": "descriere vizual"},
+    {"moment": "28-35s", "voiceover": "text vorbit", "visual": "descriere vizual"},
+    {"moment": "35-40s", "voiceover": "text vorbit", "visual": "descriere vizual"}
+  ],
+  "news_summaries": [
+    {"title": "titlu scurt impactant max 8 cuvinte", "summary": "1-2 propoziții clare și directe"}
+  ]
+}
+
+Reguli:
+- Limbă română, ton jurnalistic direct
+- Titlurile știrilor: scurte, puternice, memorabile
+- Sumarul: informație esențială, fără fluff
+- Reel: voiceover natural, de parcă vorbești cu un prieten deștept
+- Returnează DOAR JSON, fără nimic altceva`;
+
+  let result;
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await resp.json();
+    const raw = data.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
+    result = JSON.parse(raw);
+  } catch(e) {
+    right.innerHTML = `<div class="loader"><p style="color:var(--accent)">Eroare. Încearcă din nou.</p></div>`;
+    btn.disabled = false;
+    return;
+  }
+
+  generated = { result, valid, dateLabel, dateStr };
+  btn.disabled = false;
+  renderOutput();
+}
+
+// ── RENDER OUTPUT ──
+function renderOutput() {
+  const { result, valid, dateLabel } = generated;
+  const right = document.getElementById('rightPanel');
+
+  right.innerHTML = `
+    <div class="out-tabs">
+      <button class="out-tab active" onclick="switchTab('carousel',this)">📱 Carousel</button>
+      <button class="out-tab" onclick="switchTab('image',this)">🖼️ Imagine</button>
+      <button class="out-tab" onclick="switchTab('reel',this)">🎬 Reel</button>
+    </div>
+
+    <!-- CAROUSEL -->
+    <div class="out-pane active" id="pane-carousel">
+      <div class="carousel-wrap">
+        <div class="slides-viewport">
+          <div class="slides-track" id="slidesTrack">
+            ${buildSlides(result, valid, dateLabel)}
+          </div>
+        </div>
+        <div class="c-nav">
+          <div class="c-arrow" onclick="prevSlide()">‹</div>
+          <div id="cDots"></div>
+          <div class="c-arrow" onclick="nextSlide()">›</div>
+        </div>
+      </div>
+      <div class="caption-box">
+        <div class="caption-label">
+          Caption Instagram
+          <button class="copy-btn" onclick="copyText(this, \`${escapeTpl(result.caption_carousel)}\`)">Copiază</button>
+        </div>
+        <div class="caption-text">${result.caption_carousel}</div>
+      </div>
+    </div>
+
+    <!-- IMAGE -->
+    <div class="out-pane" id="pane-image">
+      ${buildImagePreview(result, valid, dateLabel)}
+      <div class="caption-box" style="margin-top:16px">
+        <div class="caption-label">
+          Caption Imagine
+          <button class="copy-btn" onclick="copyText(this, \`${escapeTpl(result.caption_image)}\`)">Copiază</button>
+        </div>
+        <div class="caption-text">${result.caption_image}</div>
+      </div>
+    </div>
+
+    <!-- REEL -->
+    <div class="out-pane" id="pane-reel">
+      ${buildReelScript(result)}
+    </div>
+  `;
+
+  // Init carousel
+  totalSlides = valid.length + 2;
+  currentSlide = 0;
+  buildDots();
+  updateCarousel();
+}
+
+function buildSlides(result, valid, dateLabel) {
+  const summaries = result.news_summaries || [];
+
+  // Cover slide
+  let html = `
+    <div class="slide slide-cover">
+      <div class="cover-noise"></div>
+      <div class="cover-line"></div>
+      <div class="cover-date">${dateLabel}</div>
+      <div class="cover-title">Ce Trebuie<br>Să <em>Știi</em> Azi</div>
+      <div class="cover-sub">${valid.length} știri esențiale • swipe →</div>
+      <div class="cover-count">${valid.length}</div>
+    </div>
+  `;
+
+  // News slides
+  valid.forEach((n, i) => {
+    const key = catKeys[n.cat];
+    const sum = summaries[i] || { title: n.text.substring(0,50), summary: n.text };
+    html += `
+      <div class="slide slide-news">
+        <div class="s-accent-bar bar-${key}"></div>
+        <div class="s-num">${i+1}</div>
+        <div class="s-logo">ȘTIRI RO</div>
+        <div class="s-cat cat-${key}">${cats[n.cat]}</div>
+        <div class="s-title">${sum.title}</div>
+        <div class="s-body">${sum.summary}</div>
+      </div>
+    `;
+  });
+
+  // Outro slide
+  html += `
+    <div class="slide slide-outro">
+      <div class="o-logo">ȘTIRI RO</div>
+      <div class="o-title">Urmărește<br>pentru mai mult</div>
+      <div class="o-sub">@stiriRO • actualizări zilnice • 08:00 · 13:00 · 20:00</div>
+    </div>
+  `;
+  return html;
+}
+
+function buildImagePreview(result, valid, dateLabel) {
+  const summaries = result.news_summaries || [];
+  const bullets = valid.slice(0,5).map((n,i) => {
+    const sum = summaries[i] || { title: n.text.substring(0,40) };
+    return `
+      <div class="news-bullet">
+        <div class="bullet-num">${i+1}</div>
+        <div class="bullet-text">${sum.title}</div>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="img-preview" style="max-width:420px;margin:0 auto">
+      <div class="img-top-line"></div>
+      <div class="top-bar">
+        <div class="brand-tag">Ce Trebuie Să Știi Azi</div>
+        <div class="date-tag">${dateLabel}</div>
+      </div>
+      <div class="center-block">
+        <div class="img-headline">Top <em>${valid.length}</em><br>Știri Azi</div>
+        <div class="news-bullets">${bullets}</div>
+      </div>
+      <div class="bottom-bar">
+        <div class="swipe-hint">@StiriRO</div>
+        <div style="font-size:0.65rem;color:var(--muted)">08:00 · 13:00 · 20:00</div>
+      </div>
+    </div>
+  `;
+}
+
+function buildReelScript(result) {
+  const scenes = result.reel_script || [];
+  const sceneHtml = scenes.map(s => `
+    <div class="scene">
+      <div class="scene-timing">
+        <span class="scene-time">${s.moment.split('-')[0]}s</span>
+        <span class="scene-dur">${s.moment}</span>
+      </div>
+      <div>
+        <div class="scene-label">🎙️ Voiceover</div>
+        <div class="scene-text">${s.voiceover}</div>
+        <div class="scene-visual">🎥 ${s.visual}</div>
+      </div>
+    </div>
+  `).join('');
+
+  const fullScript = scenes.map(s=>s.voiceover).join(' ');
+
+  return `
+    <div class="reel-wrap">
+      <div class="reel-header">
+        <div class="reel-title-label">🎬 Script Reel • ~40 secunde</div>
+        <div class="reel-duration">${scenes.length} scene</div>
+      </div>
+      <div class="reel-scenes">${sceneHtml}</div>
+      <div class="copy-row">
+        <button class="copy-btn" onclick="copyText(this,\`${escapeTpl(fullScript)}\`)">📋 Copiază voiceover complet</button>
+      </div>
+    </div>
+  `;
+}
+
+// ── CAROUSEL ──
+function buildDots() {
+  const dotsEl = document.getElementById('cDots');
+  if (!dotsEl) return;
+  dotsEl.style.cssText = 'display:flex;gap:5px;align-items:center';
+  dotsEl.innerHTML = Array.from({length:totalSlides},(_,i)=>
+    `<div class="c-dot ${i===0?'active':''}" onclick="goSlide(${i})"></div>`
+  ).join('');
+}
+
+function updateCarousel() {
+  const track = document.getElementById('slidesTrack');
+  if (track) track.style.transform = `translateX(-${currentSlide*100}%)`;
+  const dots = document.querySelectorAll('.c-dot');
+  dots.forEach((d,i) => d.classList.toggle('active', i===currentSlide));
+}
+
+function nextSlide() {
+  currentSlide = (currentSlide+1) % totalSlides;
+  updateCarousel();
+}
+function prevSlide() {
+  currentSlide = (currentSlide-1+totalSlides) % totalSlides;
+  updateCarousel();
+}
+function goSlide(i) {
+  currentSlide = i;
+  updateCarousel();
+}
+
+// ── TABS ──
+function switchTab(name, btn) {
+  document.querySelectorAll('.out-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.out-pane').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  const pane = document.getElementById('pane-'+name);
+  if (pane) pane.classList.add('active');
+}
+
+// ── COPY ──
+function copyText(btn, text) {
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent = '✓ Copiat!';
+    btn.classList.add('ok');
+    setTimeout(()=>{ btn.classList.remove('ok'); btn.textContent = 'Copiază'; }, 2000);
+  });
+}
+
+function escapeTpl(str) {
+  return (str||'').replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$/g,'\\$');
+}
+</script>
+</body>
+</html>
