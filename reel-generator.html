@@ -7,512 +7,99 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #080810;
-  --surface: #0f0f1a;
-  --card: #14141f;
-  --border: #1e1e2e;
-  --accent: #e63946;
-  --gold: #f4c430;
-  --blue: #4361ee;
-  --text: #eeeef5;
-  --muted: #55556a;
-  --green: #2ecc71;
-  --purple: #7c3aed;
+  --bg:#080810;--surface:#0f0f1a;--card:#14141f;--border:#1e1e2e;
+  --accent:#e63946;--gold:#f4c430;--text:#eeeef5;--muted:#55556a;--green:#2ecc71;
 }
-
-* { margin:0; padding:0; box-sizing:border-box; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Sora', sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* HEADER */
-header {
-  padding: 18px 36px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(8,8,16,0.95);
-  backdrop-filter: blur(14px);
-  position: sticky; top: 0; z-index: 100;
-}
-
-.logo {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.4rem;
-  letter-spacing: 2px;
-}
-.logo em { color: var(--accent); font-style: normal; }
-
-.logo-tag {
-  font-size: 0.6rem;
-  background: linear-gradient(135deg, var(--purple), var(--accent));
-  color: white;
-  padding: 3px 10px;
-  border-radius: 20px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  font-weight: 700;
-  margin-left: 10px;
-}
-
-/* LAYOUT */
-.app {
-  display: grid;
-  grid-template-columns: 380px 1fr;
-  min-height: calc(100vh - 63px);
-}
-
-/* LEFT */
-.left {
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  padding: 28px 24px;
-  overflow-y: auto;
-}
-
-.panel-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.8rem;
-  letter-spacing: 1.5px;
-  line-height: 1;
-  margin-bottom: 4px;
-}
-.panel-title em { color: var(--accent); font-style: italic; }
-.panel-sub { font-size: 0.78rem; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
-
-/* News inputs */
-.news-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
-
-.news-item {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 14px;
-  transition: border-color 0.2s;
-  position: relative;
-}
-.news-item:focus-within { border-color: var(--accent); }
-
-.news-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.news-num {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.1rem;
-  color: var(--accent);
-  min-width: 20px;
-}
-
-.news-textarea {
-  width: 100%;
-  background: transparent;
-  border: none;
-  color: var(--text);
-  font-family: 'Sora', sans-serif;
-  font-size: 0.82rem;
-  line-height: 1.5;
-  resize: none;
-  outline: none;
-  min-height: 60px;
-}
-.news-textarea::placeholder { color: var(--muted); }
-
-.remove-btn {
-  position: absolute;
-  top: 10px; right: 10px;
-  background: transparent;
-  border: none;
-  color: var(--muted);
-  font-size: 0.75rem;
-  cursor: pointer;
-  padding: 2px 6px;
-  border-radius: 4px;
-  transition: all 0.2s;
-}
-.remove-btn:hover { color: var(--accent); background: rgba(230,57,70,0.1); }
-
-.add-btn {
-  width: 100%;
-  padding: 10px;
-  background: transparent;
-  border: 1px dashed var(--border);
-  border-radius: 8px;
-  color: var(--muted);
-  font-family: 'Sora', sans-serif;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-bottom: 20px;
-}
-.add-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-/* Options */
-.opt-section { margin-bottom: 18px; }
-.opt-label {
-  font-size: 0.62rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--gold);
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
-.ratio-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.ratio-btn {
-  padding: 10px 6px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--muted);
-  font-family: 'Sora', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-align: center;
-}
-.ratio-btn .ratio-icon { font-size: 1.1rem; display: block; margin-bottom: 3px; }
-.ratio-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(230,57,70,0.08); }
-
-.style-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.style-chip {
-  padding: 5px 12px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--muted);
-  font-family: 'Sora', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.style-chip.active { border-color: var(--gold); color: var(--gold); background: rgba(244,196,48,0.08); }
-
-.duration-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.duration-row input[type=range] { flex: 1; accent-color: var(--accent); }
-.duration-val {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.1rem;
-  color: var(--accent);
-  min-width: 40px;
-  text-align: right;
-}
-
-/* Generate button */
-.gen-btn {
-  width: 100%;
-  padding: 15px;
-  background: linear-gradient(135deg, var(--accent), #ff6b6b);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-family: 'Sora', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-top: 6px;
-}
-.gen-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(230,57,70,0.4); }
-.gen-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
-
-/* RIGHT */
-.right {
-  padding: 28px 32px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* Placeholder */
-.placeholder {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  color: var(--muted);
-  text-align: center;
-}
-.placeholder-icon { font-size: 4rem; opacity: 0.2; }
-.placeholder p { font-size: 0.85rem; line-height: 1.6; max-width: 300px; }
-
-/* Progress */
-.progress-wrap {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 24px;
-}
-.progress-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.2rem;
-  letter-spacing: 1px;
-  margin-bottom: 16px;
-  color: var(--gold);
-}
-.progress-steps { display: flex; flex-direction: column; gap: 10px; }
-
-.prog-step {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 0.82rem;
-  color: var(--muted);
-  transition: color 0.3s;
-}
-.prog-step.active { color: var(--text); }
-.prog-step.done { color: var(--green); }
-
-.prog-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--border);
-  flex-shrink: 0;
-  transition: all 0.3s;
-}
-.prog-step.active .prog-dot { background: var(--gold); box-shadow: 0 0 8px var(--gold); animation: pulse-dot 1s infinite; }
-.prog-step.done .prog-dot { background: var(--green); }
-
-@keyframes pulse-dot {
-  0%,100% { transform: scale(1); }
-  50% { transform: scale(1.5); }
-}
-
-/* Preview reel */
-.preview-section {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  animation: fadeUp 0.5s ease;
-}
-
-@keyframes fadeUp {
-  from { opacity:0; transform: translateY(20px); }
-  to { opacity:1; transform: translateY(0); }
-}
-
-.preview-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.preview-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.4rem;
-  letter-spacing: 1px;
-}
-
-.action-row {
-  display: flex;
-  gap: 10px;
-}
-
-.action-btn {
-  padding: 9px 18px;
-  border-radius: 7px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text);
-  font-family: 'Sora', sans-serif;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.action-btn:hover { border-color: var(--accent); color: var(--accent); }
-.action-btn.primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
-}
-.action-btn.primary:hover { background: #ff4757; }
-
-/* Slides strip */
-.slides-strip {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding: 4px 0 10px;
-}
-.slides-strip::-webkit-scrollbar { height: 4px; }
-.slides-strip::-webkit-scrollbar-track { background: var(--border); border-radius: 2px; }
-.slides-strip::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
-
-.slide-thumb {
-  flex-shrink: 0;
-  width: 120px;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 2px solid transparent;
-  cursor: pointer;
-  transition: all 0.2s;
-  position: relative;
-}
-.slide-thumb.active { border-color: var(--accent); }
-.slide-thumb img { width: 100%; display: block; }
-.slide-thumb .thumb-num {
-  position: absolute;
-  top: 4px; left: 4px;
-  background: rgba(0,0,0,0.7);
-  color: white;
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 2px 6px;
-  border-radius: 3px;
-}
-
-/* Main preview canvas */
-.preview-canvas-wrap {
-  position: relative;
-  max-width: 500px;
-  margin: 0 auto;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-  background: #000;
-}
-
-canvas#previewCanvas {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-/* Playback controls */
-.playback {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  max-width: 500px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.play-btn {
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: none;
-  color: white;
-  font-size: 0.9rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: all 0.2s;
-}
-.play-btn:hover { background: #ff4757; transform: scale(1.05); }
-
-.progress-bar-wrap {
-  flex: 1;
-  height: 4px;
-  background: var(--border);
-  border-radius: 2px;
-  cursor: pointer;
-  position: relative;
-}
-.progress-bar-fill {
-  height: 100%;
-  background: var(--accent);
-  border-radius: 2px;
-  transition: width 0.1s linear;
-  width: 0%;
-}
-
-.time-label {
-  font-size: 0.72rem;
-  color: var(--muted);
-  min-width: 50px;
-  text-align: right;
-}
-
-/* Export section */
-.export-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 18px;
-  max-width: 500px;
-  margin: 0 auto;
-  width: 100%;
-}
-.export-title {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--gold);
-  font-weight: 700;
-  margin-bottom: 12px;
-}
-.export-options {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.export-opt {
-  flex: 1;
-  min-width: 120px;
-  padding: 10px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 7px;
-  color: var(--muted);
-  font-family: 'Sora', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-align: center;
-}
-.export-opt:hover { border-color: var(--gold); color: var(--gold); }
-.export-opt .eo-icon { font-size: 1.2rem; display: block; margin-bottom: 4px; }
-
-@media (max-width: 760px) {
-  .app { grid-template-columns: 1fr; }
-  .left { border-right: none; border-bottom: 1px solid var(--border); }
-  header { padding: 14px 18px; }
-  .right { padding: 20px 16px; }
-}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Sora',sans-serif;min-height:100vh;}
+header{padding:16px 32px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:rgba(8,8,16,0.96);backdrop-filter:blur(14px);position:sticky;top:0;z-index:100;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;}
+.logo em{color:var(--accent);font-style:normal;}
+.logo-tag{font-size:0.6rem;background:var(--accent);color:white;padding:3px 10px;border-radius:20px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;margin-left:10px;}
+.app{display:grid;grid-template-columns:360px 1fr;min-height:calc(100vh - 57px);}
+.left{background:var(--surface);border-right:1px solid var(--border);padding:24px 20px;overflow-y:auto;}
+.panel-title{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:1.5px;line-height:1;margin-bottom:4px;}
+.panel-title em{color:var(--accent);font-style:italic;}
+.panel-sub{font-size:0.78rem;color:var(--muted);margin-bottom:22px;line-height:1.5;}
+.news-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;}
+.news-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px;position:relative;transition:border-color 0.2s;}
+.news-item:focus-within{border-color:var(--accent);}
+.news-num{font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--accent);margin-bottom:6px;letter-spacing:1px;}
+.news-textarea{width:100%;background:transparent;border:none;color:var(--text);font-family:'Sora',sans-serif;font-size:0.82rem;line-height:1.5;resize:none;outline:none;min-height:70px;}
+.news-textarea::placeholder{color:var(--muted);}
+.remove-btn{position:absolute;top:10px;right:10px;background:transparent;border:none;color:var(--muted);font-size:0.75rem;cursor:pointer;padding:2px 6px;border-radius:4px;transition:all 0.2s;}
+.remove-btn:hover{color:var(--accent);}
+.add-btn{width:100%;padding:10px;background:transparent;border:1px dashed var(--border);border-radius:8px;color:var(--muted);font-family:'Sora',sans-serif;font-size:0.8rem;cursor:pointer;transition:all 0.2s;margin-bottom:20px;}
+.add-btn:hover{border-color:var(--accent);color:var(--accent);}
+.opt-label{font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold);font-weight:700;margin-bottom:10px;display:block;}
+.opt-section{margin-bottom:18px;}
+.ratio-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.ratio-btn{padding:10px 6px;background:var(--card);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Sora',sans-serif;font-size:0.7rem;font-weight:600;cursor:pointer;transition:all 0.2s;text-align:center;}
+.ratio-btn .ri{font-size:1.1rem;display:block;margin-bottom:3px;}
+.ratio-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(230,57,70,0.08);}
+.style-grid{display:flex;flex-wrap:wrap;gap:6px;}
+.style-chip{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Sora',sans-serif;font-size:0.7rem;font-weight:600;cursor:pointer;transition:all 0.2s;}
+.style-chip.active{border-color:var(--gold);color:var(--gold);background:rgba(244,196,48,0.08);}
+.words-row{display:flex;align-items:center;gap:12px;}
+.words-row input[type=range]{flex:1;accent-color:var(--accent);}
+.words-val{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--accent);min-width:55px;text-align:right;}
+.gen-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--accent),#ff6b6b);color:white;border:none;border-radius:10px;font-family:'Sora',sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:6px;}
+.gen-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 30px rgba(230,57,70,0.4);}
+.gen-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none;}
+.right{padding:24px 28px;overflow-y:auto;display:flex;flex-direction:column;gap:16px;}
+.placeholder{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--muted);text-align:center;}
+.placeholder-icon{font-size:4rem;opacity:0.2;}
+.placeholder p{font-size:0.85rem;line-height:1.6;max-width:300px;}
+.progress-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;}
+.progress-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:1px;margin-bottom:16px;color:var(--gold);}
+.prog-step{display:flex;align-items:center;gap:12px;font-size:0.82rem;color:var(--muted);transition:color 0.3s;margin-bottom:10px;}
+.prog-step.active{color:var(--text);}
+.prog-step.done{color:var(--green);}
+.prog-dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0;transition:all 0.3s;}
+.prog-step.active .prog-dot{background:var(--gold);animation:pdot 1s infinite;}
+.prog-step.done .prog-dot{background:var(--green);}
+@keyframes pdot{0%,100%{transform:scale(1)}50%{transform:scale(1.6)}}
+.preview-section{display:flex;flex-direction:column;gap:14px;animation:fadeUp 0.4s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.preview-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+.preview-title{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:1px;}
+.action-row{display:flex;gap:8px;}
+.action-btn{padding:9px 16px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--text);font-family:'Sora',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.2s;}
+.action-btn:hover{border-color:var(--accent);color:var(--accent);}
+.action-btn.primary{background:var(--accent);border-color:var(--accent);color:white;}
+.action-btn.primary:hover{background:#ff4757;}
+.story-viewer{max-width:400px;margin:0 auto;width:100%;position:relative;border-radius:14px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.7);background:#000;user-select:none;}
+.story-viewer canvas{display:block;width:100%;height:auto;}
+.tap-left{position:absolute;left:0;top:0;width:40%;height:100%;z-index:5;cursor:pointer;}
+.tap-right{position:absolute;right:0;top:0;width:40%;height:100%;z-index:5;cursor:pointer;}
+.story-bars{position:absolute;top:8px;left:8px;right:8px;display:flex;gap:3px;z-index:10;}
+.story-bar{flex:1;height:2.5px;background:rgba(255,255,255,0.3);border-radius:2px;overflow:hidden;}
+.story-bar-fill{height:100%;background:white;border-radius:2px;width:0%;}
+.story-bar-fill.done{width:100%;}
+.story-controls{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:10px;max-width:400px;margin:0 auto;width:100%;}
+.play-btn{width:38px;height:38px;border-radius:50%;background:var(--accent);border:none;color:white;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;}
+.play-btn:hover{background:#ff4757;transform:scale(1.05);}
+.ctrl-info{flex:1;font-size:0.75rem;color:var(--muted);}
+.ctrl-info strong{color:var(--text);font-size:0.8rem;display:block;}
+.slides-overview{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.slides-ov-title{font-size:0.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold);font-weight:700;margin-bottom:12px;}
+.slide-rows{display:flex;flex-direction:column;gap:5px;}
+.slide-row{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--surface);border-radius:6px;cursor:pointer;border:1px solid transparent;transition:all 0.15s;}
+.slide-row:hover{border-color:var(--border);}
+.slide-row.active{border-color:var(--accent);}
+.slide-row-num{font-family:'Bebas Neue',sans-serif;font-size:0.9rem;color:var(--accent);min-width:22px;}
+.slide-row-text{font-size:0.75rem;color:var(--muted);line-height:1.4;flex:1;}
+.slide-row-badge{font-size:0.62rem;color:var(--muted);background:var(--border);padding:2px 7px;border-radius:10px;white-space:nowrap;}
+.export-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;}
+.export-title{font-size:0.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold);font-weight:700;margin-bottom:12px;}
+.export-opts{display:flex;gap:8px;flex-wrap:wrap;}
+.export-opt{flex:1;min-width:110px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:7px;color:var(--muted);font-family:'Sora',sans-serif;font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.2s;text-align:center;}
+.export-opt:hover{border-color:var(--gold);color:var(--gold);}
+.export-opt .eo-icon{font-size:1.2rem;display:block;margin-bottom:4px;}
+@media(max-width:760px){.app{grid-template-columns:1fr;}.left{border-right:none;border-bottom:1px solid var(--border);}}
 </style>
 </head>
 <body>
-
 <header>
   <div style="display:flex;align-items:center">
     <div class="logo">Știri<em>RO</em></div>
@@ -522,565 +109,399 @@ canvas#previewCanvas {
 </header>
 
 <div class="app">
-  <!-- LEFT PANEL -->
   <div class="left">
     <h2 class="panel-title">Reel<br><em>Generator</em></h2>
-    <p class="panel-sub">Adaugă 1–5 știri. AI-ul generează imagini și asamblează un reel complet.</p>
-
+    <p class="panel-sub">O poză per știre. Textul știrii apare progresiv pe mai multe cadre — exact ca un Instagram Story.</p>
     <div class="news-list" id="newsList"></div>
     <button class="add-btn" onclick="addNews()">+ Adaugă știre</button>
-
     <div class="opt-section">
-      <div class="opt-label">Format video</div>
+      <span class="opt-label">Format video</span>
       <div class="ratio-grid">
-        <button class="ratio-btn active" data-ratio="9:16" onclick="selectRatio(this)">
-          <span class="ratio-icon">📱</span>9:16 Reel
-        </button>
-        <button class="ratio-btn" data-ratio="1:1" onclick="selectRatio(this)">
-          <span class="ratio-icon">⬛</span>1:1 Post
-        </button>
-        <button class="ratio-btn" data-ratio="16:9" onclick="selectRatio(this)">
-          <span class="ratio-icon">🖥️</span>16:9 Wide
-        </button>
+        <button class="ratio-btn active" data-ratio="9:16" onclick="selectRatio(this)"><span class="ri">📱</span>9:16 Reel</button>
+        <button class="ratio-btn" data-ratio="1:1" onclick="selectRatio(this)"><span class="ri">⬛</span>1:1 Post</button>
+        <button class="ratio-btn" data-ratio="16:9" onclick="selectRatio(this)"><span class="ri">🖥️</span>16:9 Wide</button>
       </div>
     </div>
-
     <div class="opt-section">
-      <div class="opt-label">Stil imagini</div>
+      <span class="opt-label">Stil imagini</span>
       <div class="style-grid">
-        <button class="style-chip active" data-style="photorealistic news" onclick="selectStyle(this)">📸 Foto</button>
-        <button class="style-chip" data-style="cinematic dramatic" onclick="selectStyle(this)">🎬 Cinematic</button>
-        <button class="style-chip" data-style="illustration flat design" onclick="selectStyle(this)">🎨 Ilustrație</button>
-        <button class="style-chip" data-style="dark moody editorial" onclick="selectStyle(this)">🌑 Editorial</button>
-        <button class="style-chip" data-style="minimalist clean" onclick="selectStyle(this)">⬜ Minimal</button>
+        <button class="style-chip active" data-style="photorealistic news photography" onclick="selectStyle(this)">📸 Foto</button>
+        <button class="style-chip" data-style="cinematic dramatic lighting film" onclick="selectStyle(this)">🎬 Cinematic</button>
+        <button class="style-chip" data-style="digital illustration flat design colorful" onclick="selectStyle(this)">🎨 Ilustrație</button>
+        <button class="style-chip" data-style="dark moody editorial photography" onclick="selectStyle(this)">🌑 Editorial</button>
       </div>
     </div>
-
     <div class="opt-section">
-      <div class="opt-label">Durată per slide</div>
-      <div class="duration-row">
-        <input type="range" min="2" max="8" value="4" id="durationSlider" oninput="updateDuration(this.value)">
-        <div class="duration-val" id="durationVal">4s</div>
+      <span class="opt-label">Cuvinte pe cadru</span>
+      <div class="words-row">
+        <input type="range" min="5" max="20" value="10" id="wordsSlider" oninput="updateWords(this.value)">
+        <div class="words-val" id="wordsVal">10 cuv.</div>
       </div>
     </div>
-
-    <button class="gen-btn" id="genBtn" onclick="generate()">
-      🎬 Generează Reel
-    </button>
+    <button class="gen-btn" id="genBtn" onclick="generate()">🎬 Generează Reel</button>
   </div>
 
-  <!-- RIGHT PANEL -->
   <div class="right" id="rightPanel">
-    <div class="placeholder" id="placeholder">
+    <div class="placeholder">
       <div class="placeholder-icon">🎬</div>
-      <p>Adaugă știrile, configurează stilul și apasă <strong>Generează Reel</strong>.</p>
-      <p style="font-size:0.75rem;margin-top:8px;color:var(--muted)">Imagini generate AI • Voiceover automat • Export MP4</p>
+      <p>Adaugă știrile, alege stilul și apasă <strong>Generează Reel</strong>.</p>
+      <p style="font-size:0.75rem;margin-top:8px;color:var(--muted)">O imagine per știre • Text progresiv • Export video</p>
     </div>
   </div>
 </div>
 
 <script>
-// ── STATE ──
-let newsItems = [];
-let currentRatio = '9:16';
-let currentStyle = 'photorealistic news';
-let slideDuration = 4;
-let slides = []; // {text, imageUrl, canvas}
-let isPlaying = false;
-let playTimer = null;
-let currentSlideIdx = 0;
-let totalDuration = 0;
-let elapsed = 0;
-let animFrame = null;
+let newsItems=[], currentRatio='9:16', currentStyle='photorealistic news photography', wordsPerFrame=10;
+let stories=[], allFrames=[], currentFrame=0, isPlaying=false, playInterval=null;
+const FRAME_MS = 2800;
 
-// ── INIT ──
 addNews(); addNews(); addNews();
 
-function addNews() {
-  if (newsItems.length >= 5) return;
-  const id = Date.now() + Math.random();
-  newsItems.push({ id, text: '' });
+function addNews(){
+  if(newsItems.length>=5)return;
+  newsItems.push({id:Date.now()+Math.random(),text:''});
   renderList();
 }
-
-function removeNews(id) {
-  if (newsItems.length <= 1) return;
-  newsItems = newsItems.filter(n => n.id !== id);
+function removeNews(id){
+  if(newsItems.length<=1)return;
+  newsItems=newsItems.filter(n=>n.id!==id);
   renderList();
 }
-
-function renderList() {
-  document.getElementById('newsList').innerHTML = newsItems.map((item, i) => `
+function renderList(){
+  document.getElementById('newsList').innerHTML=newsItems.map((item,i)=>`
     <div class="news-item">
-      <div class="news-header">
-        <span class="news-num">${i+1}</span>
-        <span style="font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px">Știrea ${i+1}</span>
-      </div>
-      <textarea class="news-textarea"
-        placeholder="Descrie știrea — ex: Guvernul a aprobat o nouă lege privind salariul minim..."
-        oninput="newsItems[${i}].text=this.value"
-        rows="3">${item.text}</textarea>
-      ${newsItems.length > 1 ? `<button class="remove-btn" onclick="removeNews(${item.id})">✕</button>` : ''}
-    </div>
-  `).join('');
+      <div class="news-num">ȘTIREA ${i+1}</div>
+      <textarea class="news-textarea" placeholder="Scrie știrea complet — textul va apărea progresiv pe imagine..." oninput="newsItems[${i}].text=this.value" rows="4">${item.text}</textarea>
+      ${newsItems.length>1?`<button class="remove-btn" onclick="removeNews(${item.id})">✕</button>`:''}
+    </div>`).join('');
+}
+function selectRatio(btn){document.querySelectorAll('.ratio-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentRatio=btn.dataset.ratio;}
+function selectStyle(btn){document.querySelectorAll('.style-chip').forEach(b=>b.classList.remove('active'));btn.classList.add('active');currentStyle=btn.dataset.style;}
+function updateWords(v){wordsPerFrame=parseInt(v);document.getElementById('wordsVal').textContent=v+' cuv.';}
+function getDims(){
+  if(currentRatio==='9:16')return{w:540,h:960};
+  if(currentRatio==='1:1')return{w:720,h:720};
+  return{w:960,h:540};
+}
+function splitChunks(text,n){
+  const words=text.trim().split(/\s+/);
+  const chunks=[];
+  for(let i=0;i<words.length;i+=n) chunks.push(words.slice(i,i+n).join(' '));
+  return chunks;
 }
 
-function selectRatio(btn) {
-  document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentRatio = btn.dataset.ratio;
-}
+async function generate(){
+  const valid=newsItems.filter(n=>n.text.trim().length>5);
+  if(!valid.length)return;
+  const btn=document.getElementById('genBtn');
+  btn.disabled=true;
+  stories=[]; allFrames=[];
+  const right=document.getElementById('rightPanel');
+  right.innerHTML=`<div class="progress-wrap"><div class="progress-title">⚡ Se construiește reelul...</div>
+    <div class="prog-step" id="s0"><div class="prog-dot"></div><span id="s0t">Generez prompt-uri vizuale cu AI...</span></div>
+    <div class="prog-step" id="s1"><div class="prog-dot"></div><span id="s1t">Generez ${valid.length} imagini AI...</span></div>
+    <div class="prog-step" id="s2"><div class="prog-dot"></div><span id="s2t">Randez cadrele cu text progresiv...</span></div>
+    <div class="prog-step" id="s3"><div class="prog-dot"></div><span id="s3t">Pregătesc previzualizarea...</span></div>
+  </div>`;
 
-function selectStyle(btn) {
-  document.querySelectorAll('.style-chip').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  currentStyle = btn.dataset.style;
-}
+  function ss(i,state){const e=document.getElementById('s'+i);if(e)e.className='prog-step '+state;}
+  function st(i,t){const e=document.getElementById('s'+i+'t');if(e)e.textContent=t;}
 
-function updateDuration(v) {
-  slideDuration = parseInt(v);
-  document.getElementById('durationVal').textContent = v + 's';
-}
+  ss(0,'active');
+  const prompts=await generatePrompts(valid);
+  ss(0,'done');
 
-// ── CANVAS DIMENSIONS ──
-function getCanvasDims() {
-  if (currentRatio === '9:16') return { w: 540, h: 960 };
-  if (currentRatio === '1:1')  return { w: 720, h: 720 };
-  return { w: 960, h: 540 };
-}
-
-// ── GENERATE ──
-async function generate() {
-  const valid = newsItems.filter(n => n.text.trim().length > 5);
-  if (!valid.length) return;
-
-  const btn = document.getElementById('genBtn');
-  btn.disabled = true;
-
-  const right = document.getElementById('rightPanel');
-  right.innerHTML = buildProgressUI(valid.length);
-
-  slides = [];
-
-  // Step 1: Generate image prompts via Groq
-  setStep(0, 'active');
-  const prompts = await generateImagePrompts(valid);
-  setStep(0, 'done');
-
-  // Step 2: Generate images via Pollinations
-  setStep(1, 'active');
-  const dims = getCanvasDims();
-  for (let i = 0; i < valid.length; i++) {
-    updateStepText(1, `Generez imagine ${i+1}/${valid.length}...`);
-    const imgUrl = buildPollinationsUrl(prompts[i], dims.w, dims.h);
-    const img = await loadImage(imgUrl);
-    slides.push({ text: valid[i].text, prompt: prompts[i], img });
+  ss(1,'active');
+  const dims=getDims();
+  for(let i=0;i<valid.length;i++){
+    st(1,`Generez imagine ${i+1}/${valid.length}...`);
+    const url=buildImgUrl(prompts[i],dims.w,dims.h);
+    const img=await loadImg(url);
+    const chunks=splitChunks(valid[i].text,wordsPerFrame);
+    stories.push({text:valid[i].text,chunks,img,idx:i});
   }
-  setStep(1, 'done');
+  ss(1,'done');
 
-  // Step 3: Render frames on canvas
-  setStep(2, 'active');
-  await renderSlideCanvases();
-  setStep(2, 'done');
+  ss(2,'active');
+  const d=getDims();
+  for(let si=0;si<stories.length;si++){
+    const s=stories[si];
+    for(let ci=0;ci<s.chunks.length;ci++){
+      const c=document.createElement('canvas');
+      c.width=d.w; c.height=d.h;
+      drawFrame(c.getContext('2d'),s,ci,d);
+      allFrames.push({canvas:c,dataUrl:c.toDataURL('image/jpeg',0.88),si,ci});
+    }
+  }
+  ss(2,'done');
 
-  // Step 4: Show preview
-  setStep(3, 'active');
-  await new Promise(r => setTimeout(r, 300));
-  setStep(3, 'done');
+  ss(3,'active');
+  await new Promise(r=>setTimeout(r,200));
+  ss(3,'done');
 
-  btn.disabled = false;
+  btn.disabled=false;
   showPreview();
 }
 
-function buildProgressUI(count) {
-  return `
-    <div class="progress-wrap">
-      <div class="progress-title">⚡ Se generează reelul tău...</div>
-      <div class="progress-steps">
-        <div class="prog-step" id="step-0"><div class="prog-dot"></div><span id="step-0-text">Generez descrieri pentru imagini cu AI...</span></div>
-        <div class="prog-step" id="step-1"><div class="prog-dot"></div><span id="step-1-text">Generez ${count} imagini AI (Pollinations)...</span></div>
-        <div class="prog-step" id="step-2"><div class="prog-dot"></div><span id="step-2-text">Asamblează slide-urile cu text și overlay...</span></div>
-        <div class="prog-step" id="step-3"><div class="prog-dot"></div><span id="step-3-text">Pregătesc previzualizarea...</span></div>
-      </div>
-    </div>
-  `;
-}
+async function generatePrompts(arr){
+  try{
+    const res=await fetch('https://dailystiri.vercel.app/api/generate',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({max_tokens:600,messages:[{role:'user',content:`Pentru fiecare știre scrie un prompt scurt în engleză (max 12 cuvinte) pentru generare imagine AI. Stil: ${currentStyle}. Fără text în imagine.
 
-function setStep(idx, state) {
-  const el = document.getElementById('step-' + idx);
-  if (!el) return;
-  el.className = 'prog-step ' + state;
-}
+${arr.map((n,i)=>`${i+1}. ${n.text}`).join('\n')}
 
-function updateStepText(idx, text) {
-  const el = document.getElementById('step-' + idx + '-text');
-  if (el) el.textContent = text;
-}
-
-// ── IMAGE PROMPTS VIA GROQ ──
-async function generateImagePrompts(newsArr) {
-  const newsText = newsArr.map((n, i) => `${i+1}. ${n.text}`).join('\n');
-  try {
-    const res = await fetch('https://dailystiri.vercel.app/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        max_tokens: 800,
-        messages: [{
-          role: 'user',
-          content: `Ești un director de fotografie. Pentru fiecare știre de mai jos, scrie un prompt scurt în engleză pentru generare de imagine AI (max 15 cuvinte per prompt). Stilul dorit: ${currentStyle}. Fă prompts vizuale, concrete, fără text în imagine.
-
-Știri:
-${newsText}
-
-Răspunde DOAR cu un JSON array de strings, ex: ["prompt1","prompt2"]. Fără altceva.`
-        }]
-      })
+Răspunde DOAR cu JSON array de strings. Nimic altceva.`}]})
     });
-    const data = await res.json();
-    const raw = data.content[0].text.replace(/```json|```/g, '').trim();
-    return JSON.parse(raw);
-  } catch(e) {
-    // Fallback prompts
-    return newsArr.map(n => `${currentStyle} news photography Romania: ${n.text.substring(0, 50)}`);
+    const data=await res.json();
+    return JSON.parse(data.content[0].text.replace(/```json|```/g,'').trim());
+  }catch(e){
+    return arr.map(n=>`${currentStyle} Romania: ${n.text.substring(0,40)}`);
   }
 }
 
-// ── POLLINATIONS URL ──
-function buildPollinationsUrl(prompt, w, h) {
-  const fullPrompt = prompt + ", " + currentStyle + ", high quality, no text, no watermark";
-  const seed = Math.floor(Math.random()*99999);
-  return "https://dailystiri.vercel.app/api/image?prompt=" + encodeURIComponent(fullPrompt) + "&width=" + w + "&height=" + h + "&seed=" + seed;
+function buildImgUrl(prompt,w,h){
+  const full=prompt+', '+currentStyle+', high quality, no text, no watermark';
+  return 'https://dailystiri.vercel.app/api/image?prompt='+encodeURIComponent(full)+'&width='+w+'&height='+h+'&seed='+Math.floor(Math.random()*99999);
 }
 
-// ── LOAD IMAGE ──
-function loadImage(url) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => resolve(img);
-    img.onerror = () => {
-      // Create fallback canvas image
-      const fc = document.createElement('canvas');
-      const dims = getCanvasDims();
-      fc.width = dims.w; fc.height = dims.h;
-      const ctx = fc.getContext('2d');
-      ctx.fillStyle = '#1a1a2e';
-      ctx.fillRect(0, 0, dims.w, dims.h);
+function loadImg(url){
+  return new Promise(resolve=>{
+    const img=new Image();
+    img.crossOrigin='anonymous';
+    img.onload=()=>resolve(img);
+    img.onerror=()=>{
+      const d=getDims();
+      const fc=document.createElement('canvas');
+      fc.width=d.w;fc.height=d.h;
+      const ctx=fc.getContext('2d');
+      ctx.fillStyle='#0d1117';ctx.fillRect(0,0,d.w,d.h);
+      // Draw gradient placeholder
+      const g=ctx.createLinearGradient(0,0,d.w,d.h);
+      g.addColorStop(0,'#1a1a2e');g.addColorStop(1,'#16213e');
+      ctx.fillStyle=g;ctx.fillRect(0,0,d.w,d.h);
       resolve(fc);
     };
-    img.src = url;
+    img.src=url;
   });
 }
 
-// ── RENDER SLIDE CANVASES ──
-async function renderSlideCanvases() {
-  const dims = getCanvasDims();
-  for (let i = 0; i < slides.length; i++) {
-    const c = document.createElement('canvas');
-    c.width = dims.w;
-    c.height = dims.h;
-    const ctx = c.getContext('2d');
-    drawSlide(ctx, slides[i], i, dims);
-    slides[i].canvas = c;
-    slides[i].dataUrl = c.toDataURL('image/jpeg', 0.9);
+function drawFrame(ctx,story,ci,dims){
+  const{w,h}=dims;
+  const src=story.img;
+  if(src instanceof HTMLImageElement)ctx.drawImage(src,0,0,w,h);
+  else ctx.drawImage(src,0,0,w,h);
+
+  // Gradient overlay
+  const g=ctx.createLinearGradient(0,h*0.2,0,h);
+  g.addColorStop(0,'rgba(0,0,0,0.05)');
+  g.addColorStop(0.45,'rgba(0,0,0,0.5)');
+  g.addColorStop(1,'rgba(0,0,0,0.9)');
+  ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+
+  // Top accent line
+  ctx.fillStyle='#e63946';ctx.fillRect(0,0,w,5);
+
+  // Logo
+  const logoSize=Math.round(w*0.038);
+  ctx.font=`600 ${logoSize}px Sora,sans-serif`;
+  ctx.fillStyle='rgba(255,255,255,0.5)';
+  ctx.textAlign='left';
+  ctx.fillText('ȘTIRIRO',w*0.05,h*0.065);
+
+  // Story counter
+  ctx.font=`500 ${Math.round(w*0.032)}px Sora,sans-serif`;
+  ctx.fillStyle='rgba(255,255,255,0.4)';
+  ctx.textAlign='right';
+  ctx.fillText(`${story.idx+1}/${stories.length}`,w*0.95,h*0.065);
+  ctx.textAlign='left';
+
+  // Chunk progress dots
+  const total=story.chunks.length;
+  const ds=Math.min(w*0.016,7);
+  const dg=ds*2.5;
+  const rowW=total*ds+(total-1)*(dg-ds);
+  const startX=w*0.5-rowW*0.5;
+  const dotY=h*0.1;
+  for(let i=0;i<total;i++){
+    ctx.beginPath();
+    ctx.arc(startX+i*dg,dotY,ds*0.5,0,Math.PI*2);
+    ctx.fillStyle=i<=ci?'rgba(255,255,255,0.95)':'rgba(255,255,255,0.28)';
+    ctx.fill();
   }
+
+  // Main chunk text
+  const chunkText=story.chunks[ci];
+  const fSize=currentRatio==='16:9'?Math.round(w*0.044):Math.round(w*0.062);
+  ctx.font=`700 ${fSize}px Sora,sans-serif`;
+  ctx.fillStyle='#ffffff';
+  const maxW=w*0.86;
+  const lh=fSize*1.38;
+  const lines=wrapWords(ctx,chunkText,maxW);
+  const blockH=lines.length*lh;
+  let ty=h*0.72-blockH*0.5;
+  if(ty+blockH>h*0.88)ty=h*0.88-blockH;
+  if(ty<h*0.5)ty=h*0.5;
+  lines.forEach((line,li)=>{
+    const lw=ctx.measureText(line).width;
+    ctx.fillText(line,(w-lw)*0.5,ty+li*lh);
+  });
+
+  // Last chunk CTA
+  if(ci===total-1){
+    ctx.font=`500 ${Math.round(w*0.03)}px Sora,sans-serif`;
+    ctx.fillStyle='rgba(244,196,48,0.9)';
+    const cta=story.idx+1<stories.length?'▶ Știrea următoare':'▶ Urmărește @StiriRO';
+    const ctaW=ctx.measureText(cta).width;
+    ctx.fillText(cta,(w-ctaW)*0.5,h*0.91);
+  }
+
+  // Bottom accent line
+  ctx.fillStyle='#e63946';ctx.fillRect(0,h-5,w,5);
 }
 
-function drawSlide(ctx, slide, idx, dims) {
-  const { w, h } = dims;
-
-  // Background image
-  if (slide.img instanceof HTMLImageElement) {
-    ctx.drawImage(slide.img, 0, 0, w, h);
-  } else {
-    ctx.drawImage(slide.img, 0, 0, w, h);
+function wrapWords(ctx,text,maxW){
+  const words=text.split(' ');
+  const lines=[];let line='';
+  for(let n=0;n<words.length;n++){
+    const test=line+words[n]+' ';
+    if(ctx.measureText(test).width>maxW&&n>0){lines.push(line.trim());line=words[n]+' ';}
+    else line=test;
   }
-
-  // Dark gradient overlay bottom
-  const grad = ctx.createLinearGradient(0, h * 0.4, 0, h);
-  grad.addColorStop(0, 'rgba(0,0,0,0)');
-  grad.addColorStop(0.5, 'rgba(0,0,0,0.6)');
-  grad.addColorStop(1, 'rgba(0,0,0,0.92)');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, w, h);
-
-  // Top bar
-  ctx.fillStyle = '#e63946';
-  ctx.fillRect(0, 0, w, 6);
-
-  // Logo top left
-  ctx.font = `bold ${Math.round(w*0.04)}px Bebas Neue, sans-serif`;
-  ctx.fillStyle = 'rgba(255,255,255,0.5)';
-  ctx.fillText('ȘTIRIRO', w * 0.05, h * 0.07);
-
-  // Slide number top right
-  ctx.font = `bold ${Math.round(w*0.035)}px Sora, sans-serif`;
-  ctx.fillStyle = 'rgba(255,255,255,0.4)';
-  ctx.textAlign = 'right';
-  ctx.fillText(`${idx+1}/${slides.length}`, w * 0.95, h * 0.07);
-  ctx.textAlign = 'left';
-
-  // News number accent
-  ctx.font = `bold ${Math.round(w*0.18)}px Bebas Neue, sans-serif`;
-  ctx.fillStyle = 'rgba(230,57,70,0.15)';
-  ctx.fillText(`${idx+1}`, w * 0.05, h * 0.88);
-
-  // Main text
-  const fontSize = Math.round(w * 0.055);
-  ctx.font = `700 ${fontSize}px Sora, sans-serif`;
-  ctx.fillStyle = '#ffffff';
-  wrapText(ctx, slide.text, w * 0.06, h * 0.72, w * 0.88, fontSize * 1.35);
-
-  // Bottom line
-  ctx.fillStyle = '#e63946';
-  ctx.fillRect(0, h - 5, w, 5);
+  if(line.trim())lines.push(line.trim());
+  return lines.slice(0,5);
 }
 
-function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
-  const words = text.split(' ');
-  let line = '';
-  let lines = [];
-  for (let n = 0; n < words.length; n++) {
-    const testLine = line + words[n] + ' ';
-    const metrics = ctx.measureText(testLine);
-    if (metrics.width > maxWidth && n > 0) {
-      lines.push(line);
-      line = words[n] + ' ';
-    } else {
-      line = testLine;
-    }
-  }
-  lines.push(line);
-  lines = lines.slice(0, 4); // max 4 lines
-  lines.forEach((l, i) => ctx.fillText(l, x, y + i * lineHeight));
-}
-
-// ── SHOW PREVIEW ──
-function showPreview() {
-  const right = document.getElementById('rightPanel');
-  right.innerHTML = `
+function showPreview(){
+  currentFrame=0;isPlaying=false;
+  document.getElementById('rightPanel').innerHTML=`
     <div class="preview-section">
       <div class="preview-header">
-        <div class="preview-title">🎬 Reelul tău</div>
+        <div class="preview-title">🎬 ${allFrames.length} cadre</div>
         <div class="action-row">
-          <button class="action-btn" onclick="regenerate()">↺ Regenerează</button>
-          <button class="action-btn primary" onclick="exportVideo()">⬇ Export MP4</button>
+          <button class="action-btn" onclick="location.reload()">↺ Nou</button>
+          <button class="action-btn primary" id="expBtn" onclick="exportVideo()">⬇ Export</button>
         </div>
       </div>
-
-      <div class="slides-strip" id="slidesStrip"></div>
-
-      <div class="preview-canvas-wrap">
-        <canvas id="previewCanvas"></canvas>
+      <div class="story-viewer">
+        <div class="story-bars" id="sBars"></div>
+        <div class="tap-left" onclick="prevFrame()"></div>
+        <div class="tap-right" onclick="nextFrame()"></div>
+        <canvas id="pCanvas"></canvas>
       </div>
-
-      <div class="playback">
+      <div class="story-controls">
         <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
-        <div class="progress-bar-wrap" onclick="seekTo(event)">
-          <div class="progress-bar-fill" id="progressFill"></div>
+        <div class="ctrl-info">
+          <strong id="ctrlT">Cadru 1 din ${allFrames.length}</strong>
+          <span>Tap stânga/dreapta pentru navigare</span>
         </div>
-        <div class="time-label" id="timeLabel">0:00</div>
       </div>
-
+      <div class="slides-overview">
+        <div class="slides-ov-title">Structura reelului</div>
+        <div class="slide-rows" id="slideRows"></div>
+      </div>
       <div class="export-card">
-        <div class="export-title">Export & Distribuire</div>
-        <div class="export-options">
-          <button class="export-opt" onclick="exportVideo()">
-            <span class="eo-icon">🎬</span>MP4 Video
-          </button>
-          <button class="export-opt" onclick="exportGif()">
-            <span class="eo-icon">🎞️</span>GIF Animat
-          </button>
-          <button class="export-opt" onclick="exportFrames()">
-            <span class="eo-icon">🖼️</span>Imagini JPG
-          </button>
+        <div class="export-title">Export</div>
+        <div class="export-opts">
+          <button class="export-opt" onclick="exportVideo()"><span class="eo-icon">🎬</span>Video WebM</button>
+          <button class="export-opt" onclick="exportFrames()"><span class="eo-icon">🖼️</span>Cadre JPG</button>
         </div>
       </div>
-    </div>
-  `;
-
-  // Render thumbnails
-  renderThumbs();
+    </div>`;
 
   // Init canvas
-  initPreviewCanvas();
+  const cv=document.getElementById('pCanvas');
+  const d=getDims();
+  cv.width=d.w;cv.height=d.h;
+
+  // Bars
+  document.getElementById('sBars').innerHTML=allFrames.map((_,i)=>`<div class="story-bar"><div class="story-bar-fill" id="bf${i}"></div></div>`).join('');
+
+  // Rows
+  document.getElementById('slideRows').innerHTML=allFrames.map((f,i)=>`
+    <div class="slide-row ${i===0?'active':''}" id="row${i}" onclick="goTo(${i})">
+      <div class="slide-row-num">${i+1}</div>
+      <div class="slide-row-text">${stories[f.si].chunks[f.ci]}</div>
+      <div class="slide-row-badge">Știrea ${f.si+1}</div>
+    </div>`).join('');
+
+  goTo(0);
 }
 
-function renderThumbs() {
-  const strip = document.getElementById('slidesStrip');
-  strip.innerHTML = slides.map((s, i) => `
-    <div class="slide-thumb ${i===0?'active':''}" onclick="goToSlide(${i})" id="thumb-${i}">
-      <img src="${s.dataUrl}" alt="Slide ${i+1}">
-      <div class="thumb-num">${i+1}</div>
-    </div>
-  `).join('');
-}
-
-function initPreviewCanvas() {
-  const canvas = document.getElementById('previewCanvas');
-  if (!canvas || !slides.length) return;
-  const dims = getCanvasDims();
-  canvas.width = dims.w;
-  canvas.height = dims.h;
-  drawSlideOnPreview(0);
-  totalDuration = slides.length * slideDuration;
-}
-
-function drawSlideOnPreview(idx) {
-  if (idx >= slides.length) return;
-  currentSlideIdx = idx;
-  const canvas = document.getElementById('previewCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const dims = getCanvasDims();
-  drawSlide(ctx, slides[idx], idx, dims);
-
-  // Update thumbs
-  document.querySelectorAll('.slide-thumb').forEach((t, i) => {
-    t.classList.toggle('active', i === idx);
+function goTo(idx){
+  if(idx<0||idx>=allFrames.length)return;
+  currentFrame=idx;
+  const cv=document.getElementById('pCanvas');
+  if(!cv)return;
+  const f=allFrames[idx];
+  drawFrame(cv.getContext('2d'),stories[f.si],f.ci,getDims());
+  allFrames.forEach((_,i)=>{
+    const bf=document.getElementById('bf'+i);
+    if(bf)bf.className='story-bar-fill'+(i<idx?' done':'');
   });
+  document.querySelectorAll('.slide-row').forEach((r,i)=>r.classList.toggle('active',i===idx));
+  const ct=document.getElementById('ctrlT');
+  if(ct)ct.textContent=`Cadru ${idx+1} din ${allFrames.length} • Știrea ${allFrames[idx].si+1}`;
 }
 
-function goToSlide(idx) {
+function nextFrame(){if(currentFrame<allFrames.length-1)goTo(currentFrame+1);else stopPlay();}
+function prevFrame(){if(currentFrame>0)goTo(currentFrame-1);}
+
+function togglePlay(){isPlaying?stopPlay():startPlay();}
+function startPlay(){
+  isPlaying=true;
+  document.getElementById('playBtn').textContent='⏸';
+  playInterval=setInterval(()=>{
+    if(currentFrame>=allFrames.length-1){stopPlay();return;}
+    goTo(currentFrame+1);
+  },FRAME_MS);
+}
+function stopPlay(){
+  isPlaying=false;
+  const b=document.getElementById('playBtn');
+  if(b)b.textContent='▶';
+  clearInterval(playInterval);
+}
+
+async function exportVideo(){
+  const btn=document.getElementById('expBtn');
+  if(btn){btn.textContent='⏳...';btn.disabled=true;}
   stopPlay();
-  elapsed = idx * slideDuration;
-  drawSlideOnPreview(idx);
-  updateProgress();
-}
-
-// ── PLAYBACK ──
-let startTime = null;
-let pausedElapsed = 0;
-
-function togglePlay() {
-  if (isPlaying) stopPlay();
-  else startPlay();
-}
-
-function startPlay() {
-  isPlaying = true;
-  document.getElementById('playBtn').textContent = '⏸';
-  startTime = performance.now() - pausedElapsed * 1000;
-  animatePlay();
-}
-
-function stopPlay() {
-  isPlaying = false;
-  pausedElapsed = elapsed;
-  document.getElementById('playBtn').textContent = '▶';
-  if (animFrame) cancelAnimationFrame(animFrame);
-}
-
-function animatePlay() {
-  if (!isPlaying) return;
-  const now = performance.now();
-  elapsed = (now - startTime) / 1000;
-
-  if (elapsed >= totalDuration) {
-    elapsed = 0;
-    pausedElapsed = 0;
-    startTime = performance.now();
-  }
-
-  const slideIdx = Math.min(Math.floor(elapsed / slideDuration), slides.length - 1);
-  if (slideIdx !== currentSlideIdx) drawSlideOnPreview(slideIdx);
-
-  updateProgress();
-  animFrame = requestAnimationFrame(animatePlay);
-}
-
-function updateProgress() {
-  const fill = document.getElementById('progressFill');
-  const label = document.getElementById('timeLabel');
-  if (fill) fill.style.width = ((elapsed / totalDuration) * 100) + '%';
-  if (label) {
-    const s = Math.floor(elapsed);
-    const total = Math.floor(totalDuration);
-    label.textContent = `${s}:${String(s%60).padStart(2,'0')} / ${Math.floor(total/60)}:${String(total%60).padStart(2,'0')}`;
-  }
-}
-
-function seekTo(e) {
-  const rect = e.currentTarget.getBoundingClientRect();
-  const pct = (e.clientX - rect.left) / rect.width;
-  elapsed = pct * totalDuration;
-  pausedElapsed = elapsed;
-  if (isPlaying) startTime = performance.now() - elapsed * 1000;
-  const idx = Math.min(Math.floor(elapsed / slideDuration), slides.length - 1);
-  drawSlideOnPreview(idx);
-  updateProgress();
-}
-
-// ── EXPORT VIDEO (MediaRecorder) ──
-async function exportVideo() {
-  const btn = event.target;
-  btn.textContent = '⏳ Se exportă...';
-  btn.disabled = true;
-
-  stopPlay();
-
-  const dims = getCanvasDims();
-  const exportCanvas = document.createElement('canvas');
-  exportCanvas.width = dims.w;
-  exportCanvas.height = dims.h;
-  const ctx = exportCanvas.getContext('2d');
-
-  const stream = exportCanvas.captureStream(30);
-  const recorder = new MediaRecorder(stream, {
-    mimeType: MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm'
-  });
-
-  const chunks = [];
-  recorder.ondataavailable = e => chunks.push(e.data);
-  recorder.onstop = () => {
-    const blob = new Blob(chunks, { type: 'video/webm' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `reel-stiriro-${Date.now()}.webm`;
-    a.click();
-    URL.revokeObjectURL(url);
-    btn.textContent = '⬇ Export MP4';
-    btn.disabled = false;
+  const d=getDims();
+  const ec=document.createElement('canvas');
+  ec.width=d.w;ec.height=d.h;
+  const ctx=ec.getContext('2d');
+  const stream=ec.captureStream(30);
+  const mime=MediaRecorder.isTypeSupported('video/webm;codecs=vp9')?'video/webm;codecs=vp9':'video/webm';
+  const rec=new MediaRecorder(stream,{mimeType:mime});
+  const chunks=[];
+  rec.ondataavailable=e=>chunks.push(e.data);
+  rec.onstop=()=>{
+    const blob=new Blob(chunks,{type:'video/webm'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download='reel-stiriro-'+Date.now()+'.webm';
+    a.click();URL.revokeObjectURL(url);
+    if(btn){btn.textContent='⬇ Export';btn.disabled=false;}
   };
-
-  recorder.start();
-
-  // Render each slide for slideDuration seconds at 30fps
-  const fps = 30;
-  const framesPerSlide = slideDuration * fps;
-
-  for (let i = 0; i < slides.length; i++) {
-    drawSlide(ctx, slides[i], i, dims);
-    for (let f = 0; f < framesPerSlide; f++) {
-      await new Promise(r => setTimeout(r, 1000/fps));
-    }
+  rec.start();
+  for(let i=0;i<allFrames.length;i++){
+    const img=new Image();img.src=allFrames[i].dataUrl;
+    await new Promise(r=>{img.onload=r;if(img.complete)r();});
+    ctx.drawImage(img,0,0,d.w,d.h);
+    const fps=30,frames=Math.round(FRAME_MS/(1000/fps));
+    for(let f=0;f<frames;f++)await new Promise(r=>setTimeout(r,1000/fps));
   }
-
-  recorder.stop();
+  rec.stop();
 }
 
-// ── EXPORT GIF (frame by frame download) ──
-function exportGif() {
-  // Download each frame as JPG
-  exportFrames();
-}
-
-// ── EXPORT FRAMES ──
-function exportFrames() {
-  slides.forEach((s, i) => {
-    const a = document.createElement('a');
-    a.href = s.dataUrl;
-    a.download = `stiriro-slide-${i+1}.jpg`;
+function exportFrames(){
+  allFrames.forEach((f,i)=>{
+    const a=document.createElement('a');
+    a.href=f.dataUrl;
+    a.download=`stiriro-stire${f.si+1}-cadru${f.ci+1}.jpg`;
     a.click();
   });
-}
-
-// ── REGENERATE ──
-function regenerate() {
-  stopPlay();
-  generate();
 }
 </script>
 </body>
