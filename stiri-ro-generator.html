@@ -453,7 +453,7 @@
     for (const p of platforms) {
       const prompt = buildPrompt(news, p, tone);
       try {
-        const res = await fetch('https://api.anthropic.com/v1/messages', {
+        const res = await fetch('https://dailystiri.vercel.app/api/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
