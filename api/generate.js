@@ -1,16 +1,10 @@
-export default async function handler(req, res) {
-  // Allow all origins (CORS fix)
+module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
     const { messages, max_tokens = 1000 } = req.body;
@@ -19,22 +13,22 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+        'Authorization': 'Bearer ' + process.env.GROQ_API_KEY,
       },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
-        max_tokens,
-        messages,
+        max_tokens: max_tokens,
+        messages: messages,
       }),
     });
 
     const data = await response.json();
+    const text = data.choices && data.choices[0] ? data.choices[0].message.content : '';
 
-    // Returnează în formatul Anthropic ca să nu schimbăm HTML-urile
-    const text = data.choices?.[0]?.message?.content || '';
     return res.status(200).json({
-      content: [{ type: 'text', text }]
+      content: [{ type: 'text', text: text }]
     });
+
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
