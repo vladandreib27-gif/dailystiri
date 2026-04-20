@@ -748,8 +748,9 @@ Răspunde DOAR cu un JSON array de strings, ex: ["prompt1","prompt2"]. Fără al
 
 // ── POLLINATIONS URL ──
 function buildPollinationsUrl(prompt, w, h) {
-  const encoded = encodeURIComponent(`${prompt}, ${currentStyle}, high quality, no text, no watermark`);
-  return `https://image.pollinations.ai/prompt/${encoded}?width=${w}&height=${h}&nologo=true&seed=${Math.floor(Math.random()*99999)}`;
+  const fullPrompt = prompt + ", " + currentStyle + ", high quality, no text, no watermark";
+  const seed = Math.floor(Math.random()*99999);
+  return "https://dailystiri.vercel.app/api/image?prompt=" + encodeURIComponent(fullPrompt) + "&width=" + w + "&height=" + h + "&seed=" + seed;
 }
 
 // ── LOAD IMAGE ──
