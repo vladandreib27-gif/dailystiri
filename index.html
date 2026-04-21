@@ -946,34 +946,64 @@ function stopPlay(){
 }
 
 async function exportVid(fmt){
-  const btn=document.getElementById('exp'+fmt.charAt(0).toUpperCase()+fmt.slice(1));
-  if(btn){btn.textContent='⏳...';btn.disabled=true;}
-  stopPlay();
-  const d=getDims();const ec=document.createElement('canvas');ec.width=d.w;ec.height=d.h;
-  const ctx=ec.getContext('2d');const stream=ec.captureStream(30);
-  const mimes=fmt==='mp4'
-    ?['video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9','video/webm']
-    :['video/webm;codecs=vp9','video/webm'];
-  const mime=mimes.find(m=>MediaRecorder.isTypeSupported(m))||'video/webm';
-  const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:reelQuality==='hd'?8000000:4000000});
-  const chunks=[];
-  rec.ondataavailable=e=>chunks.push(e.data);
-  rec.onstop=()=>{
-    const blob=new Blob(chunks,{type:mime});const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;a.download=`reel-stiriro-${Date.now()}.${fmt==='mp4'&&mime.includes('mp4')?'mp4':'webm'}`;
-    a.click();URL.revokeObjectURL(url);
-    if(btn){btn.textContent=fmt==='mp4'?'⬇ MP4 HD':'⬇ WebM';btn.disabled=false;}
-  };
-  rec.start();
-  const fps=30;const frameDurMs=reelFrameDur*1000;
-  for(let i=0;i<allFrames.length;i++){
-    const img=new Image();img.src=allFrames[i].dataUrl;
-    await new Promise(r=>{img.onload=r;if(img.complete)r();});
-    ctx.drawImage(img,0,0,d.w,d.h);
-    const frames=Math.round(frameDurMs/(1000/fps));
-    for(let f=0;f<frames;f++)await new Promise(r=>setTimeout(r,1000/fps));
+  const btnId = 'exp' + fmt.charAt(0).toUpperCase() + fmt.slice(1);
+  const btn = document.getElementById(btnId);
+  if(btn){ btn.textContent = '⏳ Se exporta...'; btn.disabled = true; }
+  stopPlay(); stopTTS();
+
+  const d = getDims();
+  const ec = document.createElement('canvas');
+  ec.width = d.w; ec.height = d.h;
+  const ctx = ec.getContext('2d');
+
+  // Pre-load all frame images first
+  const loadedImgs = [];
+  for(let i = 0; i < allFrames.length; i++){
+    const img = new Image();
+    img.src = allFrames[i].dataUrl;
+    await new Promise(r => { img.onload = r; img.onerror = r; if(img.complete) r(); });
+    loadedImgs.push(img);
   }
+
+  // Draw first frame so stream starts with content
+  ctx.drawImage(loadedImgs[0], 0, 0, d.w, d.h);
+  await new Promise(r => setTimeout(r, 100));
+
+  const stream = ec.captureStream(30);
+  const mimes = fmt === 'mp4'
+    ? ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm']
+    : ['video/webm;codecs=vp9', 'video/webm'];
+  const mime = mimes.find(m => MediaRecorder.isTypeSupported(m)) || 'video/webm';
+  const bitrate = reelQuality === 'hd' ? 10000000 : 5000000;
+  const rec = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: bitrate });
+  const chunks = [];
+  rec.ondataavailable = e => { if(e.data.size > 0) chunks.push(e.data); };
+  rec.onstop = () => {
+    const blob = new Blob(chunks, { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const ext = (fmt === 'mp4' && mime.includes('mp4')) ? 'mp4' : 'webm';
+    a.href = url; a.download = 'reel-stiriro-' + Date.now() + '.' + ext;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    if(btn){ btn.textContent = fmt === 'mp4' ? '\u2b07 MP4 HD' : '\u2b07 WebM'; btn.disabled = false; }
+  };
+
+  rec.start(100); // collect data every 100ms
+  const fps = 30;
+  const frameDurMs = reelFrameDur * 1000;
+  const framesPerSlide = Math.max(1, Math.round(frameDurMs / (1000 / fps)));
+
+  for(let i = 0; i < loadedImgs.length; i++){
+    // Draw frame repeatedly for its duration
+    for(let f = 0; f < framesPerSlide; f++){
+      ctx.drawImage(loadedImgs[i], 0, 0, d.w, d.h);
+      await new Promise(r => setTimeout(r, 1000 / fps));
+    }
+  }
+
+  // Small pause then stop
+  await new Promise(r => setTimeout(r, 200));
   rec.stop();
 }
 
