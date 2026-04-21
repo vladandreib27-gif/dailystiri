@@ -273,43 +273,54 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
 
 <!-- ═══════════ PAGE: POSTARE ═══════════ -->
 <div class="page active" id="page-postare">
-  <div class="split">
+  <div style="display:grid;grid-template-columns:320px 1fr;min-height:calc(100vh - 56px)">
     <div class="panel-l">
-      <h2 class="ptitle">Generator<br><em>Postări</em></h2>
-      <p class="psub">Introdu știrile zilei și AI-ul scrie postările gata de publicat.</p>
+      <h2 class="ptitle">AI<br><em>Asistent</em></h2>
+      <p class="psub">Cere orice — postări, idei, analize, strategii, scripturi, hashtag-uri, titluri.</p>
 
       <div class="ctrl-section">
-        <span class="ctrl-label">Platformă</span>
-        <div class="row3">
-          <button class="pill-btn active" data-plat="instagram" onclick="selPlat(this)"><span class="bi">📸</span>Instagram</button>
-          <button class="pill-btn" data-plat="facebook" onclick="selPlat(this)"><span class="bi">📘</span>Facebook</button>
-          <button class="pill-btn" data-plat="both" onclick="selPlat(this)"><span class="bi">✨</span>Ambele</button>
+        <span class="ctrl-label">Comenzi rapide</span>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <button class="secondary-btn" style="text-align:left;font-size:0.75rem" onclick="quickCmd('Scrie 5 idei de postări virale pentru un cont de știri din România')">💡 Idei postări virale</button>
+          <button class="secondary-btn" style="text-align:left;font-size:0.75rem" onclick="quickCmd('Scrie un caption Instagram pentru știrea: ')">📸 Caption Instagram</button>
+          <button class="secondary-btn" style="text-align:left;font-size:0.75rem" onclick="quickCmd('Scrie un script pentru un Reel de 30 secunde despre: ')">🎬 Script Reel 30s</button>
+          <button class="secondary-btn" style="text-align:left;font-size:0.75rem" onclick="quickCmd('Analizează această știre și explică impactul ei asupra României: ')">🔍 Analiză știre</button>
+          <button class="secondary-btn" style="text-align:left;font-size:0.75rem" onclick="quickCmd('Generează 20 hashtag-uri relevante pentru: ')">🏷️ Hashtag-uri custom</button>
+          <button class="secondary-btn" style="text-align:left;font-size:0.75rem" onclick="quickCmd('Scrie un titlu captivant și un hook pentru postarea despre: ')">🪝 Titlu + Hook</button>
+          <button class="secondary-btn" style="text-align:left;font-size:0.75rem" onclick="quickCmd('Scrie variante de CTA (call to action) pentru un cont de știri din România')">📢 Call to Action</button>
+          <button class="secondary-btn" style="text-align:left;font-size:0.75rem" onclick="quickCmd('Creează o strategie de creștere pentru un cont de știri pe Instagram cu 0 urmăritori')">📈 Strategie creștere</button>
         </div>
       </div>
 
-      <div class="ctrl-section">
-        <span class="ctrl-label">Ton</span>
+      <div class="ctrl-section" style="margin-top:8px">
+        <span class="ctrl-label">Ton răspuns</span>
         <div class="chip-wrap">
-          <button class="chip active" data-tone="informativ" onclick="selTone(this)">📰 Informativ</button>
-          <button class="chip" data-tone="alert" onclick="selTone(this)">🚨 Breaking</button>
-          <button class="chip" data-tone="analitic" onclick="selTone(this)">🔍 Analitic</button>
-          <button class="chip" data-tone="pozitiv" onclick="selTone(this)">✅ Pozitiv</button>
-          <button class="chip" data-tone="ironic" onclick="selTone(this)">😏 Ironic</button>
+          <button class="chip active" data-aitone="profesionist" onclick="selAiTone(this)">🎯 Profesionist</button>
+          <button class="chip" data-aitone="casual" onclick="selAiTone(this)">😎 Casual</button>
+          <button class="chip" data-aitone="creativ" onclick="selAiTone(this)">🎨 Creativ</button>
+          <button class="chip" data-aitone="scurt" onclick="selAiTone(this)">⚡ Scurt</button>
         </div>
       </div>
 
-      <div class="ctrl-section">
-        <span class="ctrl-label">Știrea</span>
-        <textarea class="txt-input" id="newsInput" rows="5" placeholder="Ex: Guvernul a aprobat mărirea salariului minim la 4.050 lei brut..."></textarea>
-      </div>
-
-      <button class="primary-btn" id="genPostBtn" onclick="genPost()">⚡ Generează postarea</button>
+      <button class="secondary-btn" onclick="clearChat()" style="width:100%;margin-top:8px;color:var(--muted)">🗑 Șterge conversația</button>
     </div>
 
-    <div class="panel-r" id="postareOut">
-      <div class="placeholder">
-        <div class="ph-icon">✍️</div>
-        <p class="ph-text">Introdu știrea și apasă Generează — AI-ul scrie postarea gata de copiat.</p>
+    <div style="display:flex;flex-direction:column;height:calc(100vh - 56px)">
+      <!-- Chat messages -->
+      <div id="chatMessages" style="flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px">
+        <div style="text-align:center;padding:40px 20px">
+          <div style="font-size:3rem;opacity:0.15;margin-bottom:12px">🤖</div>
+          <div style="font-size:0.85rem;color:var(--muted);line-height:1.6;max-width:340px;margin:0 auto">Bună! Sunt asistentul tău AI pentru ȘtiriRO. Pot scrie postări, scripturi, analize, strategii — orice ai nevoie pentru contul tău.</div>
+        </div>
+      </div>
+
+      <!-- Input area -->
+      <div style="padding:16px 24px;border-top:1px solid var(--border);background:var(--surface)">
+        <div style="display:flex;gap:10px;align-items:flex-end">
+          <textarea id="chatInput" rows="2" class="txt-input" placeholder="Scrie orice întrebare sau cerere..." style="flex:1;resize:none;line-height:1.5" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
+          <button onclick="sendChat()" id="chatSendBtn" style="width:44px;height:44px;background:var(--accent);border:none;border-radius:9px;color:white;font-size:1.1rem;cursor:pointer;flex-shrink:0;transition:all 0.2s" onmouseover="this.style.background='#ff4757'" onmouseout="this.style.background='var(--accent)'">➤</button>
+        </div>
+        <div style="font-size:0.65rem;color:var(--muted);margin-top:6px">Enter = trimite • Shift+Enter = linie nouă</div>
       </div>
     </div>
   </div>
@@ -377,25 +388,29 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
       </div>
 
       <div class="ctrl-section">
-        <span class="ctrl-label">🎵 Sunet fundal reel</span>
+        <span class="ctrl-label">🎵 Audio fundal</span>
         <div class="chip-wrap" style="margin-bottom:8px">
-          <button class="chip active" data-audio="none" onclick="selAudio(this)">🔇 Fara sunet</button>
-          <button class="chip" data-audio="upload" onclick="selAudio(this)">📁 Upload audio</button>
-          <button class="chip" data-audio="tts" onclick="selAudio(this)">🎙️ Voiceover AI</button>
+          <button class="chip active" data-audio="none" onclick="selAudio(this)">🔇 Fără</button>
+          <button class="chip" data-audio="upload" onclick="selAudio(this)">📁 Upload</button>
+          <button class="chip" data-audio="tts" onclick="selAudio(this)">🎙️ Voiceover</button>
         </div>
-        <div id="audioUploadWrap" style="display:none;margin-top:8px">
+        <div id="audioUploadWrap" style="display:none">
           <input type="file" id="audioFileIn" accept="audio/*" onchange="loadAudioFile(this)" style="display:none">
-          <button class="secondary-btn" onclick="document.getElementById('audioFileIn').click()" style="width:100%">📂 Alege fisier MP3/WAV</button>
+          <button class="secondary-btn" onclick="document.getElementById('audioFileIn').click()" style="width:100%">📂 Alege MP3/WAV</button>
           <div id="audioFileName" style="font-size:0.72rem;color:#55556a;margin-top:5px;text-align:center"></div>
-        </div>
-        <div id="audioTtsWrap" style="display:none;margin-top:8px">
-          <div style="font-size:0.72rem;color:#55556a;line-height:1.5;padding:8px 10px;background:#0f0f1a;border-radius:6px">Voiceover-ul citeste automat textul fiecarei stiri in timpul reelului, folosind sinteza vocala a browserului.</div>
           <div style="margin-top:8px">
-            <span class="ctrl-label" style="margin-bottom:6px;display:block">Viteza voce</span>
+            <span class="ctrl-label" style="margin-bottom:4px;display:block">Volum</span>
             <div class="slider-row">
-              <input type="range" min="0.5" max="1.5" value="0.9" step="0.1" id="ttsRate" oninput="document.getElementById('ttsRateVal').textContent=this.value+'x'">
-              <div class="slider-val" id="ttsRateVal">0.9x</div>
+              <input type="range" min="0" max="100" value="70" id="audioVol" oninput="setAudioVol(this.value)">
+              <div class="slider-val" id="audioVolVal">70%</div>
             </div>
+          </div>
+        </div>
+        <div id="audioTtsWrap" style="display:none">
+          <div style="font-size:0.72rem;color:#55556a;line-height:1.5;padding:8px 10px;background:#0f0f1a;border-radius:6px;margin-bottom:8px">Browserul citește textul fiecărui cadru în română.</div>
+          <div class="slider-row">
+            <input type="range" min="0.5" max="1.5" value="0.9" step="0.1" id="ttsRate" oninput="document.getElementById('ttsRateVal').textContent=this.value+'x'">
+            <div class="slider-val" id="ttsRateVal">0.9x</div>
           </div>
         </div>
       </div>
@@ -639,10 +654,11 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
 </div>
 
 <script>
+<script>
 const API = 'https://dailystiri.vercel.app/api/generate';
 const IMG_API = 'https://dailystiri.vercel.app/api/image';
 
-// ── NAVIGATION ──
+// ── NAV ──
 function goPage(id, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -650,79 +666,162 @@ function goPage(id, btn) {
   btn.classList.add('active');
 }
 function selTab(id, btn) {
-  btn.closest('.page,.split,.panel-r,[style]').querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-  btn.closest('div').querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
+  const page = btn.closest('.page');
+  page.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  page.querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   btn.classList.add('active');
 }
 
-// ── POSTARE STATE ──
-let postPlat = 'instagram', postTone = 'informativ';
-function selPlat(btn) { document.querySelectorAll('[data-plat]').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); postPlat=btn.dataset.plat; }
-function selTone(btn) { document.querySelectorAll('[data-tone]').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); postTone=btn.dataset.tone; }
+// ══════════════════════════════════════
+// AI CHAT
+// ══════════════════════════════════════
+let chatHistory = [];
+let aiTone = 'profesionist';
 
-async function genPost() {
-  const news = document.getElementById('newsInput').value.trim();
-  if (!news) return;
-  const btn = document.getElementById('genPostBtn');
-  btn.disabled = true;
-  const out = document.getElementById('postareOut');
-  out.innerHTML = '<div class="placeholder"><div class="ph-icon" style="animation:spin 1s linear infinite">⚡</div><p class="ph-text">AI-ul scrie postarea...</p></div>';
+function selAiTone(btn) {
+  document.querySelectorAll('[data-aitone]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  aiTone = btn.dataset.aitone;
+}
 
-  const toneMap = { informativ:'neutru, informativ, jurnalistic', alert:'urgent, breaking news, captivant', analitic:'analitic, explici contextul', pozitiv:'pozitiv, constructiv', ironic:'ușor ironic, cu umor subtil' };
-  const platforms = postPlat === 'both' ? ['instagram','facebook'] : [postPlat];
-  const results = [];
+function quickCmd(txt) {
+  document.getElementById('chatInput').value = txt;
+  document.getElementById('chatInput').focus();
+}
 
-  for (const p of platforms) {
-    const platDesc = p === 'instagram'
-      ? 'Instagram (max 2200 caractere, 15-20 hashtag-uri la final, emoji-uri, CTA scurt)'
-      : 'Facebook (max 400 cuvinte, max 5 hashtag-uri, întreabă opinia urmăritorilor)';
-    try {
-      const res = await fetch(API, {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ max_tokens:1000, messages:[{ role:'user', content:`Ești social media manager pentru un cont de știri din România cu ton ${toneMap[postTone]}. Scrie o postare pentru ${platDesc} bazată pe: "${news}". Returnează DOAR textul postării.` }] })
+function clearChat() {
+  chatHistory = [];
+  document.getElementById('chatMessages').innerHTML = `
+    <div style="text-align:center;padding:40px 20px">
+      <div style="font-size:3rem;opacity:0.15;margin-bottom:12px">🤖</div>
+      <div style="font-size:0.85rem;color:var(--muted);line-height:1.6;max-width:340px;margin:0 auto">Bună! Sunt asistentul tău AI pentru ȘtiriRO. Pot scrie postări, scripturi, analize, strategii — orice ai nevoie.</div>
+    </div>`;
+}
+
+function addChatMsg(role, text) {
+  const wrap = document.getElementById('chatMessages');
+  const isUser = role === 'user';
+  const div = document.createElement('div');
+  div.style.cssText = `display:flex;justify-content:${isUser?'flex-end':'flex-start'};`;
+  const bubble = document.createElement('div');
+  bubble.style.cssText = `max-width:78%;padding:12px 16px;border-radius:${isUser?'14px 14px 4px 14px':'14px 14px 14px 4px'};background:${isUser?'var(--accent)':'var(--card)'};color:${isUser?'white':'var(--text)'};font-size:0.83rem;line-height:1.7;white-space:pre-wrap;border:1px solid ${isUser?'transparent':'var(--border)'};`;
+  bubble.textContent = text;
+
+  if (!isUser) {
+    // Copy button
+    const copyBtn = document.createElement('button');
+    copyBtn.textContent = 'Copiaza';
+    copyBtn.style.cssText = 'display:block;margin-top:8px;padding:4px 12px;background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--muted);font-family:Sora,sans-serif;font-size:0.7rem;cursor:pointer;transition:all 0.2s';
+    copyBtn.onclick = () => {
+      navigator.clipboard.writeText(text).then(() => {
+        copyBtn.textContent = '✓ Copiat!';
+        copyBtn.style.color = 'var(--green)';
+        setTimeout(() => { copyBtn.textContent = 'Copiaza'; copyBtn.style.color = ''; }, 2000);
       });
-      const data = await res.json();
-      results.push({ plat: p, text: data.content[0].text });
-    } catch(e) {
-      results.push({ plat: p, text: 'Eroare. Încearcă din nou.' });
-    }
+    };
+    bubble.appendChild(copyBtn);
   }
 
-  out.innerHTML = results.map(r => `
-    <div class="out-card fade-up">
-      <div class="out-card-head">
-        <div class="out-card-label">${r.plat === 'instagram' ? '📸 Instagram' : '📘 Facebook'}</div>
-        <button class="copy-btn" onclick="copyOut(this,\`${esc(r.text)}\`)">Copiază</button>
-      </div>
-      <div class="out-card-body">${r.text}</div>
-    </div>`).join('');
+  div.appendChild(bubble);
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+function addTypingIndicator() {
+  const wrap = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.id = 'typingIndicator';
+  div.style.cssText = 'display:flex;justify-content:flex-start;';
+  div.innerHTML = '<div style="padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:14px 14px 14px 4px;display:flex;gap:5px;align-items:center"><span style="width:7px;height:7px;border-radius:50%;background:var(--muted);animation:pdot 1s infinite"></span><span style="width:7px;height:7px;border-radius:50%;background:var(--muted);animation:pdot 1s 0.2s infinite"></span><span style="width:7px;height:7px;border-radius:50%;background:var(--muted);animation:pdot 1s 0.4s infinite"></span></div>';
+  wrap.appendChild(div);
+  wrap.scrollTop = wrap.scrollHeight;
+}
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  const btn = document.getElementById('chatSendBtn');
+  btn.disabled = true;
+  input.value = '';
+
+  addChatMsg('user', msg);
+  chatHistory.push({ role: 'user', content: msg });
+  addTypingIndicator();
+
+  const toneMap = {
+    profesionist: 'Esti un expert in social media si jurnalism digital pentru Romania. Raspunzi profesionist, structurat si practic.',
+    casual: 'Esti un prieten expert in social media din Romania. Raspunzi casual, prietenos si direct.',
+    creativ: 'Esti un copywriter creativ specializat pe social media din Romania. Raspunzi cu idei originale si neconventionale.',
+    scurt: 'Esti un expert in social media. Raspunzi SCURT si LA OBIECT, maxim 3-4 propozitii sau bullet points.'
+  };
+
+  const systemPrompt = toneMap[aiTone] || toneMap.profesionist;
+  const messages = [
+    { role: 'user', content: systemPrompt + '
+
+Intrebare/Cerere: ' + chatHistory[0].content }
+  ];
+  if (chatHistory.length > 1) {
+    // Include conversation context
+    const allMsgs = chatHistory.slice(0, -1).map(m => m.role + ': ' + m.content).join('
+');
+    messages[0].content = systemPrompt + '
+
+Conversatie anterioara:
+' + allMsgs + '
+
+Mesaj curent: ' + msg;
+  }
+
+  try {
+    const res = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ max_tokens: 1000, messages })
+    });
+    const data = await res.json();
+    const reply = data.content[0].text;
+    document.getElementById('typingIndicator')?.remove();
+    addChatMsg('assistant', reply);
+    chatHistory.push({ role: 'assistant', content: reply });
+    if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+  } catch(e) {
+    document.getElementById('typingIndicator')?.remove();
+    addChatMsg('assistant', 'Eroare de conexiune. Incearca din nou.');
+  }
   btn.disabled = false;
 }
 
-// ── REEL STATE ──
+// ══════════════════════════════════════
+// REEL STATE
+// ══════════════════════════════════════
 let reelNews=[], reelRatio='9:16', reelStyle='photorealistic news photography, ultra detailed 4k';
 let reelWordsPerFrame=10, reelFrameDur=3, reelTxtSize=6, reelQuality='standard';
+let audioMode='none', uploadedAudioUrl=null, audioVolume=0.7;
 let stories=[], allFrames=[], curFrame=0, isPlaying=false, playIv=null;
+let audioEl=null;
 
-(function initReel(){ addReelNews(); addReelNews(); addReelNews(); })();
+(function(){ addReelNews(); addReelNews(); addReelNews(); })();
 
-function addReelNews() {
+function addReelNews(){
   if(reelNews.length>=5)return;
   reelNews.push({id:Date.now()+Math.random(),text:''});
   renderReelList();
 }
-function removeReelNews(id) {
+function removeReelNews(id){
   if(reelNews.length<=1)return;
   reelNews=reelNews.filter(n=>n.id!==id);
   renderReelList();
 }
-function renderReelList() {
+function renderReelList(){
   document.getElementById('reelNewsList').innerHTML=reelNews.map((item,i)=>`
     <div class="news-item">
-      <div class="news-item-num">ȘTIREA ${i+1}</div>
-      <textarea placeholder="Scrie știrea complet — textul apare progresiv pe imagine..." oninput="reelNews[${i}].text=this.value" rows="4">${item.text}</textarea>
-      ${reelNews.length>1?`<button class="news-remove" onclick="removeReelNews(${item.id})">✕</button>`:''}
+      <div class="news-item-num">STIREA ${i+1}</div>
+      <textarea placeholder="Scrie stirea complet..." oninput="reelNews[${i}].text=this.value" rows="4">${item.text}</textarea>
+      ${reelNews.length>1?`<button class="news-remove" onclick="removeReelNews(${item.id})">x</button>`:''}
     </div>`).join('');
 }
 function selRatio(btn){document.querySelectorAll('[data-ratio]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');reelRatio=btn.dataset.ratio;}
@@ -731,32 +830,74 @@ function selQuality(btn){document.querySelectorAll('[data-quality]').forEach(b=>
 function updWords(v){reelWordsPerFrame=parseInt(v);document.getElementById('wordsVal').textContent=v+' cuv.';}
 function updDur(v){reelFrameDur=parseFloat(v);document.getElementById('durVal').textContent=v+'s';}
 function updTxtSize(v){reelTxtSize=parseInt(v);document.getElementById('txtSizeVal').textContent=v+'%';}
+function setAudioVol(v){audioVolume=parseInt(v)/100;document.getElementById('audioVolVal').textContent=v+'%';if(audioEl)audioEl.volume=audioVolume;}
 
-function getDims(){
-  if(reelRatio==='9:16')return{w:reelQuality==='hd'?720:540,h:reelQuality==='hd'?1280:960};
-  if(reelRatio==='1:1')return{w:reelQuality==='hd'?1080:720,h:reelQuality==='hd'?1080:720};
-  return{w:reelQuality==='hd'?1280:960,h:reelQuality==='hd'?720:540};
+function selAudio(btn){
+  document.querySelectorAll('[data-audio]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  audioMode=btn.dataset.audio;
+  document.getElementById('audioUploadWrap').style.display=audioMode==='upload'?'block':'none';
+  document.getElementById('audioTtsWrap').style.display=audioMode==='tts'?'block':'none';
 }
 
+function loadAudioFile(input){
+  const file=input.files[0];
+  if(!file)return;
+  if(uploadedAudioUrl)URL.revokeObjectURL(uploadedAudioUrl);
+  uploadedAudioUrl=URL.createObjectURL(file);
+  document.getElementById('audioFileName').textContent='✓ '+file.name;
+}
+
+function playAudio(){
+  if(audioMode==='upload'&&uploadedAudioUrl){
+    if(!audioEl){audioEl=new Audio();audioEl.loop=true;}
+    audioEl.src=uploadedAudioUrl;
+    audioEl.volume=audioVolume;
+    audioEl.play().catch(()=>{});
+  }
+}
+function stopAudio(){
+  if(audioEl){audioEl.pause();audioEl.currentTime=0;}
+  stopTTS();
+}
+function stopTTS(){if(window.speechSynthesis)window.speechSynthesis.cancel();}
+function playTTS(text){
+  if(!window.speechSynthesis)return;
+  window.speechSynthesis.cancel();
+  const utt=new SpeechSynthesisUtterance(text);
+  utt.lang='ro-RO';
+  utt.rate=parseFloat(document.getElementById('ttsRate')?.value||0.9);
+  const voices=window.speechSynthesis.getVoices();
+  const ro=voices.find(v=>v.lang.startsWith('ro'));
+  if(ro)utt.voice=ro;
+  window.speechSynthesis.speak(utt);
+}
+
+function getDims(){
+  const hd=reelQuality==='hd';
+  if(reelRatio==='9:16')return{w:hd?720:540,h:hd?1280:960};
+  if(reelRatio==='1:1')return{w:hd?1080:720,h:hd?1080:720};
+  return{w:hd?1280:960,h:hd?720:540};
+}
 function splitChunks(text,n){
   const words=text.trim().split(/\s+/);const chunks=[];
   for(let i=0;i<words.length;i+=n)chunks.push(words.slice(i,i+n).join(' '));
   return chunks;
 }
 
+// ── GENERATE ──
 async function genReel(){
   const valid=reelNews.filter(n=>n.text.trim().length>5);
   if(!valid.length)return;
   const btn=document.getElementById('genReelBtn');btn.disabled=true;
-  stories=[];allFrames=[];
+  stories=[];allFrames=[];stopAudio();
   const out=document.getElementById('reelOut');
-
   out.innerHTML=`<div class="prog-wrap">
-    <div class="prog-title">⚡ Se construiește reelul...</div>
+    <div class="prog-title">Se construieste reelul...</div>
     <div class="prog-step" id="rs0"><div class="prog-dot"></div><span id="rs0t">Generez prompt-uri vizuale...</span></div>
-    <div class="prog-step" id="rs1"><div class="prog-dot"></div><span id="rs1t">Generez ${valid.length} imagini ${reelQuality==='hd'?'HD':''} AI...</span></div>
-    <div class="prog-step" id="rs2"><div class="prog-dot"></div><span id="rs2t">Randez cadrele cu text progresiv...</span></div>
-    <div class="prog-step" id="rs3"><div class="prog-dot"></div><span id="rs3t">Pregătesc previzualizarea...</span></div>
+    <div class="prog-step" id="rs1"><div class="prog-dot"></div><span id="rs1t">Generez ${valid.length} imagini AI...</span></div>
+    <div class="prog-step" id="rs2"><div class="prog-dot"></div><span id="rs2t">Randez cadrele...</span></div>
+    <div class="prog-step" id="rs3"><div class="prog-dot"></div><span id="rs3t">Gata!</span></div>
   </div>`;
 
   function ss(i,s){const e=document.getElementById('rs'+i);if(e)e.className='prog-step '+s;}
@@ -769,7 +910,7 @@ async function genReel(){
   ss(1,'active');
   const dims=getDims();
   for(let i=0;i<valid.length;i++){
-    st(1,`Generez imagine ${i+1}/${valid.length}${reelQuality==='hd'?' (HD)':''}...`);
+    st(1,'Generez imagine '+(i+1)+'/'+valid.length+(reelQuality==='hd'?' (HD)':'')+'...');
     const url=buildImgUrl(prompts[i],dims.w,dims.h);
     const img=await loadImg(url);
     const chunks=splitChunks(valid[i].text,reelWordsPerFrame);
@@ -781,15 +922,13 @@ async function genReel(){
   for(let si=0;si<stories.length;si++){
     const s=stories[si];
     for(let ci=0;ci<s.chunks.length;ci++){
-      const c=document.createElement('canvas');
-      c.width=dims.w;c.height=dims.h;
+      const c=document.createElement('canvas');c.width=dims.w;c.height=dims.h;
       drawFrame(c.getContext('2d'),s,ci,dims);
-      allFrames.push({canvas:c,dataUrl:c.toDataURL('image/jpeg',reelQuality==='hd'?0.95:0.88),si,ci});
+      allFrames.push({canvas:c,dataUrl:c.toDataURL('image/jpeg',reelQuality==='hd'?0.95:0.88),si,ci,dur:reelFrameDur});
     }
   }
   ss(2,'done');ss(3,'active');
-  await new Promise(r=>setTimeout(r,200));
-  ss(3,'done');
+  await new Promise(r=>setTimeout(r,150));ss(3,'done');
   btn.disabled=false;
   showReelPreview();
 }
@@ -797,17 +936,22 @@ async function genReel(){
 async function genImgPrompts(arr){
   try{
     const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({max_tokens:600,messages:[{role:'user',content:`Pentru fiecare știre scrie un prompt scurt în engleză (max 12 cuvinte) pentru generare imagine AI. Stil: ${reelStyle}. Fără text în imagine, fără watermark.\n\n${arr.map((n,i)=>`${i+1}. ${n.text}`).join('\n')}\n\nRăspunde DOAR cu JSON array de strings. Nimic altceva.`}]})
+      body:JSON.stringify({max_tokens:600,messages:[{role:'user',content:`Pentru fiecare stire scrie un prompt scurt in engleza (max 12 cuvinte) pentru generare imagine AI. Stil: ${reelStyle}. Fara text in imagine.
+
+${arr.map((n,i)=>`${i+1}. ${n.text}`).join('
+')}
+
+Raspunde DOAR cu JSON array de strings.`}]})
     });
     const data=await res.json();
-    return JSON.parse(data.content[0].text.replace(/```json|```/g,'').trim());
+    return JSON.parse(data.content[0].text.replace(/\`\`\`json|\`\`\`/g,'').trim());
   }catch(e){
-    return arr.map(n=>`${reelStyle} Romania: ${n.text.substring(0,40)}`);
+    return arr.map(n=>reelStyle+' Romania: '+n.text.substring(0,40));
   }
 }
 
 function buildImgUrl(prompt,w,h){
-  const full=prompt+', '+reelStyle+', no text, no watermark, no subtitles'+(reelQuality==='hd'?', ultra detailed, sharp, 8k':'');
+  const full=prompt+', '+reelStyle+', no text, no watermark'+(reelQuality==='hd'?', ultra detailed 8k':'');
   return IMG_API+'?prompt='+encodeURIComponent(full)+'&width='+w+'&height='+h+'&seed='+Math.floor(Math.random()*99999);
 }
 
@@ -816,34 +960,34 @@ function loadImg(url){
     const img=new Image();img.crossOrigin='anonymous';
     img.onload=()=>resolve(img);
     img.onerror=()=>{
-      const d=getDims();const fc=document.createElement('canvas');
-      fc.width=d.w;fc.height=d.h;
+      const d=getDims();const fc=document.createElement('canvas');fc.width=d.w;fc.height=d.h;
       const ctx=fc.getContext('2d');
-      const g=ctx.createLinearGradient(0,0,d.w,d.h);
-      g.addColorStop(0,'#1a1a2e');g.addColorStop(1,'#16213e');
-      ctx.fillStyle=g;ctx.fillRect(0,0,d.w,d.h);
-      resolve(fc);
+      const g=ctx.createLinearGradient(0,0,d.w,d.h);g.addColorStop(0,'#1a1a2e');g.addColorStop(1,'#16213e');
+      ctx.fillStyle=g;ctx.fillRect(0,0,d.w,d.h);resolve(fc);
     };
     img.src=url;
   });
 }
 
+// ── DRAW FRAME ──
 function drawFrame(ctx,story,ci,dims){
   const{w,h}=dims;
-  ctx.drawImage(story.img instanceof HTMLImageElement?story.img:story.img,0,0,w,h);
+  const src=story.img;
+  if(src instanceof HTMLImageElement)ctx.drawImage(src,0,0,w,h);
+  else ctx.drawImage(src,0,0,w,h);
+
   const g=ctx.createLinearGradient(0,h*0.2,0,h);
   g.addColorStop(0,'rgba(0,0,0,0.05)');g.addColorStop(0.45,'rgba(0,0,0,0.52)');g.addColorStop(1,'rgba(0,0,0,0.91)');
   ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
   ctx.fillStyle='#e63946';ctx.fillRect(0,0,w,5);
 
-  const logoSz=Math.round(w*0.038);
-  ctx.font=`600 ${logoSz}px Sora,sans-serif`;
+  ctx.font='600 '+Math.round(w*0.038)+'px Sora,sans-serif';
   ctx.fillStyle='rgba(255,255,255,0.5)';ctx.textAlign='left';
-  ctx.fillText('ȘTIRIRO',w*0.05,h*0.065);
+  ctx.fillText('STIRIRO',w*0.05,h*0.065);
 
-  ctx.font=`500 ${Math.round(w*0.032)}px Sora,sans-serif`;
+  ctx.font='500 '+Math.round(w*0.032)+'px Sora,sans-serif';
   ctx.fillStyle='rgba(255,255,255,0.4)';ctx.textAlign='right';
-  ctx.fillText(`${story.idx+1}/${stories.length}`,w*0.95,h*0.065);ctx.textAlign='left';
+  ctx.fillText((story.idx+1)+'/'+stories.length,w*0.95,h*0.065);ctx.textAlign='left';
 
   const total=story.chunks.length;
   const ds=Math.min(w*0.016,7);const dg=ds*2.5;
@@ -855,7 +999,7 @@ function drawFrame(ctx,story,ci,dims){
 
   const fSizePct=reelTxtSize/100;
   const fSize=reelRatio==='16:9'?Math.round(w*(fSizePct*0.7)):Math.round(w*fSizePct);
-  ctx.font=`700 ${fSize}px Sora,sans-serif`;ctx.fillStyle='#ffffff';
+  ctx.font='700 '+fSize+'px Sora,sans-serif';ctx.fillStyle='#ffffff';
   const maxW=w*0.86;const lh=fSize*1.38;
   const lines=wrapWords(ctx,story.chunks[ci],maxW);
   const blockH=lines.length*lh;
@@ -865,8 +1009,8 @@ function drawFrame(ctx,story,ci,dims){
   lines.forEach((line,li)=>{const lw=ctx.measureText(line).width;ctx.fillText(line,(w-lw)*0.5,ty+li*lh);});
 
   if(ci===total-1){
-    ctx.font=`500 ${Math.round(w*0.03)}px Sora,sans-serif`;ctx.fillStyle='rgba(244,196,48,0.9)';
-    const cta=story.idx+1<stories.length?'▶ Știrea următoare':'▶ Urmărește @StiriRO';
+    ctx.font='500 '+Math.round(w*0.03)+'px Sora,sans-serif';ctx.fillStyle='rgba(244,196,48,0.9)';
+    const cta=story.idx+1<stories.length?'Stirea urmatoare':'Urmareste @StiriRO';
     const ctaW=ctx.measureText(cta).width;ctx.fillText(cta,(w-ctaW)*0.5,h*0.91);
   }
   ctx.fillStyle='#e63946';ctx.fillRect(0,h-5,w,5);
@@ -882,54 +1026,92 @@ function wrapWords(ctx,text,maxW){
   return lines.slice(0,5);
 }
 
+// ── SHOW PREVIEW ──
 function showReelPreview(){
   curFrame=0;isPlaying=false;
   document.getElementById('reelOut').innerHTML=`
     <div class="preview-section fade-up" style="display:flex;flex-direction:column;gap:14px">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px">🎬 ${allFrames.length} cadre</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="secondary-btn" onclick="genReel()">↺ Regenereaza imagini</button>
-          <button class="secondary-btn" id="expDl" onclick="exportFramesPng()" style="border-color:#2ecc71;color:#2ecc71">⬇ JPG Cadre</button>
-          <button class="secondary-btn" id="expVid" onclick="exportVid()" style="border-color:var(--gold);color:var(--gold)">⬇ Descarca Video</button>
+
+      <!-- HEADER -->
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:1px">${allFrames.length} CADRE GENERATE</div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap">
+          <button class="secondary-btn" onclick="genReel()">Regenereaza imagini</button>
+          <button class="secondary-btn" id="expJpg" onclick="exportFramesPng()" style="border-color:#2ecc71;color:#2ecc71">Descarca JPG</button>
+          <button class="secondary-btn" id="expVid" onclick="exportVid()" style="border-color:var(--gold);color:var(--gold)">Descarca Video</button>
         </div>
       </div>
+
+      <!-- VIEWER -->
       <div class="story-viewer">
         <div class="story-bars" id="sBars"></div>
         <div class="tap-l" onclick="prevFr()"></div>
         <div class="tap-r" onclick="nextFr()"></div>
         <canvas id="pCanvas"></canvas>
       </div>
+
+      <!-- PLAYBACK -->
       <div class="story-ctrl">
-        <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+        <button class="play-btn" id="playBtn" onclick="togglePlay()">&#9654;</button>
         <div class="ctrl-info">
           <strong id="ctrlT">Cadru 1 din ${allFrames.length}</strong>
           <span>Tap stanga/dreapta pentru navigare</span>
         </div>
+        <button onclick="stopAudio()" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:1rem" title="Opreste audio">🔇</button>
       </div>
 
-      <!-- EDITOR CADRU CURENT -->
+      <!-- EDITOR -->
       <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:10px;padding:16px">
-        <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:#f4c430;font-weight:700;margin-bottom:12px">✏️ Editeaza cadrul curent</div>
-        <div style="font-size:0.72rem;color:#55556a;margin-bottom:8px">Modifica textul, durata sau sterge cadrul — fara sa regenerezi imaginile.</div>
-        <textarea id="editFrameText" rows="3" style="width:100%;background:#0f0f1a;border:1px solid #1e1e2e;border-radius:7px;padding:10px;color:#eeeef5;font-family:Sora,sans-serif;font-size:0.82rem;outline:none;resize:vertical;line-height:1.5;margin-bottom:8px" placeholder="Textul cadrului curent..."></textarea>
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-          <span style="font-size:0.72rem;color:#55556a;white-space:nowrap">Durata cadru:</span>
-          <input type="range" min="1" max="10" value="3" step="0.5" id="editFrameDur" oninput="document.getElementById('editDurVal').textContent=this.value+'s'" style="flex:1;accent-color:#e63946">
-          <span id="editDurVal" style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:#e63946;min-width:36px">3s</span>
+        <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:#f4c430;font-weight:700;margin-bottom:12px">EDITEAZA CADRUL CURENT</div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div>
+            <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;display:block;margin-bottom:5px">Text cadru</span>
+            <textarea id="editFrameText" rows="4" style="width:100%;background:#0f0f1a;border:1px solid #1e1e2e;border-radius:7px;padding:9px;color:#eeeef5;font-family:Sora,sans-serif;font-size:0.8rem;outline:none;resize:vertical;line-height:1.5"></textarea>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div>
+              <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;display:block;margin-bottom:5px">Durata cadru</span>
+              <div style="display:flex;align-items:center;gap:8px">
+                <input type="range" min="1" max="10" value="3" step="0.5" id="editFrameDur" oninput="document.getElementById('editDurVal').textContent=this.value+'s'" style="flex:1;accent-color:#e63946">
+                <span id="editDurVal" style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:#e63946;min-width:32px">3s</span>
+              </div>
+            </div>
+            <div>
+              <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;display:block;margin-bottom:5px">Dim. text global</span>
+              <div style="display:flex;align-items:center;gap:8px">
+                <input type="range" min="2" max="12" value="${reelTxtSize}" id="editTxtSize" oninput="updateTxtSizeGlobal(this.value)" style="flex:1;accent-color:#f4c430">
+                <span id="editTxtSizeVal" style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:#f4c430;min-width:32px">${reelTxtSize}%</span>
+              </div>
+            </div>
+            <div>
+              <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;display:block;margin-bottom:5px">Cuv/cadru global</span>
+              <div style="display:flex;align-items:center;gap:8px">
+                <input type="range" min="4" max="25" value="${reelWordsPerFrame}" id="editWords" oninput="document.getElementById('editWordsVal').textContent=this.value+' c.'" style="flex:1;accent-color:#4361ee">
+                <span id="editWordsVal" style="font-family:'Bebas Neue',sans-serif;font-size:0.9rem;color:#4361ee;min-width:32px">${reelWordsPerFrame} c.</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="secondary-btn" onclick="applyFrameEdit()" style="flex:1;border-color:#e63946;color:#e63946">✓ Aplica modificarile</button>
-          <button class="secondary-btn" onclick="deleteFrame()" style="border-color:#55556a;color:#55556a">🗑 Sterge cadru</button>
-          <button class="secondary-btn" onclick="moveFrameUp()" title="Muta sus">↑</button>
-          <button class="secondary-btn" onclick="moveFrameDown()" title="Muta jos">↓</button>
+
+        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px">
+          <button class="secondary-btn" onclick="applyFrameEdit()" style="flex:1;border-color:#e63946;color:#e63946">Aplica text + durata</button>
+          <button class="secondary-btn" onclick="rewordFrame()" style="flex:1;border-color:#7c3aed;color:#7c3aed">AI rescrie textul</button>
+        </div>
+        <div style="display:flex;gap:7px">
+          <button class="secondary-btn" onclick="rebuildAllText()" style="flex:1;border-color:#4361ee;color:#4361ee">Reimparte tot textul</button>
+          <button class="secondary-btn" onclick="moveFrameUp()">Sus</button>
+          <button class="secondary-btn" onclick="moveFrameDown()">Jos</button>
+          <button class="secondary-btn" onclick="deleteFrame()" style="color:#55556a">Sterge</button>
         </div>
       </div>
 
+      <!-- SLIDE LIST -->
       <div class="slides-overview">
-        <div class="sov-title">Toate cadrele — click pentru a edita</div>
+        <div class="sov-title">Toate cadrele</div>
         <div class="slide-rows" id="slideRows"></div>
       </div>
+
     </div>`;
 
   const cv=document.getElementById('pCanvas');const d=getDims();cv.width=d.w;cv.height=d.h;
@@ -939,13 +1121,12 @@ function showReelPreview(){
 }
 
 function renderSlideRows(){
-  const container = document.getElementById('slideRows');
-  if(!container) return;
-  container.innerHTML = allFrames.map((f,i)=>`
+  const c=document.getElementById('slideRows');if(!c)return;
+  c.innerHTML=allFrames.map((f,i)=>`
     <div class="slide-row ${i===curFrame?'active':''}" id="row${i}" onclick="goFr(${i})">
       <div class="sr-num">${i+1}</div>
-      <div class="sr-text">${stories[f.si] ? stories[f.si].chunks[f.ci] : ''}</div>
-      <div class="sr-badge">Stirea ${f.si+1}</div>
+      <div class="sr-text">${stories[f.si]?stories[f.si].chunks[f.ci]:''}</div>
+      <div class="sr-badge">${f.dur||reelFrameDur}s</div>
     </div>`).join('');
 }
 
@@ -958,356 +1139,291 @@ function goFr(idx){
   allFrames.forEach((_,i)=>{const bf=document.getElementById('bf'+i);if(bf)bf.className='story-bar-fill'+(i<idx?' done':'');});
   document.querySelectorAll('.slide-row').forEach((r,i)=>r.classList.toggle('active',i===idx));
   const ct=document.getElementById('ctrlT');
-  if(ct)ct.textContent='Cadru '+(idx+1)+' din '+allFrames.length+' - Stirea '+(allFrames[idx].si+1);
-  // Update editor fields
-  const et=document.getElementById('editFrameText');
-  if(et) et.value = stories[f.si] ? stories[f.si].chunks[f.ci] : '';
-  const ed=document.getElementById('editFrameDur');
-  if(ed){ ed.value=f.customDur||reelFrameDur; document.getElementById('editDurVal').textContent=(f.customDur||reelFrameDur)+'s'; }
+  if(ct)ct.textContent='Cadru '+(idx+1)+' din '+allFrames.length+' - Stirea '+(f.si+1);
+  // Update editor
+  const et=document.getElementById('editFrameText');if(et)et.value=stories[f.si]?stories[f.si].chunks[f.ci]:'';
+  const ed=document.getElementById('editFrameDur');if(ed){ed.value=f.dur||reelFrameDur;document.getElementById('editDurVal').textContent=(f.dur||reelFrameDur)+'s';}
+  // Audio
+  if(audioMode==='tts'&&stories[f.si])playTTS(stories[f.si].chunks[f.ci]);
 }
 
+function nextFr(){if(curFrame<allFrames.length-1)goFr(curFrame+1);else{stopPlay();stopAudio();}}
+function prevFr(){if(curFrame>0)goFr(curFrame-1);}
+function togglePlay(){isPlaying?stopPlay():startPlay();}
+function startPlay(){
+  isPlaying=true;const b=document.getElementById('playBtn');if(b)b.innerHTML='&#9646;&#9646;';
+  if(audioMode==='upload')playAudio();
+  playIv=setInterval(()=>{
+    if(curFrame>=allFrames.length-1){stopPlay();stopAudio();return;}
+    goFr(curFrame+1);
+  },(allFrames[curFrame]?.dur||reelFrameDur)*1000);
+}
+function stopPlay(){
+  isPlaying=false;const b=document.getElementById('playBtn');if(b)b.innerHTML='&#9654;';clearInterval(playIv);
+}
+
+// ── EDITOR FUNCTIONS ──
 function applyFrameEdit(){
   if(curFrame<0||curFrame>=allFrames.length)return;
   const newText=document.getElementById('editFrameText').value.trim();
   const newDur=parseFloat(document.getElementById('editFrameDur').value);
   const f=allFrames[curFrame];
-  // Update text in story chunk
-  if(stories[f.si] && newText){
-    stories[f.si].chunks[f.ci]=newText;
-    f.customDur=newDur;
-  }
-  // Redraw frame with new text
+  if(newText&&stories[f.si])stories[f.si].chunks[f.ci]=newText;
+  f.dur=newDur;
+  // Redraw
   const dims=getDims();
   const c=document.createElement('canvas');c.width=dims.w;c.height=dims.h;
   drawFrame(c.getContext('2d'),stories[f.si],f.ci,dims);
-  f.canvas=c; f.dataUrl=c.toDataURL('image/jpeg',0.92);
-  // Refresh preview and rows
+  f.canvas=c;f.dataUrl=c.toDataURL('image/jpeg',0.92);
   const cv=document.getElementById('pCanvas');
-  if(cv) drawFrame(cv.getContext('2d'),stories[f.si],f.ci,dims);
+  if(cv)drawFrame(cv.getContext('2d'),stories[f.si],f.ci,dims);
   renderSlideRows();
-  // Flash feedback
-  const btn=event.target;
-  const orig=btn.textContent;
-  btn.textContent='✓ Salvat!'; btn.style.color='#2ecc71'; btn.style.borderColor='#2ecc71';
-  setTimeout(()=>{ btn.textContent=orig; btn.style.color=''; btn.style.borderColor=''; },1500);
+  const btn=event.target;const orig=btn.textContent;
+  btn.textContent='Salvat!';btn.style.color='#2ecc71';
+  setTimeout(()=>{btn.textContent=orig;btn.style.color='';},1500);
+}
+
+async function rewordFrame(){
+  if(curFrame<0||curFrame>=allFrames.length)return;
+  const f=allFrames[curFrame];
+  const currentText=stories[f.si]?.chunks[f.ci]||'';
+  const btn=event.target;btn.textContent='AI rescrie...';btn.disabled=true;
+  try{
+    const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({max_tokens:200,messages:[{role:'user',content:`Rescrie urmatorul text mai impactant si concis pentru un reel de stiri (max ${reelWordsPerFrame} cuvinte, pastrand informatia esentiala): "${currentText}"
+
+Raspunde DOAR cu textul rescris, fara ghilimele.`}]})
+    });
+    const data=await res.json();
+    const newText=data.content[0].text.trim();
+    document.getElementById('editFrameText').value=newText;
+  }catch(e){}
+  btn.textContent='AI rescrie textul';btn.disabled=false;
+}
+
+function updateTxtSizeGlobal(v){
+  reelTxtSize=parseInt(v);
+  document.getElementById('editTxtSizeVal').textContent=v+'%';
+  document.getElementById('txtSizeVal').textContent=v+'%';
+  document.getElementById('txtSizeSlider').value=v;
+  // Redraw all frames
+  const dims=getDims();
+  allFrames.forEach(f=>{
+    const c=document.createElement('canvas');c.width=dims.w;c.height=dims.h;
+    drawFrame(c.getContext('2d'),stories[f.si],f.ci,dims);
+    f.canvas=c;f.dataUrl=c.toDataURL('image/jpeg',0.9);
+  });
+  // Refresh current
+  const cv=document.getElementById('pCanvas');
+  if(cv)drawFrame(cv.getContext('2d'),stories[allFrames[curFrame].si],allFrames[curFrame].ci,dims);
+}
+
+function rebuildAllText(){
+  const newWords=parseInt(document.getElementById('editWords').value);
+  reelWordsPerFrame=newWords;
+  document.getElementById('wordsSlider').value=newWords;
+  document.getElementById('wordsVal').textContent=newWords+' cuv.';
+  // Rebuild all frames from stories
+  const dims=getDims();
+  allFrames=[];
+  stories.forEach((s,si)=>{
+    s.chunks=splitChunks(s.text,newWords);
+    s.chunks.forEach((chunk,ci)=>{
+      const c=document.createElement('canvas');c.width=dims.w;c.height=dims.h;
+      drawFrame(c.getContext('2d'),s,ci,dims);
+      allFrames.push({canvas:c,dataUrl:c.toDataURL('image/jpeg',0.9),si,ci,dur:reelFrameDur});
+    });
+  });
+  // Rebuild bars
+  document.getElementById('sBars').innerHTML=allFrames.map((_,i)=>`<div class="story-bar"><div class="story-bar-fill" id="bf${i}"></div></div>`).join('');
+  renderSlideRows();
+  goFr(0);
 }
 
 function deleteFrame(){
   if(allFrames.length<=1){alert('Nu poti sterge singurul cadru!');return;}
   allFrames.splice(curFrame,1);
-  // Rebuild story bars
   document.getElementById('sBars').innerHTML=allFrames.map((_,i)=>`<div class="story-bar"><div class="story-bar-fill" id="bf${i}"></div></div>`).join('');
   renderSlideRows();
   goFr(Math.min(curFrame,allFrames.length-1));
 }
-
 function moveFrameUp(){
   if(curFrame<=0)return;
-  const tmp=allFrames[curFrame];
-  allFrames[curFrame]=allFrames[curFrame-1];
-  allFrames[curFrame-1]=tmp;
-  renderSlideRows();
-  goFr(curFrame-1);
+  [allFrames[curFrame],allFrames[curFrame-1]]=[allFrames[curFrame-1],allFrames[curFrame]];
+  renderSlideRows();goFr(curFrame-1);
 }
-
 function moveFrameDown(){
   if(curFrame>=allFrames.length-1)return;
-  const tmp=allFrames[curFrame];
-  allFrames[curFrame]=allFrames[curFrame+1];
-  allFrames[curFrame+1]=tmp;
-  renderSlideRows();
-  goFr(curFrame+1);
+  [allFrames[curFrame],allFrames[curFrame+1]]=[allFrames[curFrame+1],allFrames[curFrame]];
+  renderSlideRows();goFr(curFrame+1);
 }
 
+// ── EXPORT ──
 function exportFramesPng(){
   allFrames.forEach((f,i)=>{
     const a=document.createElement('a');
     a.href=f.dataUrl;
     a.download='stiriro-cadru-'+(i+1)+'.jpg';
-    a.click();
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
   });
-}
-function nextFr(){if(curFrame<allFrames.length-1)goFr(curFrame+1);else stopPlay();}
-function prevFr(){if(curFrame>0)goFr(curFrame-1);}
-function togglePlay(){isPlaying?stopPlay():startPlay();}
-function startPlay(){
-  isPlaying=true;const b=document.getElementById('playBtn');if(b)b.textContent='⏸';
-  playIv=setInterval(()=>{if(curFrame>=allFrames.length-1){stopPlay();return;}goFr(curFrame+1);},reelFrameDur*1000);
-}
-function stopPlay(){
-  isPlaying=false;const b=document.getElementById('playBtn');if(b)b.textContent='▶';clearInterval(playIv);
 }
 
 async function exportVid(){
-  const btn = document.getElementById('expVid');
-  if(btn){ btn.textContent = '⏳ Se exporta...'; btn.disabled = true; }
-  stopPlay(); stopTTS();
+  const btn=document.getElementById('expVid');
+  if(btn){btn.textContent='Se exporta...';btn.disabled=true;}
+  stopPlay();stopAudio();stopTTS();
 
-  const d = getDims();
+  const d=getDims();
 
-  // Pre-load all images from dataUrls
-  const imgs = [];
-  for(let i = 0; i < allFrames.length; i++){
-    await new Promise(resolve => {
-      const img = new Image();
-      img.onload = () => { imgs.push({img, dur: allFrames[i].customDur || reelFrameDur}); resolve(); };
-      img.onerror = () => { imgs.push({img: null, dur: allFrames[i].customDur || reelFrameDur}); resolve(); };
-      img.src = allFrames[i].dataUrl;
+  // Show progress
+  const progDiv=document.createElement('div');
+  progDiv.style.cssText='margin-top:8px;padding:10px 14px;background:#14141f;border:1px solid #1e1e2e;border-radius:7px;font-size:0.75rem;color:#55556a';
+  progDiv.textContent='Se incarca imaginile...';
+  if(btn)btn.parentNode.insertAdjacentElement('afterend',progDiv);
+
+  // Pre-load all images
+  const imgs=[];
+  for(let i=0;i<allFrames.length;i++){
+    progDiv.textContent='Pregatesc cadrul '+(i+1)+' din '+allFrames.length+'...';
+    await new Promise(resolve=>{
+      const img=new Image();
+      img.onload=()=>{imgs.push({img,dur:allFrames[i].dur||reelFrameDur});resolve();};
+      img.onerror=()=>{imgs.push({img:null,dur:allFrames[i].dur||reelFrameDur});resolve();};
+      img.src=allFrames[i].dataUrl;
     });
   }
 
-  // Create recording canvas
-  const ec = document.createElement('canvas');
-  ec.width = d.w; ec.height = d.h;
-  const ctx = ec.getContext('2d');
+  progDiv.textContent='Inregistrez video... (nu inchide pagina)';
 
-  // Draw first frame before starting stream
-  if(imgs[0] && imgs[0].img) ctx.drawImage(imgs[0].img, 0, 0, d.w, d.h);
-  else { ctx.fillStyle = '#0d0d12'; ctx.fillRect(0, 0, d.w, d.h); }
+  const ec=document.createElement('canvas');ec.width=d.w;ec.height=d.h;
+  const ctx=ec.getContext('2d');
 
-  // Wait a tick so stream captures the drawn frame
-  await new Promise(r => setTimeout(r, 200));
+  // Draw first frame
+  if(imgs[0]?.img)ctx.drawImage(imgs[0].img,0,0,d.w,d.h);
+  await new Promise(r=>setTimeout(r,150));
 
-  const stream = ec.captureStream(25);
+  const stream=ec.captureStream(25);
+  const tryMimes=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];
+  const mime=tryMimes.find(m=>MediaRecorder.isTypeSupported(m))||'video/webm';
+  const bitrate=reelQuality==='hd'?8000000:4000000;
+  const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:bitrate});
+  const chunks=[];
+  rec.ondataavailable=e=>{if(e.data&&e.data.size>0)chunks.push(e.data);};
 
-  // Try formats in order of compatibility
-  const tryMimes = [
-    'video/webm;codecs=vp9',
-    'video/webm;codecs=vp8',
-    'video/webm'
-  ];
-  const mime = tryMimes.find(m => MediaRecorder.isTypeSupported(m)) || 'video/webm';
-  const bitrate = reelQuality === 'hd' ? 8000000 : 4000000;
-
-  const rec = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: bitrate });
-  const chunks = [];
-  rec.ondataavailable = e => { if(e.data && e.data.size > 0) chunks.push(e.data); };
-
-  rec.onstop = () => {
-    const blob = new Blob(chunks, { type: mime });
-    if(blob.size < 1000){
-      alert('Exportul a esuat. Incearca sa descarci cadrele JPG in schimb.');
-      if(btn){ btn.textContent = '⬇ Descarca Video'; btn.disabled = false; }
+  rec.onstop=()=>{
+    progDiv.remove();
+    const blob=new Blob(chunks,{type:mime});
+    if(blob.size<5000){
+      if(btn){btn.textContent='Descarca Video';btn.disabled=false;}
+      alert('Exportul a esuat. Descarca cadrele JPG in schimb si importa-le in CapCut/Canva.');
       return;
     }
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'reel-stiriro-' + Date.now() + '.webm';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 3000);
-    if(btn){ btn.textContent = '⬇ Descarca Video'; btn.disabled = false; }
-    // Show info about converting
-    const info = document.createElement('div');
-    info.style.cssText = 'margin-top:8px;padding:10px 14px;background:#0f1a0f;border:1px solid #2ecc71;border-radius:7px;font-size:0.75rem;color:#2ecc71;line-height:1.6';
-    info.innerHTML = '✓ Video descarcat ca .webm<br><span style="color:#55556a">Pentru MP4 compatibil cu iPhone/Android, converteste gratuit pe <strong style="color:#f4c430">cloudconvert.com</strong> sau <strong style="color:#f4c430">handbrake.fr</strong></span>';
-    btn.parentNode.insertAdjacentElement('afterend', info);
-    setTimeout(() => info.remove(), 8000);
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download='reel-stiriro-'+Date.now()+'.webm';
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url),5000);
+    if(btn){btn.textContent='Descarca Video';btn.disabled=false;}
+    // Tip conversie
+    const tip=document.createElement('div');
+    tip.style.cssText='margin-top:8px;padding:10px 14px;background:#0f1a0f;border:1px solid #2ecc71;border-radius:7px;font-size:0.75rem;color:#2ecc71;line-height:1.6';
+    tip.innerHTML='✓ Video descarcat (.webm)<br><span style="color:#55556a">Pentru MP4: urca pe <strong style="color:#f4c430">cloudconvert.com</strong> sau deschide in <strong style="color:#f4c430">VLC Player</strong></span>';
+    if(btn)btn.parentNode.insertAdjacentElement('afterend',tip);
+    setTimeout(()=>tip.remove(),10000);
   };
 
-  rec.start(500); // collect chunks every 500ms
-
-  const fps = 25;
-  for(let i = 0; i < imgs.length; i++){
-    const {img, dur} = imgs[i];
-    const totalMs = dur * 1000;
-    const frameMs = 1000 / fps;
-    const numFrames = Math.max(1, Math.round(totalMs / frameMs));
-    for(let f = 0; f < numFrames; f++){
-      if(img) ctx.drawImage(img, 0, 0, d.w, d.h);
-      else { ctx.fillStyle = '#0d0d12'; ctx.fillRect(0, 0, d.w, d.h); }
-      await new Promise(r => setTimeout(r, frameMs));
+  rec.start(200);
+  const fps=25;
+  for(let i=0;i<imgs.length;i++){
+    progDiv.textContent='Inregistrez cadrul '+(i+1)+' din '+imgs.length+'...';
+    const{img,dur}=imgs[i];
+    const frameMs=1000/fps;
+    const numFrames=Math.max(fps,Math.round(dur*1000/frameMs));
+    for(let f=0;f<numFrames;f++){
+      if(img)ctx.drawImage(img,0,0,d.w,d.h);
+      await new Promise(r=>setTimeout(r,frameMs));
     }
   }
-
-  await new Promise(r => setTimeout(r, 500));
+  await new Promise(r=>setTimeout(r,300));
   rec.stop();
 }
 
 // ── HASHTAG ──
 function copyHash(el){
   navigator.clipboard.writeText(el.textContent).then(()=>{
-    const orig={bg:el.style.background,bc:el.style.borderColor,c:el.style.color};
+    const s={bg:el.style.background,bc:el.style.borderColor,c:el.style.color};
     el.style.background='rgba(46,204,113,0.15)';el.style.borderColor='#2ecc71';el.style.color='#2ecc71';
-    setTimeout(()=>{el.style.background=orig.bg;el.style.borderColor=orig.bc;el.style.color=orig.c;},700);
+    setTimeout(()=>{el.style.background=s.bg;el.style.borderColor=s.bc;el.style.color=s.c;},700);
   });
 }
 function copyCombo(id,btn){
   navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>{
-    btn.textContent='✓ Copiat!';btn.style.color='var(--green)';btn.style.borderColor='var(--green)';
-    setTimeout(()=>{btn.textContent='📋 Copiază combo';btn.style.color='';btn.style.borderColor='';},2000);
+    btn.textContent='Copiat!';btn.style.color='var(--green)';
+    setTimeout(()=>{btn.textContent='Copiaza combo';btn.style.color='';},2000);
   });
 }
-
-// ── POSTARE COPY ──
-function copyOut(btn,text){
-  navigator.clipboard.writeText(text).then(()=>{
-    btn.textContent='✓ Copiat!';btn.classList.add('ok');
-    setTimeout(()=>{btn.textContent='Copiază';btn.classList.remove('ok');},2000);
-  });
-}
-
-function esc(str){return(str||'').replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$/g,'\\$');}
-
-// ── AUDIO STATE ──
-let audioMode = 'none';
-let audioBuffer = null;
-let audioCtx = null;
-let uploadedAudio = null;
-
-function selAudio(btn) {
-  document.querySelectorAll('[data-audio]').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  audioMode = btn.dataset.audio;
-  document.getElementById('audioUploadWrap').style.display = audioMode === 'upload' ? 'block' : 'none';
-  document.getElementById('audioTtsWrap').style.display = audioMode === 'tts' ? 'block' : 'none';
-}
-
-function loadAudioFile(input) {
-  const file = input.files[0];
-  if (!file) return;
-  uploadedAudio = file;
-  document.getElementById('audioFileName').textContent = '✓ ' + file.name;
-}
-
-function playTTS(text) {
-  if (!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  const utt = new SpeechSynthesisUtterance(text);
-  utt.lang = 'ro-RO';
-  utt.rate = parseFloat(document.getElementById('ttsRate')?.value || 0.9);
-  const voices = window.speechSynthesis.getVoices();
-  const roVoice = voices.find(v => v.lang.startsWith('ro'));
-  if (roVoice) utt.voice = roVoice;
-  window.speechSynthesis.speak(utt);
-}
-
-function stopTTS() {
-  if (window.speechSynthesis) window.speechSynthesis.cancel();
-}
-
-// Override goFr to add TTS
-const _origGoFr = goFr;
-window.goFr = function(idx) {
-  _origGoFr(idx);
-  if (audioMode === 'tts' && allFrames[idx]) {
-    const f = allFrames[idx];
-    const chunk = stories[f.si]?.chunks[f.ci] || '';
-    playTTS(chunk);
-  }
-};
 
 // ── CUSTOM TEMPLATES ──
-let customTemplates = JSON.parse(localStorage.getItem('stiriro_templates') || '[]');
+let customTemplates=JSON.parse(localStorage.getItem('stiriro_templates')||'[]');
+let customCombos=JSON.parse(localStorage.getItem('stiriro_combos')||'[]');
 
-function renderCustomTemplates() {
-  const container = document.getElementById('customTemplates');
-  if (!container) return;
-  if (!customTemplates.length) {
-    container.innerHTML = '<div style="font-size:0.75rem;color:#55556a;padding:8px 0">Niciun template salvat inca.</div>';
-    return;
-  }
-  container.innerHTML = customTemplates.map((t, i) => `
-    <div style="background:#0f0f1a;border:1px solid #1e1e2e;border-radius:7px;padding:12px;display:flex;align-items:center;gap:10px">
+function renderCustomTemplates(){
+  const c=document.getElementById('customTemplates');if(!c)return;
+  if(!customTemplates.length){c.innerHTML='<div style="font-size:0.75rem;color:#55556a;padding:6px 0">Niciun template salvat inca.</div>';return;}
+  c.innerHTML=customTemplates.map((t,i)=>`
+    <div style="background:#0f0f1a;border:1px solid #1e1e2e;border-radius:7px;padding:10px;display:flex;align-items:center;gap:10px">
       <div style="width:28px;height:28px;border-radius:4px;background:${t.bg};border:2px solid ${t.accent};flex-shrink:0"></div>
-      <div style="flex:1">
-        <div style="font-size:0.8rem;font-weight:700">${t.name}</div>
-        ${t.notes ? `<div style="font-size:0.7rem;color:#55556a">${t.notes}</div>` : ''}
-        <div style="font-size:0.68rem;color:#55556a;margin-top:2px">Font: ${t.font || 'Bebas Neue'} • BG: ${t.bg} • Accent: ${t.accent}</div>
-      </div>
-      <button onclick="deleteCustomTpl(${i})" style="background:transparent;border:none;color:#55556a;cursor:pointer;font-size:0.8rem">✕</button>
-    </div>
-  `).join('');
+      <div style="flex:1"><div style="font-size:0.8rem;font-weight:700">${t.name}</div>${t.notes?`<div style="font-size:0.7rem;color:#55556a">${t.notes}</div>`:''}<div style="font-size:0.68rem;color:#55556a;margin-top:2px">BG:${t.bg} • Accent:${t.accent}</div></div>
+      <button onclick="delTpl(${i})" style="background:transparent;border:none;color:#55556a;cursor:pointer">x</button>
+    </div>`).join('');
 }
-
-function addCustomTpl() {
-  const name = document.getElementById('tplName')?.value.trim();
-  const bg = document.getElementById('tplBg')?.value || '#0d0d0d';
-  const accent = document.getElementById('tplAccent')?.value || '#e63946';
-  const font = document.getElementById('tplFont')?.value.trim() || 'Bebas Neue';
-  const notes = document.getElementById('tplNotes')?.value.trim() || '';
-  if (!name) { alert('Adauga un nume pentru template!'); return; }
-  customTemplates.push({ name, bg, accent, font, notes });
-  localStorage.setItem('stiriro_templates', JSON.stringify(customTemplates));
+function addCustomTpl(){
+  const name=document.getElementById('tplName')?.value.trim();
+  if(!name){alert('Adauga un nume!');return;}
+  customTemplates.push({name,bg:document.getElementById('tplBg').value,accent:document.getElementById('tplAccent').value,font:document.getElementById('tplFont').value||'Bebas Neue',notes:document.getElementById('tplNotes').value});
+  localStorage.setItem('stiriro_templates',JSON.stringify(customTemplates));
   renderCustomTemplates();
-  document.getElementById('tplName').value = '';
-  document.getElementById('tplNotes').value = '';
-  document.getElementById('tplFont').value = '';
+  ['tplName','tplFont','tplNotes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
 }
+function delTpl(i){customTemplates.splice(i,1);localStorage.setItem('stiriro_templates',JSON.stringify(customTemplates));renderCustomTemplates();}
 
-function deleteCustomTpl(i) {
-  customTemplates.splice(i, 1);
-  localStorage.setItem('stiriro_templates', JSON.stringify(customTemplates));
-  renderCustomTemplates();
-}
-
-// ── CUSTOM COMBOS ──
-let customCombos = JSON.parse(localStorage.getItem('stiriro_combos') || '[]');
-
-function renderCustomCombos() {
-  const container = document.getElementById('customCombos');
-  if (!container) return;
-  if (!customCombos.length) {
-    container.innerHTML = '<div style="font-size:0.75rem;color:#55556a;padding:4px 0">Niciun combo salvat inca.</div>';
-    return;
-  }
-  container.innerHTML = customCombos.map((c, i) => `
+function renderCustomCombos(){
+  const c=document.getElementById('customCombos');if(!c)return;
+  if(!customCombos.length){c.innerHTML='<div style="font-size:0.75rem;color:#55556a;padding:4px 0">Niciun combo salvat inca.</div>';return;}
+  c.innerHTML=customCombos.map((cb,i)=>`
     <div class="combo-card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-        <div class="combo-title" style="margin-bottom:0">🔵 ${c.name}</div>
-        <button onclick="deleteCustomCombo(${i})" style="background:transparent;border:none;color:#55556a;cursor:pointer;font-size:0.8rem">✕</button>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div class="combo-title" style="margin-bottom:0">${cb.name}</div>
+        <button onclick="delCombo(${i})" style="background:transparent;border:none;color:#55556a;cursor:pointer;font-size:0.8rem">x</button>
       </div>
-      <div class="combo-body" id="cc${i}">${c.tags}</div>
-      <button class="secondary-btn" onclick="copyCombo('cc${i}',this)">📋 Copiaza</button>
-    </div>
-  `).join('');
+      <div class="combo-body" id="cc${i}">${cb.tags}</div>
+      <button class="secondary-btn" onclick="copyCombo('cc${i}',this)">Copiaza</button>
+    </div>`).join('');
 }
-
-function addCustomCombo() {
-  const name = document.getElementById('comboNameIn')?.value.trim();
-  const tags = document.getElementById('comboTagsIn')?.value.trim();
-  if (!name || !tags) { alert('Completeaza numele si hashtag-urile!'); return; }
-  customCombos.push({ name, tags });
-  localStorage.setItem('stiriro_combos', JSON.stringify(customCombos));
+function addCustomCombo(){
+  const name=document.getElementById('comboNameIn')?.value.trim();
+  const tags=document.getElementById('comboTagsIn')?.value.trim();
+  if(!name||!tags){alert('Completeaza numele si hashtag-urile!');return;}
+  customCombos.push({name,tags});
+  localStorage.setItem('stiriro_combos',JSON.stringify(customCombos));
   renderCustomCombos();
-  document.getElementById('comboNameIn').value = '';
-  document.getElementById('comboTagsIn').value = '';
+  document.getElementById('comboNameIn').value='';document.getElementById('comboTagsIn').value='';
+}
+function delCombo(i){customCombos.splice(i,1);localStorage.setItem('stiriro_combos',JSON.stringify(customCombos));renderCustomCombos();}
+
+async function genHashAI(){
+  const topic=prompt('Despre ce subiect vrei hashtag-uri?');if(!topic)return;
+  const btn=event.target;btn.textContent='Generez...';btn.disabled=true;
+  try{
+    const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({max_tokens:200,messages:[{role:'user',content:`Genereaza 20 hashtag-uri pentru Instagram/Facebook despre: "${topic}". Focus Romania. Raspunde DOAR cu hashtag-urile separate prin spatiu.`}]})});
+    const data=await res.json();
+    document.getElementById('comboTagsIn').value=data.content[0].text.trim();
+    document.getElementById('comboNameIn').value=topic;
+  }catch(e){}
+  btn.textContent='AI sugereaza';btn.disabled=false;
 }
 
-function deleteCustomCombo(i) {
-  customCombos.splice(i, 1);
-  localStorage.setItem('stiriro_combos', JSON.stringify(customCombos));
-  renderCustomCombos();
-}
-
-async function genHashAI() {
-  const topic = prompt('Despre ce subiect vrei hashtag-uri? (ex: stiri economice Romania)');
-  if (!topic) return;
-  const btn = event.target;
-  btn.textContent = '⏳ Generez...'; btn.disabled = true;
-  try {
-    const res = await fetch(API, {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ max_tokens: 300, messages: [{ role: 'user', content: `Genereaza 20 hashtag-uri relevante pentru Instagram/Facebook despre: "${topic}". Focus pe audienta din Romania. Raspunde DOAR cu hashtag-urile separate prin spatiu, fara altceva.` }] })
-    });
-    const data = await res.json();
-    const tags = data.content[0].text.trim();
-    document.getElementById('comboTagsIn').value = tags;
-    document.getElementById('comboNameIn').value = topic;
-  } catch(e) {}
-  btn.textContent = '✨ AI sugereaza'; btn.disabled = false;
-}
-
-// ── INIT ON PAGE LOAD ──
-document.addEventListener('DOMContentLoaded', () => {
-  renderCustomTemplates();
-  renderCustomCombos();
-});
-// Also init immediately in case DOM is ready
-setTimeout(() => { renderCustomTemplates(); renderCustomCombos(); }, 100);
-
-</script>
-</body>
+// ── INIT ──
+setTimeout(()=>{renderCustomTemplates();renderCustomCombos();},200);
+</script></body>
 </html>
