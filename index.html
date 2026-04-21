@@ -3,1048 +3,944 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ce Trebuie Să Știi Azi — Generator</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>ȘtiriRO — Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0b0b0f;
-  --surface: #13131a;
-  --card: #18181f;
-  --border: #25252f;
-  --accent: #e63946;
-  --gold: #f4c430;
-  --text: #f0eee8;
-  --muted: #5a5a72;
-  --green: #2ecc71;
+  --bg:#080810;--surface:#0f0f1a;--card:#14141f;--border:#1e1e2e;
+  --accent:#e63946;--gold:#f4c430;--blue:#4361ee;--text:#eeeef5;
+  --muted:#55556a;--green:#2ecc71;--purple:#7c3aed;
 }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Sora',sans-serif;min-height:100vh;}
 
-* { margin:0; padding:0; box-sizing:border-box; }
+/* NAV */
+nav{
+  background:rgba(8,8,16,0.97);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:0;padding:0 24px;
+  position:sticky;top:0;z-index:200;backdrop-filter:blur(16px);height:56px;
+}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:2px;margin-right:28px;white-space:nowrap;}
+.nav-logo em{color:var(--accent);font-style:normal;}
+.nav-logo span{font-size:0.6rem;background:var(--accent);color:#fff;padding:2px 8px;border-radius:10px;letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-left:8px;vertical-align:middle;}
+.nav-tabs{display:flex;gap:0;overflow-x:auto;flex:1;}
+.nav-tab{
+  padding:0 18px;height:56px;display:flex;align-items:center;gap:7px;
+  background:transparent;border:none;color:var(--muted);font-family:'Sora',sans-serif;
+  font-size:0.78rem;font-weight:600;cursor:pointer;white-space:nowrap;
+  border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.2s;
+}
+.nav-tab:hover{color:var(--text);}
+.nav-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.nav-tab .ti{font-size:1rem;}
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  min-height: 100vh;
-}
+/* PAGES */
+.page{display:none;min-height:calc(100vh - 56px);}
+.page.active{display:block;}
 
-/* ── HEADER ── */
-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px 36px;
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  background: rgba(11,11,15,0.96);
-  backdrop-filter: blur(14px);
-  z-index: 200;
-}
+/* ═══════════════════════════════════════════
+   SHARED LAYOUT
+═══════════════════════════════════════════ */
+.split{display:grid;grid-template-columns:340px 1fr;min-height:calc(100vh - 56px);}
+.panel-l{background:var(--surface);border-right:1px solid var(--border);padding:24px 20px;overflow-y:auto;}
+.panel-r{padding:24px 28px;overflow-y:auto;display:flex;flex-direction:column;gap:16px;}
+.ptitle{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:1.5px;line-height:1;margin-bottom:4px;}
+.ptitle em{color:var(--accent);font-style:italic;}
+.psub{font-size:0.77rem;color:var(--muted);margin-bottom:20px;line-height:1.5;}
 
-.logo {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.3rem;
-  font-weight: 900;
-  letter-spacing: -0.5px;
+/* CONTROLS */
+.ctrl-section{margin-bottom:18px;}
+.ctrl-label{font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold);font-weight:700;margin-bottom:8px;display:block;}
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+.row2{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;}
+.pill-btn{
+  padding:9px 6px;background:var(--card);border:1px solid var(--border);
+  border-radius:8px;color:var(--muted);font-family:'Sora',sans-serif;
+  font-size:0.68rem;font-weight:600;cursor:pointer;transition:all 0.2s;text-align:center;
 }
-.logo span { color: var(--accent); }
+.pill-btn .bi{font-size:1rem;display:block;margin-bottom:2px;}
+.pill-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(230,57,70,0.08);}
+.chip-wrap{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{
+  padding:4px 11px;border-radius:20px;border:1px solid var(--border);
+  background:transparent;color:var(--muted);font-family:'Sora',sans-serif;
+  font-size:0.68rem;font-weight:600;cursor:pointer;transition:all 0.2s;
+}
+.chip.active{border-color:var(--gold);color:var(--gold);background:rgba(244,196,48,0.08);}
+.slider-row{display:flex;align-items:center;gap:10px;}
+.slider-row input[type=range]{flex:1;accent-color:var(--accent);cursor:pointer;}
+.slider-val{font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--accent);min-width:52px;text-align:right;}
+.txt-input{
+  width:100%;background:var(--card);border:1px solid var(--border);
+  border-radius:8px;padding:10px 12px;color:var(--text);
+  font-family:'Sora',sans-serif;font-size:0.82rem;outline:none;transition:border-color 0.2s;
+}
+.txt-input:focus{border-color:var(--accent);}
+.txt-input::placeholder{color:var(--muted);}
+textarea.txt-input{resize:vertical;line-height:1.5;}
+.primary-btn{
+  width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),#ff6b6b);
+  color:#fff;border:none;border-radius:10px;font-family:'Sora',sans-serif;
+  font-size:0.9rem;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:4px;
+}
+.primary-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 28px rgba(230,57,70,0.35);}
+.primary-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none;}
+.secondary-btn{
+  padding:9px 16px;border-radius:7px;border:1px solid var(--border);
+  background:transparent;color:var(--text);font-family:'Sora',sans-serif;
+  font-size:0.78rem;font-weight:600;cursor:pointer;transition:all 0.2s;
+}
+.secondary-btn:hover{border-color:var(--accent);color:var(--accent);}
 
-.live-badge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.68rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--muted);
-}
-.live-dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--accent);
-  animation: pulse 2s infinite;
-}
-@keyframes pulse {
-  0%,100% { opacity:1; transform:scale(1); }
-  50%      { opacity:0.4; transform:scale(0.7); }
-}
+/* NEWS ITEMS */
+.news-list{display:flex;flex-direction:column;gap:9px;margin-bottom:10px;}
+.news-item{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:11px 13px;position:relative;transition:border-color 0.2s;}
+.news-item:focus-within{border-color:var(--accent);}
+.news-item-num{font-family:'Bebas Neue',sans-serif;font-size:0.9rem;color:var(--accent);margin-bottom:5px;letter-spacing:1px;}
+.news-item textarea{width:100%;background:transparent;border:none;color:var(--text);font-family:'Sora',sans-serif;font-size:0.8rem;line-height:1.5;resize:none;outline:none;min-height:60px;}
+.news-item textarea::placeholder{color:var(--muted);}
+.news-remove{position:absolute;top:9px;right:9px;background:transparent;border:none;color:var(--muted);font-size:0.72rem;cursor:pointer;padding:2px 5px;border-radius:3px;transition:all 0.2s;}
+.news-remove:hover{color:var(--accent);}
+.add-news-btn{width:100%;padding:9px;background:transparent;border:1px dashed var(--border);border-radius:8px;color:var(--muted);font-family:'Sora',sans-serif;font-size:0.78rem;cursor:pointer;transition:all 0.2s;margin-bottom:18px;}
+.add-news-btn:hover{border-color:var(--accent);color:var(--accent);}
 
-/* ── LAYOUT ── */
-.app {
-  display: grid;
-  grid-template-columns: 400px 1fr;
-  min-height: calc(100vh - 63px);
-}
+/* OUTPUT CARDS */
+.out-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.out-card-head{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.out-card-label{font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);font-weight:700;}
+.copy-btn{padding:5px 12px;border:1px solid var(--border);border-radius:5px;background:transparent;color:var(--muted);font-family:'Sora',sans-serif;font-size:0.72rem;cursor:pointer;transition:all 0.2s;}
+.copy-btn:hover{color:var(--text);border-color:var(--text);}
+.copy-btn.ok{color:var(--green);border-color:var(--green);}
+.out-card-body{padding:18px;font-size:0.82rem;line-height:1.75;white-space:pre-wrap;}
 
-/* ── LEFT PANEL ── */
-.left {
-  border-right: 1px solid var(--border);
-  padding: 32px 28px;
-  overflow-y: auto;
-  background: var(--surface);
-}
+/* PLACEHOLDER */
+.placeholder{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--muted);text-align:center;padding:40px;}
+.ph-icon{font-size:3.5rem;opacity:0.18;}
+.ph-text{font-size:0.82rem;line-height:1.6;max-width:280px;}
 
-.panel-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.5rem;
-  font-weight: 900;
-  margin-bottom: 4px;
-  line-height: 1.1;
-}
-.panel-title em { color: var(--accent); font-style: italic; }
+/* PROGRESS */
+.prog-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px;}
+.prog-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;margin-bottom:14px;color:var(--gold);}
+.prog-step{display:flex;align-items:center;gap:10px;font-size:0.8rem;color:var(--muted);transition:color 0.3s;margin-bottom:9px;}
+.prog-step.active{color:var(--text);}
+.prog-step.done{color:var(--green);}
+.prog-dot{width:7px;height:7px;border-radius:50%;background:var(--border);flex-shrink:0;transition:all 0.3s;}
+.prog-step.active .prog-dot{background:var(--gold);animation:pdot 1s infinite;}
+.prog-step.done .prog-dot{background:var(--green);}
+@keyframes pdot{0%,100%{transform:scale(1)}50%{transform:scale(1.7)}}
 
-.panel-sub {
-  color: var(--muted);
-  font-size: 0.8rem;
-  margin-bottom: 28px;
-  line-height: 1.5;
-}
+/* CAROUSEL PREVIEW */
+.carousel-wrap{max-width:400px;margin:0 auto;width:100%;}
+.slides-viewport{overflow:hidden;border-radius:12px;box-shadow:0 16px 50px rgba(0,0,0,0.55);}
+.slides-track{display:flex;transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);}
+.slide{min-width:100%;aspect-ratio:1;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:24px;overflow:hidden;background:#0d0d12;}
+.slide-cover{background:var(--bg);}
+.slide-cover .sc-line{position:absolute;top:0;left:0;right:0;height:4px;background:var(--accent);}
+.slide-cover .sc-date{font-size:0.62rem;text-transform:uppercase;letter-spacing:3px;color:var(--muted);margin-bottom:8px;}
+.slide-cover .sc-title{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;font-weight:900;line-height:1.05;margin-bottom:6px;}
+.slide-cover .sc-title em{color:var(--accent);font-style:italic;}
+.slide-cover .sc-sub{font-size:0.72rem;color:var(--muted);}
+.slide-cover .sc-big{position:absolute;bottom:24px;right:20px;font-family:'Bebas Neue',sans-serif;font-size:5rem;font-weight:900;color:var(--accent);opacity:0.07;line-height:1;}
+.slide-news{background:#0d0d12;}
+.slide-news .sn-bar{position:absolute;left:0;top:0;bottom:0;width:4px;}
+.slide-news .sn-num{font-family:'Bebas Neue',sans-serif;font-size:5rem;font-weight:900;color:#fff;opacity:0.04;position:absolute;top:12px;right:16px;line-height:1;}
+.slide-news .sn-cat{font-size:0.58rem;text-transform:uppercase;letter-spacing:2.5px;font-weight:700;margin-bottom:8px;}
+.slide-news .sn-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;font-weight:700;line-height:1.2;margin-bottom:8px;}
+.slide-news .sn-body{font-size:0.75rem;color:#aaa;line-height:1.5;}
+.slide-news .sn-logo{position:absolute;top:16px;left:16px;font-family:'Bebas Neue',sans-serif;font-size:0.65rem;font-weight:700;color:#333;letter-spacing:1px;}
+.slide-outro{background:var(--accent);}
+.slide-outro .so-title{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;font-weight:900;line-height:1.1;margin-bottom:8px;color:#fff;}
+.slide-outro .so-sub{font-size:0.75rem;color:rgba(255,255,255,0.7);}
+.slide-outro .so-logo{position:absolute;top:20px;right:20px;font-family:'Bebas Neue',sans-serif;font-size:0.8rem;font-weight:900;color:rgba(255,255,255,0.25);}
+.c-nav{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;}
+.c-dot{width:6px;height:6px;border-radius:50%;background:var(--border);cursor:pointer;transition:all 0.2s;}
+.c-dot.active{background:var(--accent);transform:scale(1.4);}
+.c-arr{background:var(--card);border:1px solid var(--border);border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.8rem;color:var(--text);transition:all 0.2s;}
+.c-arr:hover{border-color:var(--accent);color:var(--accent);}
+.caption-box{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:16px;max-width:400px;margin:0 auto;width:100%;}
+.caption-lbl{font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);font-weight:700;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+.caption-txt{font-size:0.8rem;line-height:1.75;color:var(--text);white-space:pre-wrap;}
 
-/* Date */
-.date-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 22px;
-  padding: 10px 14px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  font-size: 0.78rem;
-}
-.date-bar input {
-  background: transparent;
-  border: none;
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.78rem;
-  outline: none;
-  cursor: pointer;
-}
+/* REEL VIEWER */
+.story-viewer{max-width:380px;margin:0 auto;width:100%;position:relative;border-radius:14px;overflow:hidden;box-shadow:0 18px 55px rgba(0,0,0,0.65);background:#000;user-select:none;}
+.story-viewer canvas{display:block;width:100%;height:auto;}
+.story-bars{position:absolute;top:7px;left:7px;right:7px;display:flex;gap:2px;z-index:10;}
+.story-bar{flex:1;height:2px;background:rgba(255,255,255,0.3);border-radius:2px;overflow:hidden;}
+.story-bar-fill{height:100%;background:#fff;border-radius:2px;width:0%;}
+.story-bar-fill.done{width:100%;}
+.tap-l{position:absolute;left:0;top:0;width:38%;height:100%;z-index:5;cursor:pointer;}
+.tap-r{position:absolute;right:0;top:0;width:38%;height:100%;z-index:5;cursor:pointer;}
+.story-ctrl{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:9px;max-width:380px;margin:0 auto;width:100%;}
+.play-btn{width:36px;height:36px;border-radius:50%;background:var(--accent);border:none;color:#fff;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.2s;}
+.play-btn:hover{background:#ff4757;transform:scale(1.05);}
+.ctrl-info{flex:1;font-size:0.72rem;color:var(--muted);}
+.ctrl-info strong{color:var(--text);font-size:0.76rem;display:block;}
+.slides-overview{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:14px;}
+.sov-title{font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold);font-weight:700;margin-bottom:10px;}
+.slide-rows{display:flex;flex-direction:column;gap:4px;max-height:220px;overflow-y:auto;}
+.slide-row{display:flex;align-items:center;gap:8px;padding:7px 9px;background:var(--surface);border-radius:5px;cursor:pointer;border:1px solid transparent;transition:all 0.15s;}
+.slide-row:hover{border-color:var(--border);}
+.slide-row.active{border-color:var(--accent);}
+.sr-num{font-family:'Bebas Neue',sans-serif;font-size:0.85rem;color:var(--accent);min-width:20px;}
+.sr-text{font-size:0.72rem;color:var(--muted);line-height:1.35;flex:1;}
+.sr-badge{font-size:0.6rem;color:var(--muted);background:var(--border);padding:1px 6px;border-radius:8px;white-space:nowrap;}
 
-/* News inputs */
-.news-list { display: flex; flex-direction: column; gap: 12px; }
+/* EXPORT PANEL */
+.export-panel{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:14px;}
+.exp-title{font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold);font-weight:700;margin-bottom:10px;}
+.exp-opts{display:flex;gap:7px;flex-wrap:wrap;}
+.exp-opt{flex:1;min-width:100px;padding:10px;background:var(--surface);border:1px solid var(--border);border-radius:7px;color:var(--muted);font-family:'Sora',sans-serif;font-size:0.72rem;font-weight:600;cursor:pointer;transition:all 0.2s;text-align:center;}
+.exp-opt:hover{border-color:var(--gold);color:var(--gold);}
+.exp-opt .eo{font-size:1.1rem;display:block;margin-bottom:3px;}
+.exp-opt:disabled{opacity:0.4;cursor:not-allowed;}
 
-.news-item {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px;
-  position: relative;
-  transition: border-color 0.2s;
-}
-.news-item:focus-within { border-color: var(--accent); }
+/* HASHTAG PAGE */
+.hash-section{margin-bottom:28px;}
+.hash-group-label{font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+.hash-group-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.hashtag-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.hashtag{background:var(--card);border:1px solid var(--border);border-radius:5px;padding:5px 12px;font-size:0.78rem;font-family:monospace;cursor:pointer;transition:all 0.15s;}
+.hashtag:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px);}
+.hash-big{border-color:rgba(230,57,70,0.25);color:#fc5c7d;}
+.hash-mid{border-color:rgba(124,92,252,0.25);color:#9b8ff5;}
+.hash-small{border-color:rgba(244,196,48,0.25);color:var(--gold);}
+.combo-card{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:16px;margin-bottom:12px;}
+.combo-title{font-size:0.82rem;font-weight:700;margin-bottom:8px;}
+.combo-body{font-size:0.77rem;color:#8888aa;font-family:monospace;line-height:1.75;padding:12px;background:var(--bg);border-radius:5px;margin-bottom:8px;}
 
-.news-num {
-  position: absolute;
-  top: 12px; left: 14px;
-  font-family: 'Playfair Display', serif;
-  font-size: 1.6rem;
-  font-weight: 900;
-  color: var(--accent);
-  opacity: 0.25;
-  line-height: 1;
-}
+/* CALENDAR PAGE */
+.cal-wrap{padding:24px;overflow-x:auto;}
+.week-grid{display:grid;grid-template-columns:80px repeat(7,1fr);gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--border);min-width:700px;}
+.day-hdr{background:var(--surface);color:var(--muted);padding:10px;text-align:center;font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;border-right:1px solid var(--border);}
+.time-lbl{background:var(--card);padding:12px 8px;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:0.9rem;letter-spacing:1px;color:var(--text);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;}
+.time-lbl .tl-slot{font-size:0.5rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-family:'Sora',sans-serif;font-weight:600;}
+.post-cell{background:var(--bg);padding:7px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);min-height:95px;}
+.post-card{background:var(--card);border-radius:5px;padding:8px 10px;height:100%;border-left:3px solid transparent;cursor:default;}
+.post-card.morning{border-left-color:var(--gold);background:#1a160a;}
+.post-card.noon{border-left-color:var(--accent);background:#1a0a0a;}
+.post-card.evening{border-left-color:var(--blue);background:#0a0a1a;}
+.post-type{font-size:0.55rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;}
+.morning .post-type{color:var(--gold);}
+.noon .post-type{color:var(--accent);}
+.evening .post-type{color:var(--blue);}
+.post-title{font-size:0.72rem;font-weight:700;line-height:1.25;margin-bottom:3px;}
+.post-hint{font-size:0.65rem;color:var(--muted);line-height:1.35;}
 
-.news-cat {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 8px;
-  padding-left: 28px;
-  flex-wrap: wrap;
-}
-.cat-btn {
-  padding: 3px 10px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--muted);
-  font-size: 0.65rem;
-  font-family: 'DM Sans', sans-serif;
-  cursor: pointer;
-  transition: all 0.15s;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 600;
-}
-.cat-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+/* TEMPLATE PAGE */
+.tmpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:24px;}
+.tmpl-card{background:var(--card);border:1px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:all 0.2s;}
+.tmpl-card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,0.3);}
+.tpl-preview{aspect-ratio:1;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:18px;overflow:hidden;}
+.tpl-dark{background:#0d0d0d;}
+.tpl-white{background:#fff;}
+.tpl-gold{background:#111;}
+.tpl-label-wrap{padding:12px 14px;border-top:1px solid var(--border);}
+.tpl-name{font-size:0.82rem;font-weight:700;margin-bottom:2px;}
+.tpl-desc{font-size:0.72rem;color:var(--muted);}
 
-.news-input {
-  width: 100%;
-  background: transparent;
-  border: none;
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.85rem;
-  line-height: 1.5;
-  resize: none;
-  outline: none;
-  min-height: 54px;
-  padding-left: 28px;
-}
-.news-input::placeholder { color: var(--muted); }
+/* TABS inside page */
+.page-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:20px;}
+.page-tab{padding:10px 18px;background:transparent;border:none;color:var(--muted);font-family:'Sora',sans-serif;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.2s;}
+.page-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
 
-.impact-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 8px;
-  padding-left: 28px;
-  padding-top: 8px;
-  border-top: 1px solid var(--border);
-}
-.impact-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-.impact-stars { display: flex; gap: 3px; }
-.star {
-  width: 16px; height: 16px;
-  background: var(--border);
-  border-radius: 2px;
-  cursor: pointer;
-  transition: background 0.15s;
-  font-size: 0; /* hide text */
-}
-.star.on { background: var(--gold); }
+/* ANIM */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp 0.35s ease;}
 
-/* Format selector */
-.format-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin: 22px 0;
-}
-.fmt-btn {
-  padding: 12px 8px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--muted);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-align: center;
-}
-.fmt-btn .fmt-icon { font-size: 1.2rem; display:block; margin-bottom:4px; }
-.fmt-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(230,57,70,0.08); }
-
-/* Generate button */
-.gen-btn {
-  width: 100%;
-  padding: 15px;
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  letter-spacing: 0.3px;
-}
-.gen-btn:hover:not(:disabled) { background: #ff4757; transform: translateY(-1px); }
-.gen-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
-
-/* ── RIGHT PANEL ── */
-.right {
-  padding: 32px 36px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
-
-.placeholder-state {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: var(--muted);
-  text-align: center;
-  gap: 12px;
-}
-.placeholder-state .big-icon { font-size: 3.5rem; opacity: 0.3; }
-.placeholder-state p { font-size: 0.85rem; line-height: 1.6; max-width: 280px; }
-
-/* ── OUTPUT TABS ── */
-.out-tabs {
-  display: flex;
-  gap: 0;
-  border-bottom: 1px solid var(--border);
-}
-.out-tab {
-  padding: 10px 20px;
-  background: transparent;
-  border: none;
-  color: var(--muted);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.78rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  transition: all 0.2s;
-}
-.out-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-
-.out-pane { display: none; }
-.out-pane.active { display: block; }
-
-/* ── CAROUSEL PREVIEW ── */
-.carousel-wrap {
-  position: relative;
-  width: 100%;
-  max-width: 420px;
-  margin: 0 auto;
-}
-
-.slides-viewport {
-  overflow: hidden;
-  border-radius: 14px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-}
-
-.slides-track {
-  display: flex;
-  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
-}
-
-.slide {
-  min-width: 100%;
-  aspect-ratio: 1;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 28px;
-  overflow: hidden;
-  background: #0d0d12;
-}
-
-/* Slide 0 — cover */
-.slide-cover { background: var(--bg); }
-.slide-cover .cover-noise {
-  position: absolute; inset: 0;
-  background: repeating-linear-gradient(
-    45deg, transparent, transparent 2px,
-    rgba(255,255,255,0.01) 2px, rgba(255,255,255,0.01) 4px
-  );
-}
-.slide-cover .cover-line {
-  position: absolute; top: 0; left: 0; right: 0; height: 4px;
-  background: var(--accent);
-}
-.slide-cover .cover-date {
-  font-size: 0.65rem; text-transform: uppercase;
-  letter-spacing: 3px; color: var(--muted); margin-bottom: 10px;
-}
-.slide-cover .cover-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 2rem; font-weight: 900; line-height: 1.05;
-  margin-bottom: 6px;
-}
-.slide-cover .cover-title em { color: var(--accent); font-style: italic; }
-.slide-cover .cover-sub {
-  font-size: 0.75rem; color: var(--muted);
-}
-.slide-cover .cover-count {
-  position: absolute; bottom: 28px; right: 28px;
-  font-family: 'Playfair Display', serif;
-  font-size: 5rem; font-weight: 900;
-  color: var(--accent); opacity: 0.08; line-height: 1;
-}
-
-/* News slides */
-.slide-news { background: #0d0d12; }
-.slide-news .s-accent-bar {
-  position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
-}
-.slide-news .s-num {
-  font-family: 'Playfair Display', serif;
-  font-size: 5rem; font-weight: 900;
-  color: white; opacity: 0.04;
-  position: absolute; top: 16px; right: 20px; line-height:1;
-}
-.slide-news .s-cat {
-  font-size: 0.6rem; text-transform: uppercase;
-  letter-spacing: 2.5px; font-weight: 700;
-  margin-bottom: 10px;
-}
-.slide-news .s-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.35rem; font-weight: 700;
-  line-height: 1.25; margin-bottom: 10px;
-}
-.slide-news .s-body {
-  font-size: 0.78rem; color: #aaa; line-height: 1.55;
-}
-.slide-news .s-logo {
-  position: absolute; top: 20px; left: 20px;
-  font-family: 'Playfair Display', serif;
-  font-size: 0.7rem; font-weight: 700;
-  color: #333; letter-spacing: 1px;
-}
-
-/* Outro slide */
-.slide-outro { background: var(--accent); }
-.slide-outro .o-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.8rem; font-weight: 900;
-  line-height: 1.1; margin-bottom: 10px; color: white;
-}
-.slide-outro .o-sub { font-size: 0.8rem; color: rgba(255,255,255,0.7); }
-.slide-outro .o-logo {
-  position: absolute; top: 24px; right: 24px;
-  font-family: 'Playfair Display', serif;
-  font-size: 0.85rem; font-weight: 900; color: rgba(255,255,255,0.3);
-}
-
-/* Carousel nav */
-.c-nav {
-  display: flex; align-items: center; justify-content: center;
-  gap: 10px; margin-top: 14px;
-}
-.c-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--border); cursor: pointer; transition: all 0.2s;
-}
-.c-dot.active { background: var(--accent); transform: scale(1.4); }
-.c-arrow {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 50%; width: 34px; height: 34px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: 0.85rem; color: var(--text);
-  transition: all 0.2s;
-}
-.c-arrow:hover { border-color: var(--accent); color: var(--accent); }
-
-/* Caption box */
-.caption-box {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 18px;
-  margin-top: 16px;
-  max-width: 420px;
-  margin-left: auto; margin-right: auto;
-}
-.caption-label {
-  font-size: 0.65rem; text-transform: uppercase;
-  letter-spacing: 2px; color: var(--muted); font-weight: 700;
-  margin-bottom: 10px; display: flex; justify-content: space-between;
-  align-items: center;
-}
-.caption-text {
-  font-size: 0.82rem; line-height: 1.7; color: var(--text);
-  white-space: pre-wrap;
-}
-
-/* ── SINGLE IMAGE PREVIEW ── */
-.img-preview {
-  max-width: 420px;
-  margin: 0 auto;
-  aspect-ratio: 1;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-  position: relative;
-  background: #0d0d12;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 28px;
-}
-.img-preview .top-bar {
-  display: flex; align-items: center; justify-content: space-between;
-}
-.img-preview .brand-tag {
-  font-family: 'Playfair Display', serif;
-  font-size: 0.75rem; font-weight: 700;
-  color: var(--accent); letter-spacing: 1px;
-}
-.img-preview .date-tag {
-  font-size: 0.65rem; color: var(--muted);
-  text-transform: uppercase; letter-spacing: 1px;
-}
-.img-preview .center-block { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 14px; }
-.img-preview .img-headline {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.5rem; font-weight: 900;
-  line-height: 1.1; color: white;
-}
-.img-preview .img-headline em { color: var(--accent); font-style: italic; }
-.img-preview .news-bullets { display: flex; flex-direction: column; gap: 10px; }
-.img-preview .news-bullet {
-  display: flex; gap: 10px; align-items: flex-start;
-}
-.img-preview .bullet-num {
-  font-family: 'Playfair Display', serif;
-  font-size: 1rem; font-weight: 900;
-  color: var(--accent); min-width: 18px; line-height: 1.2;
-}
-.img-preview .bullet-text {
-  font-size: 0.75rem; color: #ccc; line-height: 1.4;
-}
-.img-preview .bottom-bar {
-  display: flex; align-items: center; justify-content: space-between;
-}
-.img-preview .swipe-hint {
-  font-size: 0.6rem; color: var(--muted);
-  text-transform: uppercase; letter-spacing: 1px;
-}
-.img-top-line {
-  position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  background: var(--accent);
-}
-
-/* ── REEL SCRIPT ── */
-.reel-wrap { max-width: 520px; margin: 0 auto; }
-
-.reel-header {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px 10px 0 0;
-  padding: 14px 18px;
-  display: flex; align-items: center; justify-content: space-between;
-}
-.reel-title-label {
-  font-size: 0.7rem; text-transform: uppercase;
-  letter-spacing: 2px; color: var(--accent); font-weight: 700;
-}
-.reel-duration {
-  font-size: 0.72rem; color: var(--muted);
-  background: var(--bg); padding: 3px 10px; border-radius: 20px;
-}
-
-.reel-scenes { display: flex; flex-direction: column; }
-
-.scene {
-  background: var(--card);
-  border-left: 1px solid var(--border);
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  padding: 16px 18px;
-  display: grid;
-  grid-template-columns: 60px 1fr;
-  gap: 14px;
-  align-items: start;
-}
-
-.scene-timing {
-  text-align: center;
-}
-.scene-time {
-  font-family: 'Playfair Display', serif;
-  font-size: 0.9rem; font-weight: 700;
-  color: var(--accent); display: block;
-}
-.scene-dur {
-  font-size: 0.6rem; color: var(--muted);
-  text-transform: uppercase; letter-spacing: 0.5px;
-}
-.scene-label {
-  font-size: 0.65rem; text-transform: uppercase;
-  letter-spacing: 1.5px; font-weight: 700;
-  color: var(--muted); margin-bottom: 4px;
-}
-.scene-text {
-  font-size: 0.82rem; line-height: 1.55; color: var(--text);
-}
-.scene-visual {
-  font-size: 0.72rem; color: var(--muted); margin-top: 6px;
-  font-style: italic;
-}
-.scene:last-child { border-radius: 0 0 10px 10px; }
-
-/* Copy buttons */
-.copy-row {
-  display: flex; gap: 8px; margin-top: 12px;
-  justify-content: center;
-}
-.copy-btn {
-  padding: 8px 18px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: transparent;
-  color: var(--muted);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.75rem; font-weight: 600;
-  cursor: pointer; transition: all 0.2s;
-}
-.copy-btn:hover { border-color: var(--accent); color: var(--accent); }
-.copy-btn.ok { border-color: var(--green); color: var(--green); }
-
-/* Loader */
-.loader {
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 60px; gap: 16px;
-}
-.spinner {
-  width: 40px; height: 40px;
-  border: 3px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.loader p { font-size: 0.82rem; color: var(--muted); }
-
-/* Category colors */
-.cat-politica  { color: #e63946; }
-.cat-economie  { color: #f4c430; }
-.cat-social    { color: #2ecc71; }
-.cat-international { color: #3498db; }
-.cat-meteo     { color: #9b59b6; }
-.cat-default   { color: #aaa; }
-
-.bar-politica     { background: #e63946; }
-.bar-economie     { background: #f4c430; }
-.bar-social       { background: #2ecc71; }
-.bar-international{ background: #3498db; }
-.bar-meteo        { background: #9b59b6; }
-.bar-default      { background: #aaa; }
-
-@media (max-width: 780px) {
-  .app { grid-template-columns: 1fr; }
-  .left { border-right: none; border-bottom: 1px solid var(--border); }
-  header { padding: 14px 18px; }
-  .right { padding: 24px 18px; }
+@media(max-width:800px){
+  .split{grid-template-columns:1fr;}
+  .panel-l{border-right:none;border-bottom:1px solid var(--border);}
+  nav{padding:0 12px;}
+  .nav-logo{margin-right:12px;font-size:1.2rem;}
+  .nav-tab{padding:0 12px;font-size:0.7rem;}
 }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">Ce Trebuie Să <span>Știi</span> Azi</div>
-  <div class="live-badge"><div class="live-dot"></div> Generator AI</div>
-</header>
+<nav>
+  <div class="nav-logo">Știri<em>RO</em><span>Studio</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="goPage('postare',this)"><span class="ti">✍️</span>Postare AI</button>
+    <button class="nav-tab" onclick="goPage('reel',this)"><span class="ti">🎬</span>Reel Generator</button>
+    <button class="nav-tab" onclick="goPage('hashtag',this)"><span class="ti">#</span>Hashtag-uri</button>
+    <button class="nav-tab" onclick="goPage('calendar',this)"><span class="ti">📅</span>Calendar</button>
+    <button class="nav-tab" onclick="goPage('template',this)"><span class="ti">🎨</span>Template Canva</button>
+  </div>
+</nav>
 
-<div class="app">
-  <!-- ══ LEFT ══ -->
-  <div class="left">
-    <h2 class="panel-title">Știrile<br><em>zilei</em></h2>
-    <p class="panel-sub">Adaugă 3–5 știri importante. AI-ul generează carousel, imagine și script reel.</p>
+<!-- ═══════════ PAGE: POSTARE ═══════════ -->
+<div class="page active" id="page-postare">
+  <div class="split">
+    <div class="panel-l">
+      <h2 class="ptitle">Generator<br><em>Postări</em></h2>
+      <p class="psub">Introdu știrile zilei și AI-ul scrie postările gata de publicat.</p>
 
-    <div class="date-bar">
-      📅 <input type="date" id="dateInput">
+      <div class="ctrl-section">
+        <span class="ctrl-label">Platformă</span>
+        <div class="row3">
+          <button class="pill-btn active" data-plat="instagram" onclick="selPlat(this)"><span class="bi">📸</span>Instagram</button>
+          <button class="pill-btn" data-plat="facebook" onclick="selPlat(this)"><span class="bi">📘</span>Facebook</button>
+          <button class="pill-btn" data-plat="both" onclick="selPlat(this)"><span class="bi">✨</span>Ambele</button>
+        </div>
+      </div>
+
+      <div class="ctrl-section">
+        <span class="ctrl-label">Ton</span>
+        <div class="chip-wrap">
+          <button class="chip active" data-tone="informativ" onclick="selTone(this)">📰 Informativ</button>
+          <button class="chip" data-tone="alert" onclick="selTone(this)">🚨 Breaking</button>
+          <button class="chip" data-tone="analitic" onclick="selTone(this)">🔍 Analitic</button>
+          <button class="chip" data-tone="pozitiv" onclick="selTone(this)">✅ Pozitiv</button>
+          <button class="chip" data-tone="ironic" onclick="selTone(this)">😏 Ironic</button>
+        </div>
+      </div>
+
+      <div class="ctrl-section">
+        <span class="ctrl-label">Știrea</span>
+        <textarea class="txt-input" id="newsInput" rows="5" placeholder="Ex: Guvernul a aprobat mărirea salariului minim la 4.050 lei brut..."></textarea>
+      </div>
+
+      <button class="primary-btn" id="genPostBtn" onclick="genPost()">⚡ Generează postarea</button>
     </div>
 
-    <div class="news-list" id="newsList">
-      <!-- items injected by JS -->
+    <div class="panel-r" id="postareOut">
+      <div class="placeholder">
+        <div class="ph-icon">✍️</div>
+        <p class="ph-text">Introdu știrea și apasă Generează — AI-ul scrie postarea gata de copiat.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ PAGE: REEL ═══════════ -->
+<div class="page" id="page-reel">
+  <div class="split">
+    <div class="panel-l">
+      <h2 class="ptitle">Reel<br><em>Generator</em></h2>
+      <p class="psub">O imagine AI per știre. Textul apare progresiv pe mai multe cadre.</p>
+
+      <div class="news-list" id="reelNewsList"></div>
+      <button class="add-news-btn" onclick="addReelNews()">+ Adaugă știre</button>
+
+      <div class="ctrl-section">
+        <span class="ctrl-label">Format video</span>
+        <div class="row3">
+          <button class="pill-btn active" data-ratio="9:16" onclick="selRatio(this)"><span class="bi">📱</span>9:16 Reel</button>
+          <button class="pill-btn" data-ratio="1:1" onclick="selRatio(this)"><span class="bi">⬛</span>1:1 Post</button>
+          <button class="pill-btn" data-ratio="16:9" onclick="selRatio(this)"><span class="bi">🖥️</span>16:9</button>
+        </div>
+      </div>
+
+      <div class="ctrl-section">
+        <span class="ctrl-label">Stil imagini</span>
+        <div class="chip-wrap">
+          <button class="chip active" data-style="photorealistic news photography, ultra detailed 4k" onclick="selStyle(this)">📸 Foto HD</button>
+          <button class="chip" data-style="cinematic dramatic lighting, film grain, 8k" onclick="selStyle(this)">🎬 Cinematic</button>
+          <button class="chip" data-style="digital illustration flat design colorful" onclick="selStyle(this)">🎨 Ilustrație</button>
+          <button class="chip" data-style="dark moody editorial photography, high contrast" onclick="selStyle(this)">🌑 Editorial</button>
+        </div>
+      </div>
+
+      <div class="ctrl-section">
+        <span class="ctrl-label">Cuvinte pe cadru</span>
+        <div class="slider-row">
+          <input type="range" min="4" max="25" value="10" id="wordsSlider" oninput="updWords(this.value)">
+          <div class="slider-val" id="wordsVal">10 cuv.</div>
+        </div>
+      </div>
+
+      <div class="ctrl-section">
+        <span class="ctrl-label">Durată cadru (secunde)</span>
+        <div class="slider-row">
+          <input type="range" min="1" max="8" value="3" step="0.5" id="durSlider" oninput="updDur(this.value)">
+          <div class="slider-val" id="durVal">3s</div>
+        </div>
+      </div>
+
+      <div class="ctrl-section">
+        <span class="ctrl-label">Dimensiune text</span>
+        <div class="slider-row">
+          <input type="range" min="2" max="10" value="6" id="txtSizeSlider" oninput="updTxtSize(this.value)">
+          <div class="slider-val" id="txtSizeVal">6%</div>
+        </div>
+      </div>
+
+      <div class="ctrl-section">
+        <span class="ctrl-label">Calitate imagine</span>
+        <div class="row2">
+          <button class="pill-btn active" data-quality="standard" onclick="selQuality(this)"><span class="bi">🖼️</span>Standard</button>
+          <button class="pill-btn" data-quality="hd" onclick="selQuality(this)"><span class="bi">⭐</span>HD (mai lent)</button>
+        </div>
+      </div>
+
+      <button class="primary-btn" id="genReelBtn" onclick="genReel()">🎬 Generează Reel</button>
     </div>
 
-    <div style="margin-top:10px">
-      <button onclick="addNews()" style="width:100%;padding:10px;background:transparent;border:1px dashed var(--border);border-radius:8px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:0.82rem;cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
-        + Adaugă știre
-      </button>
+    <div class="panel-r" id="reelOut">
+      <div class="placeholder">
+        <div class="ph-icon">🎬</div>
+        <p class="ph-text">Adaugă știrile, configurează opțiunile și apasă Generează Reel.</p>
+        <p style="font-size:0.72rem;margin-top:6px;color:var(--muted)">Imagini AI generate • Text progresiv • Export MP4/WebM</p>
+      </div>
     </div>
+  </div>
+</div>
 
-    <div style="margin-top:22px">
-      <div style="font-size:0.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--muted);font-weight:700;margin-bottom:10px">Format de generat</div>
-      <div class="format-grid">
-        <button class="fmt-btn active" data-fmt="carousel" onclick="selectFmt(this)">
-          <span class="fmt-icon">📱</span>Carousel
-        </button>
-        <button class="fmt-btn" data-fmt="image" onclick="selectFmt(this)">
-          <span class="fmt-icon">🖼️</span>Imagine
-        </button>
-        <button class="fmt-btn" data-fmt="reel" onclick="selectFmt(this)">
-          <span class="fmt-icon">🎬</span>Reel
-        </button>
+<!-- ═══════════ PAGE: HASHTAG ═══════════ -->
+<div class="page" id="page-hashtag">
+  <div style="max-width:900px;margin:0 auto;padding:32px 24px">
+    <h2 class="ptitle" style="margin-bottom:4px">Hashtag-uri<br><em>România</em></h2>
+    <p class="psub">Click pe orice hashtag pentru a-l copia. Combo-uri gata de utilizat.</p>
+
+    <div class="hash-section">
+      <div class="hash-group-label" style="color:#fc5c7d">🔴 Hashtag-uri mari — volum ridicat</div>
+      <div class="hashtag-grid">
+        <span class="hashtag hash-big" onclick="copyHash(this)">#romania</span>
+        <span class="hashtag hash-big" onclick="copyHash(this)">#stiri</span>
+        <span class="hashtag hash-big" onclick="copyHash(this)">#stiridezazi</span>
+        <span class="hashtag hash-big" onclick="copyHash(this)">#news</span>
+        <span class="hashtag hash-big" onclick="copyHash(this)">#breaking</span>
+        <span class="hashtag hash-big" onclick="copyHash(this)">#actualitati</span>
+        <span class="hashtag hash-big" onclick="copyHash(this)">#bucuresti</span>
+        <span class="hashtag hash-big" onclick="copyHash(this)">#politica</span>
       </div>
     </div>
 
-    <button class="gen-btn" id="genBtn" onclick="generate()">⚡ Generează conținut</button>
-  </div>
+    <div class="hash-section">
+      <div class="hash-group-label" style="color:#9b8ff5">🟣 Hashtag-uri medii — echilibru optim</div>
+      <div class="hashtag-grid">
+        <span class="hashtag hash-mid" onclick="copyHash(this)">#stiriromania</span>
+        <span class="hashtag hash-mid" onclick="copyHash(this)">#newsromania</span>
+        <span class="hashtag hash-mid" onclick="copyHash(this)">#romanianews</span>
+        <span class="hashtag hash-mid" onclick="copyHash(this)">#stiriazi</span>
+        <span class="hashtag hash-mid" onclick="copyHash(this)">#mediaro</span>
+        <span class="hashtag hash-mid" onclick="copyHash(this)">#evenimentezilei</span>
+        <span class="hashtag hash-mid" onclick="copyHash(this)">#stiriurgente</span>
+        <span class="hashtag hash-mid" onclick="copyHash(this)">#presaromana</span>
+        <span class="hashtag hash-mid" onclick="copyHash(this)">#jurnalism</span>
+        <span class="hashtag hash-mid" onclick="copyHash(this)">#romaniaazi</span>
+      </div>
+    </div>
 
-  <!-- ══ RIGHT ══ -->
-  <div class="right" id="rightPanel">
-    <div class="placeholder-state" id="placeholder">
-      <div class="big-icon">📰</div>
-      <p>Adaugă știrile zilei și apasă <strong>Generează</strong> — AI-ul construiește totul în câteva secunde.</p>
+    <div class="hash-section">
+      <div class="hash-group-label" style="color:var(--gold)">🟡 Hashtag-uri nișă — engagement ridicat</div>
+      <div class="hashtag-grid">
+        <span class="hashtag hash-small" onclick="copyHash(this)">#stiridimineata</span>
+        <span class="hashtag hash-small" onclick="copyHash(this)">#stirisera</span>
+        <span class="hashtag hash-small" onclick="copyHash(this)">#stirilocale</span>
+        <span class="hashtag hash-small" onclick="copyHash(this)">#informatiiimportante</span>
+        <span class="hashtag hash-small" onclick="copyHash(this)">#ceseintampla</span>
+        <span class="hashtag hash-small" onclick="copyHash(this)">#economie</span>
+        <span class="hashtag hash-small" onclick="copyHash(this)">#politicaromana</span>
+        <span class="hashtag hash-small" onclick="copyHash(this)">#guvern</span>
+        <span class="hashtag hash-small" onclick="copyHash(this)">#salariuminim</span>
+        <span class="hashtag hash-small" onclick="copyHash(this)">#inflatiero</span>
+      </div>
+    </div>
+
+    <div class="hash-section">
+      <div class="hash-group-label" style="color:var(--muted)">⚡ Combo-uri gata de copiat</div>
+      <div class="combo-card">
+        <div class="combo-title">📰 Știre generală zilnică</div>
+        <div class="combo-body" id="combo1">#romania #stiri #stiriromania #newsromania #stiriazi #romaniaazi #actualitati #stiridezazi #evenimentezilei #jurnalism #informatii #presaromana #mediaro #stiridimineata #ceseintampla #news #breaking #stiriurgente #informatiiimportante #newsziua</div>
+        <button class="secondary-btn" onclick="copyCombo('combo1',this)">📋 Copiază combo</button>
+      </div>
+      <div class="combo-card">
+        <div class="combo-title">💰 Știre economică</div>
+        <div class="combo-body" id="combo2">#romania #economie #stiriromania #salariuminim #inflatiero #bnr #pensii #taxe #buget #eurron #stiriazi #actualitati #news #romaniaazi #informatiiimportante #evenimentezilei #stiri #mediaro #newsromania #informatii</div>
+        <button class="secondary-btn" onclick="copyCombo('combo2',this)">📋 Copiază combo</button>
+      </div>
+      <div class="combo-card">
+        <div class="combo-title">🏛️ Știre politică</div>
+        <div class="combo-body" id="combo3">#romania #politicaromana #stiriromania #guvern #parlament #alegeri #presedintie #ue #stiriazi #actualitati #breaking #stiriurgente #news #diplomatiero #romaniaazi #evenimentezilei #stiri #informatii #mediaro #newsromania</div>
+        <button class="secondary-btn" onclick="copyCombo('combo3',this)">📋 Copiează combo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ PAGE: CALENDAR ═══════════ -->
+<div class="page" id="page-calendar">
+  <div style="padding:24px">
+    <h2 class="ptitle" style="margin-bottom:4px">Calendar<br><em>Editorial</em></h2>
+    <p class="psub">21 postări/săptămână • ore fixe de trafic maxim</p>
+    <div class="cal-wrap">
+      <div class="week-grid">
+        <div class="day-hdr"></div>
+        <div class="day-hdr">Luni</div><div class="day-hdr">Marți</div><div class="day-hdr">Miercuri</div>
+        <div class="day-hdr">Joi</div><div class="day-hdr">Vineri</div><div class="day-hdr">Sâmbătă</div><div class="day-hdr">Duminică</div>
+        <!-- 08:00 -->
+        <div class="time-lbl"><span>08:00</span><span class="tl-slot">☀️ dimineață</span></div>
+        <div class="post-cell"><div class="post-card morning"><div class="post-type">Top 3 știri</div><div class="post-title">Rezumat weekend</div><div class="post-hint">Ce s-a întâmplat sâmbătă-duminică</div></div></div>
+        <div class="post-cell"><div class="post-card morning"><div class="post-type">Economie</div><div class="post-title">Știre economică</div><div class="post-hint">Curs, prețuri, salarii, taxe</div></div></div>
+        <div class="post-cell"><div class="post-card morning"><div class="post-type">Politică</div><div class="post-title">Știre politică</div><div class="post-hint">Decizii guvern, parlament</div></div></div>
+        <div class="post-cell"><div class="post-card morning"><div class="post-type">Internațional</div><div class="post-title">România în lume</div><div class="post-hint">UE, NATO, vecini</div></div></div>
+        <div class="post-cell"><div class="post-card morning"><div class="post-type">Cifra zilei</div><div class="post-title">Statistică</div><div class="post-hint">Un număr important, vizual</div></div></div>
+        <div class="post-cell"><div class="post-card morning"><div class="post-type">Weekend</div><div class="post-title">Știre ușoară</div><div class="post-hint">Subiect relaxat, pozitiv</div></div></div>
+        <div class="post-cell"><div class="post-card morning"><div class="post-type">Preview</div><div class="post-title">Ce urmează</div><div class="post-hint">Agenda săptămânii viitoare</div></div></div>
+        <!-- 13:00 -->
+        <div class="time-lbl"><span>13:00</span><span class="tl-slot">🔴 prânz</span></div>
+        <div class="post-cell"><div class="post-card noon"><div class="post-type">Breaking</div><div class="post-title">Cea mai mare știre</div><div class="post-hint">Hook puternic, ton urgent</div></div></div>
+        <div class="post-cell"><div class="post-card noon"><div class="post-type">Breaking</div><div class="post-title">Știre fierbinte</div><div class="post-hint">Ce discută toată lumea azi</div></div></div>
+        <div class="post-cell"><div class="post-card noon"><div class="post-type">Breaking</div><div class="post-title">Update important</div><div class="post-hint">Dezvoltare subiect anterior</div></div></div>
+        <div class="post-cell"><div class="post-card noon"><div class="post-type">Breaking</div><div class="post-title">Anunț oficial</div><div class="post-hint">Eveniment neprevăzut</div></div></div>
+        <div class="post-cell"><div class="post-card noon"><div class="post-type">Recapitulare</div><div class="post-title">Top 5 ale săptămânii</div><div class="post-hint">Carousel, performează bine</div></div></div>
+        <div class="post-cell"><div class="post-card noon"><div class="post-type">Sondaj</div><div class="post-title">Tu ce crezi?</div><div class="post-hint">Engagement maxim sâmbătă</div></div></div>
+        <div class="post-cell"><div class="post-card noon"><div class="post-type">Culise</div><div class="post-title">Behind the scenes</div><div class="post-hint">Cum funcționează contul</div></div></div>
+        <!-- 20:00 -->
+        <div class="time-lbl"><span>20:00</span><span class="tl-slot">🌙 seară</span></div>
+        <div class="post-cell"><div class="post-card evening"><div class="post-type">Rezumat zilei</div><div class="post-title">Ce s-a întâmplat azi</div><div class="post-hint">3 știri din ziua curentă</div></div></div>
+        <div class="post-cell"><div class="post-card evening"><div class="post-type">Analiză</div><div class="post-title">De ce contează</div><div class="post-hint">Impactul știrii principale</div></div></div>
+        <div class="post-cell"><div class="post-card evening"><div class="post-type">Rezumat zilei</div><div class="post-title">Știrile serii</div><div class="post-hint">3 puncte cheie</div></div></div>
+        <div class="post-cell"><div class="post-card evening"><div class="post-type">Dezbatere</div><div class="post-title">Tu ce crezi?</div><div class="post-hint">2 perspective, invită comentarii</div></div></div>
+        <div class="post-cell"><div class="post-card evening"><div class="post-type">Vineri seară</div><div class="post-title">Știre pozitivă</div><div class="post-hint">O veste bună din România</div></div></div>
+        <div class="post-cell"><div class="post-card evening"><div class="post-type">Rezumat</div><div class="post-title">Știrile de sâmbătă</div><div class="post-hint">Ce s-a întâmplat important</div></div></div>
+        <div class="post-cell"><div class="post-card evening"><div class="post-type">Preview luni</div><div class="post-title">Ce urmează</div><div class="post-hint">Creezi așteptare pentru mâine</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ PAGE: TEMPLATE ═══════════ -->
+<div class="page" id="page-template">
+  <div style="max-width:900px;margin:0 auto;padding:32px 24px">
+    <h2 class="ptitle" style="margin-bottom:4px">Template-uri<br><em>Canva</em></h2>
+    <p class="psub">3 stiluri + ghid pas cu pas + specificații complete</p>
+
+    <div class="page-tabs">
+      <button class="page-tab active" onclick="selTab('tpl-preview',this)">Preview</button>
+      <button class="page-tab" onclick="selTab('tpl-guide',this)">Ghid Canva</button>
+      <button class="page-tab" onclick="selTab('tpl-specs',this)">Specificații</button>
+    </div>
+
+    <div class="tab-pane active" id="tpl-preview">
+      <div class="tmpl-grid">
+        <div class="tmpl-card">
+          <div class="tpl-preview tpl-dark">
+            <div style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--accent)"></div>
+            <div style="position:absolute;left:18px;top:24px;width:2px;height:50px;background:var(--gold)"></div>
+            <div style="font-size:0.6rem;letter-spacing:3px;color:var(--accent);margin-bottom:6px;text-transform:uppercase">⚡ Breaking News</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;line-height:1.1;margin-bottom:8px">TITLUL ȘTIRII MERGE AICI</div>
+            <div style="font-size:0.65rem;color:#333;letter-spacing:2px;font-family:'Bebas Neue',sans-serif">ȘTIRIRO</div>
+          </div>
+          <div class="tpl-label-wrap"><div class="tpl-name">🖤 Breaking Dark</div><div class="tpl-desc">Fundal negru, accent roșu. Știri urgente.</div></div>
+        </div>
+        <div class="tmpl-card">
+          <div class="tpl-preview tpl-white" style="border-top:6px solid #111;justify-content:space-between">
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:'Bebas Neue',sans-serif;font-size:0.9rem;letter-spacing:2px;color:#111">ȘTIRIRO</span><span style="font-size:0.55rem;color:#999;text-transform:uppercase;letter-spacing:1px">21 APR 2026</span></div>
+            <div><div style="display:inline-block;background:#d62828;color:#fff;font-size:0.55rem;font-weight:700;padding:2px 8px;border-radius:2px;letter-spacing:2px;text-transform:uppercase;margin-bottom:7px">Știre zilei</div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;line-height:1.1;color:#111">TITLUL ȘTIRII MERGE AICI</div></div>
+            <div style="font-size:0.6rem;color:#999;border-top:1px solid #eee;padding-top:7px">sursă: digi24.ro • stiriro.ro</div>
+          </div>
+          <div class="tpl-label-wrap"><div class="tpl-name">🤍 Clean Ziar</div><div class="tpl-desc">Alb cu accente negre. Aspect serios.</div></div>
+        </div>
+        <div class="tmpl-card">
+          <div class="tpl-preview tpl-gold" style="justify-content:center">
+            <div style="position:absolute;top:12px;right:14px;font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:var(--gold);opacity:0.1;line-height:1">01</div>
+            <div style="font-size:0.58rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px">📰 România Azi</div>
+            <div style="width:35px;height:3px;background:var(--gold);margin-bottom:10px"></div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;line-height:1.15;margin-bottom:10px">TITLUL ȘTIRII MERGE AICI</div>
+            <div style="font-size:0.6rem;letter-spacing:2px;color:#444;font-family:'Bebas Neue',sans-serif">ȘTIRIRO</div>
+          </div>
+          <div class="tpl-label-wrap"><div class="tpl-name">✨ Gold Editorial</div><div class="tpl-desc">Negru cu aur. Aspect premium.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="tpl-guide">
+      <div style="display:flex;flex-direction:column;gap:20px;max-width:600px">
+        <a href="https://canva.com" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:var(--dark,#111);color:#fff;border-radius:6px;text-decoration:none;font-size:0.88rem;font-weight:600;width:fit-content;border:1px solid var(--border)">🎨 Deschide Canva.com</a>
+        ${['Creează design nou — Post Instagram (1080×1080px)','Setează fundalul: Dark=#0d0d0d / Clean=#ffffff / Gold=#111111','Adaugă linie accent roșu (#d62828) de 1080×8px sus','Titlu: Bebas Neue, 80-100px. Tag categorie: 20px, Sora','Salvează ca template → Duplicate page pentru fiecare postare','Exportă PNG calitate maximă → programează cu Meta Business Suite'].map((s,i)=>`
+          <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--border)">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--accent);line-height:1;min-width:40px">${String(i+1).padStart(2,'0')}</div>
+            <div style="padding-top:4px;font-size:0.83rem;line-height:1.6;color:var(--muted)">${s}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="tab-pane" id="tpl-specs">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:24px">
+        ${[['Post Instagram/Facebook','1080 × 1080px','pătrat'],['Story/Reels Cover','1080 × 1920px','vertical 9:16'],['Cover Facebook Page','820 × 312px','orizontal'],['Export format','PNG','calitate maximă']].map(([l,v,n])=>`
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:16px">
+            <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:5px">${l}</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px">${v}</div>
+            <div style="font-size:0.7rem;color:var(--muted);margin-top:3px">${n}</div>
+          </div>`).join('')}
+      </div>
+      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);font-weight:700;margin-bottom:12px">Paletă culori</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        ${[['#0d0d0d','Negru'],['#d62828','Roșu'],['#f7b731','Auriu'],['#ffffff','Alb'],['#f5f0e8','Crem']].map(([c,n])=>`
+          <div style="text-align:center"><div style="width:52px;height:52px;border-radius:4px;background:${c};border:1px solid rgba(255,255,255,0.1);margin-bottom:5px"></div><div style="font-size:0.7rem;font-weight:600;margin-bottom:2px">${n}</div><div style="font-size:0.62rem;color:var(--muted);font-family:monospace">${c}</div></div>`).join('')}
+      </div>
     </div>
   </div>
 </div>
 
 <script>
-// ── STATE ──
-const cats = ['Politică','Economie','Social','Internațional','Meteo'];
-const catKeys = ['politica','economie','social','international','meteo'];
-let newsItems = [];
-let currentFmt = 'carousel';
-let currentSlide = 0;
-let totalSlides = 0;
-let generated = null;
+const API = 'https://dailystiri.vercel.app/api/generate';
+const IMG_API = 'https://dailystiri.vercel.app/api/image';
 
-// ── INIT ──
-const today = new Date();
-document.getElementById('dateInput').value = today.toISOString().split('T')[0];
-addNews(); addNews(); addNews();
-
-function addNews() {
-  if (newsItems.length >= 5) return;
-  const id = Date.now() + Math.random();
-  newsItems.push({ id, cat: 0, text: '', impact: 3 });
-  renderNewsList();
-}
-
-function renderNewsList() {
-  const list = document.getElementById('newsList');
-  list.innerHTML = newsItems.map((item, i) => `
-    <div class="news-item" id="ni_${item.id}">
-      <div class="news-num">${i+1}</div>
-      <div class="news-cat">
-        ${cats.map((c,ci) => `
-          <button class="cat-btn ${item.cat===ci?'active':''}"
-            onclick="setCat(${item.id},${ci})">${c}</button>
-        `).join('')}
-      </div>
-      <textarea class="news-input"
-        placeholder="Descrie știrea pe scurt..."
-        oninput="setText(${item.id},this.value)"
-        rows="3">${item.text}</textarea>
-      <div class="impact-row">
-        <span class="impact-label">Impact</span>
-        <div class="impact-stars">
-          ${[1,2,3,4,5].map(s=>`
-            <div class="star ${item.impact>=s?'on':''}"
-              onclick="setImpact(${item.id},${s})" title="${s}"></div>
-          `).join('')}
-        </div>
-        ${newsItems.length>1?`
-          <div style="margin-left:auto;cursor:pointer;color:var(--muted);font-size:0.75rem"
-            onclick="removeNews(${item.id})">✕</div>
-        `:''}
-      </div>
-    </div>
-  `).join('');
-}
-
-function setCat(id, ci) {
-  newsItems.find(n=>n.id===id).cat = ci;
-  renderNewsList();
-}
-function setText(id, v) {
-  newsItems.find(n=>n.id===id).text = v;
-}
-function setImpact(id, v) {
-  newsItems.find(n=>n.id===id).impact = v;
-  renderNewsList();
-}
-function removeNews(id) {
-  newsItems = newsItems.filter(n=>n.id!==id);
-  renderNewsList();
-}
-function selectFmt(btn) {
-  document.querySelectorAll('.fmt-btn').forEach(b=>b.classList.remove('active'));
+// ── NAVIGATION ──
+function goPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
   btn.classList.add('active');
-  currentFmt = btn.dataset.fmt;
+}
+function selTab(id, btn) {
+  btn.closest('.page,.split,.panel-r,[style]').querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  btn.closest('div').querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
 }
 
-// ── DATE FORMAT ──
-function fmtDate(str) {
-  const d = new Date(str+'T00:00:00');
-  return d.toLocaleDateString('ro-RO',{day:'numeric',month:'long',year:'numeric'});
-}
+// ── POSTARE STATE ──
+let postPlat = 'instagram', postTone = 'informativ';
+function selPlat(btn) { document.querySelectorAll('[data-plat]').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); postPlat=btn.dataset.plat; }
+function selTone(btn) { document.querySelectorAll('[data-tone]').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); postTone=btn.dataset.tone; }
 
-// ── GENERATE ──
-async function generate() {
-  const valid = newsItems.filter(n=>n.text.trim().length>5);
-  if (valid.length < 1) return;
-
-  const btn = document.getElementById('genBtn');
+async function genPost() {
+  const news = document.getElementById('newsInput').value.trim();
+  if (!news) return;
+  const btn = document.getElementById('genPostBtn');
   btn.disabled = true;
+  const out = document.getElementById('postareOut');
+  out.innerHTML = '<div class="placeholder"><div class="ph-icon" style="animation:spin 1s linear infinite">⚡</div><p class="ph-text">AI-ul scrie postarea...</p></div>';
 
-  const right = document.getElementById('rightPanel');
-  right.innerHTML = `<div class="loader"><div class="spinner"></div><p>AI-ul analizează și construiește...</p></div>`;
+  const toneMap = { informativ:'neutru, informativ, jurnalistic', alert:'urgent, breaking news, captivant', analitic:'analitic, explici contextul', pozitiv:'pozitiv, constructiv', ironic:'ușor ironic, cu umor subtil' };
+  const platforms = postPlat === 'both' ? ['instagram','facebook'] : [postPlat];
+  const results = [];
 
-  const dateStr = document.getElementById('dateInput').value;
-  const dateLabel = fmtDate(dateStr);
-
-  // Build prompt
-  const newsText = valid.map((n,i)=>
-    `${i+1}. [${cats[n.cat]}] ${n.text} (impact: ${n.impact}/5)`
-  ).join('\n');
-
-  const prompt = `Ești un editor de știri pentru un cont de social media din România numit "Ce Trebuie Să Știi Azi".
-
-Data: ${dateLabel}
-Știrile zilei:
-${newsText}
-
-Generează conținut în format JSON cu această structură exactă (fără markdown, doar JSON pur):
-{
-  "caption_carousel": "caption complet pentru Instagram cu emoji-uri, 150-200 cuvinte, hashtag-uri la final",
-  "caption_image": "caption scurt pentru postarea cu imaginea, 80-100 cuvinte, energic, cu hashtag-uri",
-  "reel_script": [
-    {"moment": "0-3s", "voiceover": "text vorbit", "visual": "descriere vizual"},
-    {"moment": "3-8s", "voiceover": "text vorbit", "visual": "descriere vizual"},
-    {"moment": "8-18s", "voiceover": "text vorbit", "visual": "descriere vizual"},
-    {"moment": "18-28s", "voiceover": "text vorbit", "visual": "descriere vizual"},
-    {"moment": "28-35s", "voiceover": "text vorbit", "visual": "descriere vizual"},
-    {"moment": "35-40s", "voiceover": "text vorbit", "visual": "descriere vizual"}
-  ],
-  "news_summaries": [
-    {"title": "titlu scurt impactant max 8 cuvinte", "summary": "1-2 propoziții clare și directe"}
-  ]
-}
-
-Reguli:
-- Limbă română, ton jurnalistic direct
-- Titlurile știrilor: scurte, puternice, memorabile
-- Sumarul: informație esențială, fără fluff
-- Reel: voiceover natural, de parcă vorbești cu un prieten deștept
-- Returnează DOAR JSON, fără nimic altceva`;
-
-  let result;
-  try {
-    const resp = await fetch('https://dailystiri.vercel.app/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-    const data = await resp.json();
-    const raw = data.content.map(c=>c.text||'').join('').replace(/```json|```/g,'').trim();
-    result = JSON.parse(raw);
-  } catch(e) {
-    right.innerHTML = `<div class="loader"><p style="color:var(--accent)">Eroare. Încearcă din nou.</p></div>`;
-    btn.disabled = false;
-    return;
+  for (const p of platforms) {
+    const platDesc = p === 'instagram'
+      ? 'Instagram (max 2200 caractere, 15-20 hashtag-uri la final, emoji-uri, CTA scurt)'
+      : 'Facebook (max 400 cuvinte, max 5 hashtag-uri, întreabă opinia urmăritorilor)';
+    try {
+      const res = await fetch(API, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ max_tokens:1000, messages:[{ role:'user', content:`Ești social media manager pentru un cont de știri din România cu ton ${toneMap[postTone]}. Scrie o postare pentru ${platDesc} bazată pe: "${news}". Returnează DOAR textul postării.` }] })
+      });
+      const data = await res.json();
+      results.push({ plat: p, text: data.content[0].text });
+    } catch(e) {
+      results.push({ plat: p, text: 'Eroare. Încearcă din nou.' });
+    }
   }
 
-  generated = { result, valid, dateLabel, dateStr };
+  out.innerHTML = results.map(r => `
+    <div class="out-card fade-up">
+      <div class="out-card-head">
+        <div class="out-card-label">${r.plat === 'instagram' ? '📸 Instagram' : '📘 Facebook'}</div>
+        <button class="copy-btn" onclick="copyOut(this,\`${esc(r.text)}\`)">Copiază</button>
+      </div>
+      <div class="out-card-body">${r.text}</div>
+    </div>`).join('');
   btn.disabled = false;
-  renderOutput();
 }
 
-// ── RENDER OUTPUT ──
-function renderOutput() {
-  const { result, valid, dateLabel } = generated;
-  const right = document.getElementById('rightPanel');
+// ── REEL STATE ──
+let reelNews=[], reelRatio='9:16', reelStyle='photorealistic news photography, ultra detailed 4k';
+let reelWordsPerFrame=10, reelFrameDur=3, reelTxtSize=6, reelQuality='standard';
+let stories=[], allFrames=[], curFrame=0, isPlaying=false, playIv=null;
 
-  right.innerHTML = `
-    <div class="out-tabs">
-      <button class="out-tab active" onclick="switchTab('carousel',this)">📱 Carousel</button>
-      <button class="out-tab" onclick="switchTab('image',this)">🖼️ Imagine</button>
-      <button class="out-tab" onclick="switchTab('reel',this)">🎬 Reel</button>
-    </div>
+(function initReel(){ addReelNews(); addReelNews(); addReelNews(); })();
 
-    <!-- CAROUSEL -->
-    <div class="out-pane active" id="pane-carousel">
-      <div class="carousel-wrap">
-        <div class="slides-viewport">
-          <div class="slides-track" id="slidesTrack">
-            ${buildSlides(result, valid, dateLabel)}
-          </div>
-        </div>
-        <div class="c-nav">
-          <div class="c-arrow" onclick="prevSlide()">‹</div>
-          <div id="cDots"></div>
-          <div class="c-arrow" onclick="nextSlide()">›</div>
-        </div>
-      </div>
-      <div class="caption-box">
-        <div class="caption-label">
-          Caption Instagram
-          <button class="copy-btn" onclick="copyText(this, \`${escapeTpl(result.caption_carousel)}\`)">Copiază</button>
-        </div>
-        <div class="caption-text">${result.caption_carousel}</div>
-      </div>
-    </div>
+function addReelNews() {
+  if(reelNews.length>=5)return;
+  reelNews.push({id:Date.now()+Math.random(),text:''});
+  renderReelList();
+}
+function removeReelNews(id) {
+  if(reelNews.length<=1)return;
+  reelNews=reelNews.filter(n=>n.id!==id);
+  renderReelList();
+}
+function renderReelList() {
+  document.getElementById('reelNewsList').innerHTML=reelNews.map((item,i)=>`
+    <div class="news-item">
+      <div class="news-item-num">ȘTIREA ${i+1}</div>
+      <textarea placeholder="Scrie știrea complet — textul apare progresiv pe imagine..." oninput="reelNews[${i}].text=this.value" rows="4">${item.text}</textarea>
+      ${reelNews.length>1?`<button class="news-remove" onclick="removeReelNews(${item.id})">✕</button>`:''}
+    </div>`).join('');
+}
+function selRatio(btn){document.querySelectorAll('[data-ratio]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');reelRatio=btn.dataset.ratio;}
+function selStyle(btn){document.querySelectorAll('[data-style]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');reelStyle=btn.dataset.style;}
+function selQuality(btn){document.querySelectorAll('[data-quality]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');reelQuality=btn.dataset.quality;}
+function updWords(v){reelWordsPerFrame=parseInt(v);document.getElementById('wordsVal').textContent=v+' cuv.';}
+function updDur(v){reelFrameDur=parseFloat(v);document.getElementById('durVal').textContent=v+'s';}
+function updTxtSize(v){reelTxtSize=parseInt(v);document.getElementById('txtSizeVal').textContent=v+'%';}
 
-    <!-- IMAGE -->
-    <div class="out-pane" id="pane-image">
-      ${buildImagePreview(result, valid, dateLabel)}
-      <div class="caption-box" style="margin-top:16px">
-        <div class="caption-label">
-          Caption Imagine
-          <button class="copy-btn" onclick="copyText(this, \`${escapeTpl(result.caption_image)}\`)">Copiază</button>
-        </div>
-        <div class="caption-text">${result.caption_image}</div>
-      </div>
-    </div>
-
-    <!-- REEL -->
-    <div class="out-pane" id="pane-reel">
-      ${buildReelScript(result)}
-    </div>
-  `;
-
-  // Init carousel
-  totalSlides = valid.length + 2;
-  currentSlide = 0;
-  buildDots();
-  updateCarousel();
+function getDims(){
+  if(reelRatio==='9:16')return{w:reelQuality==='hd'?720:540,h:reelQuality==='hd'?1280:960};
+  if(reelRatio==='1:1')return{w:reelQuality==='hd'?1080:720,h:reelQuality==='hd'?1080:720};
+  return{w:reelQuality==='hd'?1280:960,h:reelQuality==='hd'?720:540};
 }
 
-function buildSlides(result, valid, dateLabel) {
-  const summaries = result.news_summaries || [];
+function splitChunks(text,n){
+  const words=text.trim().split(/\s+/);const chunks=[];
+  for(let i=0;i<words.length;i+=n)chunks.push(words.slice(i,i+n).join(' '));
+  return chunks;
+}
 
-  // Cover slide
-  let html = `
-    <div class="slide slide-cover">
-      <div class="cover-noise"></div>
-      <div class="cover-line"></div>
-      <div class="cover-date">${dateLabel}</div>
-      <div class="cover-title">Ce Trebuie<br>Să <em>Știi</em> Azi</div>
-      <div class="cover-sub">${valid.length} știri esențiale • swipe →</div>
-      <div class="cover-count">${valid.length}</div>
-    </div>
-  `;
+async function genReel(){
+  const valid=reelNews.filter(n=>n.text.trim().length>5);
+  if(!valid.length)return;
+  const btn=document.getElementById('genReelBtn');btn.disabled=true;
+  stories=[];allFrames=[];
+  const out=document.getElementById('reelOut');
 
-  // News slides
-  valid.forEach((n, i) => {
-    const key = catKeys[n.cat];
-    const sum = summaries[i] || { title: n.text.substring(0,50), summary: n.text };
-    html += `
-      <div class="slide slide-news">
-        <div class="s-accent-bar bar-${key}"></div>
-        <div class="s-num">${i+1}</div>
-        <div class="s-logo">ȘTIRI RO</div>
-        <div class="s-cat cat-${key}">${cats[n.cat]}</div>
-        <div class="s-title">${sum.title}</div>
-        <div class="s-body">${sum.summary}</div>
-      </div>
-    `;
+  out.innerHTML=`<div class="prog-wrap">
+    <div class="prog-title">⚡ Se construiește reelul...</div>
+    <div class="prog-step" id="rs0"><div class="prog-dot"></div><span id="rs0t">Generez prompt-uri vizuale...</span></div>
+    <div class="prog-step" id="rs1"><div class="prog-dot"></div><span id="rs1t">Generez ${valid.length} imagini ${reelQuality==='hd'?'HD':''} AI...</span></div>
+    <div class="prog-step" id="rs2"><div class="prog-dot"></div><span id="rs2t">Randez cadrele cu text progresiv...</span></div>
+    <div class="prog-step" id="rs3"><div class="prog-dot"></div><span id="rs3t">Pregătesc previzualizarea...</span></div>
+  </div>`;
+
+  function ss(i,s){const e=document.getElementById('rs'+i);if(e)e.className='prog-step '+s;}
+  function st(i,t){const e=document.getElementById('rs'+i+'t');if(e)e.textContent=t;}
+
+  ss(0,'active');
+  const prompts=await genImgPrompts(valid);
+  ss(0,'done');
+
+  ss(1,'active');
+  const dims=getDims();
+  for(let i=0;i<valid.length;i++){
+    st(1,`Generez imagine ${i+1}/${valid.length}${reelQuality==='hd'?' (HD)':''}...`);
+    const url=buildImgUrl(prompts[i],dims.w,dims.h);
+    const img=await loadImg(url);
+    const chunks=splitChunks(valid[i].text,reelWordsPerFrame);
+    stories.push({text:valid[i].text,chunks,img,idx:i});
+  }
+  ss(1,'done');
+
+  ss(2,'active');
+  for(let si=0;si<stories.length;si++){
+    const s=stories[si];
+    for(let ci=0;ci<s.chunks.length;ci++){
+      const c=document.createElement('canvas');
+      c.width=dims.w;c.height=dims.h;
+      drawFrame(c.getContext('2d'),s,ci,dims);
+      allFrames.push({canvas:c,dataUrl:c.toDataURL('image/jpeg',reelQuality==='hd'?0.95:0.88),si,ci});
+    }
+  }
+  ss(2,'done');ss(3,'active');
+  await new Promise(r=>setTimeout(r,200));
+  ss(3,'done');
+  btn.disabled=false;
+  showReelPreview();
+}
+
+async function genImgPrompts(arr){
+  try{
+    const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({max_tokens:600,messages:[{role:'user',content:`Pentru fiecare știre scrie un prompt scurt în engleză (max 12 cuvinte) pentru generare imagine AI. Stil: ${reelStyle}. Fără text în imagine, fără watermark.\n\n${arr.map((n,i)=>`${i+1}. ${n.text}`).join('\n')}\n\nRăspunde DOAR cu JSON array de strings. Nimic altceva.`}]})
+    });
+    const data=await res.json();
+    return JSON.parse(data.content[0].text.replace(/```json|```/g,'').trim());
+  }catch(e){
+    return arr.map(n=>`${reelStyle} Romania: ${n.text.substring(0,40)}`);
+  }
+}
+
+function buildImgUrl(prompt,w,h){
+  const full=prompt+', '+reelStyle+', no text, no watermark, no subtitles'+(reelQuality==='hd'?', ultra detailed, sharp, 8k':'');
+  return IMG_API+'?prompt='+encodeURIComponent(full)+'&width='+w+'&height='+h+'&seed='+Math.floor(Math.random()*99999);
+}
+
+function loadImg(url){
+  return new Promise(resolve=>{
+    const img=new Image();img.crossOrigin='anonymous';
+    img.onload=()=>resolve(img);
+    img.onerror=()=>{
+      const d=getDims();const fc=document.createElement('canvas');
+      fc.width=d.w;fc.height=d.h;
+      const ctx=fc.getContext('2d');
+      const g=ctx.createLinearGradient(0,0,d.w,d.h);
+      g.addColorStop(0,'#1a1a2e');g.addColorStop(1,'#16213e');
+      ctx.fillStyle=g;ctx.fillRect(0,0,d.w,d.h);
+      resolve(fc);
+    };
+    img.src=url;
   });
-
-  // Outro slide
-  html += `
-    <div class="slide slide-outro">
-      <div class="o-logo">ȘTIRI RO</div>
-      <div class="o-title">Urmărește<br>pentru mai mult</div>
-      <div class="o-sub">@stiriRO • actualizări zilnice • 08:00 · 13:00 · 20:00</div>
-    </div>
-  `;
-  return html;
 }
 
-function buildImagePreview(result, valid, dateLabel) {
-  const summaries = result.news_summaries || [];
-  const bullets = valid.slice(0,5).map((n,i) => {
-    const sum = summaries[i] || { title: n.text.substring(0,40) };
-    return `
-      <div class="news-bullet">
-        <div class="bullet-num">${i+1}</div>
-        <div class="bullet-text">${sum.title}</div>
+function drawFrame(ctx,story,ci,dims){
+  const{w,h}=dims;
+  ctx.drawImage(story.img instanceof HTMLImageElement?story.img:story.img,0,0,w,h);
+  const g=ctx.createLinearGradient(0,h*0.2,0,h);
+  g.addColorStop(0,'rgba(0,0,0,0.05)');g.addColorStop(0.45,'rgba(0,0,0,0.52)');g.addColorStop(1,'rgba(0,0,0,0.91)');
+  ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+  ctx.fillStyle='#e63946';ctx.fillRect(0,0,w,5);
+
+  const logoSz=Math.round(w*0.038);
+  ctx.font=`600 ${logoSz}px Sora,sans-serif`;
+  ctx.fillStyle='rgba(255,255,255,0.5)';ctx.textAlign='left';
+  ctx.fillText('ȘTIRIRO',w*0.05,h*0.065);
+
+  ctx.font=`500 ${Math.round(w*0.032)}px Sora,sans-serif`;
+  ctx.fillStyle='rgba(255,255,255,0.4)';ctx.textAlign='right';
+  ctx.fillText(`${story.idx+1}/${stories.length}`,w*0.95,h*0.065);ctx.textAlign='left';
+
+  const total=story.chunks.length;
+  const ds=Math.min(w*0.016,7);const dg=ds*2.5;
+  const rowW=total*ds+(total-1)*(dg-ds);const startX=w*0.5-rowW*0.5;const dotY=h*0.105;
+  for(let i=0;i<total;i++){
+    ctx.beginPath();ctx.arc(startX+i*dg,dotY,ds*0.5,0,Math.PI*2);
+    ctx.fillStyle=i<=ci?'rgba(255,255,255,0.95)':'rgba(255,255,255,0.28)';ctx.fill();
+  }
+
+  const fSizePct=reelTxtSize/100;
+  const fSize=reelRatio==='16:9'?Math.round(w*(fSizePct*0.7)):Math.round(w*fSizePct);
+  ctx.font=`700 ${fSize}px Sora,sans-serif`;ctx.fillStyle='#ffffff';
+  const maxW=w*0.86;const lh=fSize*1.38;
+  const lines=wrapWords(ctx,story.chunks[ci],maxW);
+  const blockH=lines.length*lh;
+  let ty=h*0.72-blockH*0.5;
+  if(ty+blockH>h*0.88)ty=h*0.88-blockH;
+  if(ty<h*0.5)ty=h*0.5;
+  lines.forEach((line,li)=>{const lw=ctx.measureText(line).width;ctx.fillText(line,(w-lw)*0.5,ty+li*lh);});
+
+  if(ci===total-1){
+    ctx.font=`500 ${Math.round(w*0.03)}px Sora,sans-serif`;ctx.fillStyle='rgba(244,196,48,0.9)';
+    const cta=story.idx+1<stories.length?'▶ Știrea următoare':'▶ Urmărește @StiriRO';
+    const ctaW=ctx.measureText(cta).width;ctx.fillText(cta,(w-ctaW)*0.5,h*0.91);
+  }
+  ctx.fillStyle='#e63946';ctx.fillRect(0,h-5,w,5);
+}
+
+function wrapWords(ctx,text,maxW){
+  const words=text.split(' ');const lines=[];let line='';
+  for(let n=0;n<words.length;n++){
+    const test=line+words[n]+' ';
+    if(ctx.measureText(test).width>maxW&&n>0){lines.push(line.trim());line=words[n]+' ';}else line=test;
+  }
+  if(line.trim())lines.push(line.trim());
+  return lines.slice(0,5);
+}
+
+function showReelPreview(){
+  curFrame=0;isPlaying=false;
+  document.getElementById('reelOut').innerHTML=`
+    <div class="preview-section fade-up" style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px">🎬 ${allFrames.length} cadre generate</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="secondary-btn" onclick="genReel()">↺ Regenerează</button>
+          <button class="secondary-btn" id="expWebm" onclick="exportVid('webm')">⬇ WebM</button>
+          <button class="secondary-btn" id="expMp4" onclick="exportVid('mp4')" style="border-color:var(--gold);color:var(--gold)">⬇ MP4 HD</button>
+        </div>
       </div>
-    `;
-  }).join('');
-
-  return `
-    <div class="img-preview" style="max-width:420px;margin:0 auto">
-      <div class="img-top-line"></div>
-      <div class="top-bar">
-        <div class="brand-tag">Ce Trebuie Să Știi Azi</div>
-        <div class="date-tag">${dateLabel}</div>
+      <div class="story-viewer">
+        <div class="story-bars" id="sBars"></div>
+        <div class="tap-l" onclick="prevFr()"></div>
+        <div class="tap-r" onclick="nextFr()"></div>
+        <canvas id="pCanvas"></canvas>
       </div>
-      <div class="center-block">
-        <div class="img-headline">Top <em>${valid.length}</em><br>Știri Azi</div>
-        <div class="news-bullets">${bullets}</div>
+      <div class="story-ctrl">
+        <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+        <div class="ctrl-info">
+          <strong id="ctrlT">Cadru 1 din ${allFrames.length}</strong>
+          <span>Tap stânga/dreapta • ${reelFrameDur}s per cadru</span>
+        </div>
       </div>
-      <div class="bottom-bar">
-        <div class="swipe-hint">@StiriRO</div>
-        <div style="font-size:0.65rem;color:var(--muted)">08:00 · 13:00 · 20:00</div>
+      <div class="slides-overview">
+        <div class="sov-title">Structura reelului</div>
+        <div class="slide-rows" id="slideRows"></div>
       </div>
-    </div>
-  `;
+    </div>`;
+
+  const cv=document.getElementById('pCanvas');const d=getDims();cv.width=d.w;cv.height=d.h;
+  document.getElementById('sBars').innerHTML=allFrames.map((_,i)=>`<div class="story-bar"><div class="story-bar-fill" id="bf${i}"></div></div>`).join('');
+  document.getElementById('slideRows').innerHTML=allFrames.map((f,i)=>`
+    <div class="slide-row ${i===0?'active':''}" id="row${i}" onclick="goFr(${i})">
+      <div class="sr-num">${i+1}</div>
+      <div class="sr-text">${stories[f.si].chunks[f.ci]}</div>
+      <div class="sr-badge">Știrea ${f.si+1}</div>
+    </div>`).join('');
+  goFr(0);
 }
 
-function buildReelScript(result) {
-  const scenes = result.reel_script || [];
-  const sceneHtml = scenes.map(s => `
-    <div class="scene">
-      <div class="scene-timing">
-        <span class="scene-time">${s.moment.split('-')[0]}s</span>
-        <span class="scene-dur">${s.moment}</span>
-      </div>
-      <div>
-        <div class="scene-label">🎙️ Voiceover</div>
-        <div class="scene-text">${s.voiceover}</div>
-        <div class="scene-visual">🎥 ${s.visual}</div>
-      </div>
-    </div>
-  `).join('');
-
-  const fullScript = scenes.map(s=>s.voiceover).join(' ');
-
-  return `
-    <div class="reel-wrap">
-      <div class="reel-header">
-        <div class="reel-title-label">🎬 Script Reel • ~40 secunde</div>
-        <div class="reel-duration">${scenes.length} scene</div>
-      </div>
-      <div class="reel-scenes">${sceneHtml}</div>
-      <div class="copy-row">
-        <button class="copy-btn" onclick="copyText(this,\`${escapeTpl(fullScript)}\`)">📋 Copiază voiceover complet</button>
-      </div>
-    </div>
-  `;
+function goFr(idx){
+  if(idx<0||idx>=allFrames.length)return;
+  curFrame=idx;
+  const cv=document.getElementById('pCanvas');if(!cv)return;
+  const f=allFrames[idx];
+  drawFrame(cv.getContext('2d'),stories[f.si],f.ci,getDims());
+  allFrames.forEach((_,i)=>{const bf=document.getElementById('bf'+i);if(bf)bf.className='story-bar-fill'+(i<idx?' done':'');});
+  document.querySelectorAll('.slide-row').forEach((r,i)=>r.classList.toggle('active',i===idx));
+  const ct=document.getElementById('ctrlT');if(ct)ct.textContent=`Cadru ${idx+1} din ${allFrames.length} • Știrea ${allFrames[idx].si+1}`;
+}
+function nextFr(){if(curFrame<allFrames.length-1)goFr(curFrame+1);else stopPlay();}
+function prevFr(){if(curFrame>0)goFr(curFrame-1);}
+function togglePlay(){isPlaying?stopPlay():startPlay();}
+function startPlay(){
+  isPlaying=true;const b=document.getElementById('playBtn');if(b)b.textContent='⏸';
+  playIv=setInterval(()=>{if(curFrame>=allFrames.length-1){stopPlay();return;}goFr(curFrame+1);},reelFrameDur*1000);
+}
+function stopPlay(){
+  isPlaying=false;const b=document.getElementById('playBtn');if(b)b.textContent='▶';clearInterval(playIv);
 }
 
-// ── CAROUSEL ──
-function buildDots() {
-  const dotsEl = document.getElementById('cDots');
-  if (!dotsEl) return;
-  dotsEl.style.cssText = 'display:flex;gap:5px;align-items:center';
-  dotsEl.innerHTML = Array.from({length:totalSlides},(_,i)=>
-    `<div class="c-dot ${i===0?'active':''}" onclick="goSlide(${i})"></div>`
-  ).join('');
+async function exportVid(fmt){
+  const btn=document.getElementById('exp'+fmt.charAt(0).toUpperCase()+fmt.slice(1));
+  if(btn){btn.textContent='⏳...';btn.disabled=true;}
+  stopPlay();
+  const d=getDims();const ec=document.createElement('canvas');ec.width=d.w;ec.height=d.h;
+  const ctx=ec.getContext('2d');const stream=ec.captureStream(30);
+  const mimes=fmt==='mp4'
+    ?['video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9','video/webm']
+    :['video/webm;codecs=vp9','video/webm'];
+  const mime=mimes.find(m=>MediaRecorder.isTypeSupported(m))||'video/webm';
+  const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:reelQuality==='hd'?8000000:4000000});
+  const chunks=[];
+  rec.ondataavailable=e=>chunks.push(e.data);
+  rec.onstop=()=>{
+    const blob=new Blob(chunks,{type:mime});const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download=`reel-stiriro-${Date.now()}.${fmt==='mp4'&&mime.includes('mp4')?'mp4':'webm'}`;
+    a.click();URL.revokeObjectURL(url);
+    if(btn){btn.textContent=fmt==='mp4'?'⬇ MP4 HD':'⬇ WebM';btn.disabled=false;}
+  };
+  rec.start();
+  const fps=30;const frameDurMs=reelFrameDur*1000;
+  for(let i=0;i<allFrames.length;i++){
+    const img=new Image();img.src=allFrames[i].dataUrl;
+    await new Promise(r=>{img.onload=r;if(img.complete)r();});
+    ctx.drawImage(img,0,0,d.w,d.h);
+    const frames=Math.round(frameDurMs/(1000/fps));
+    for(let f=0;f<frames;f++)await new Promise(r=>setTimeout(r,1000/fps));
+  }
+  rec.stop();
 }
 
-function updateCarousel() {
-  const track = document.getElementById('slidesTrack');
-  if (track) track.style.transform = `translateX(-${currentSlide*100}%)`;
-  const dots = document.querySelectorAll('.c-dot');
-  dots.forEach((d,i) => d.classList.toggle('active', i===currentSlide));
+// ── HASHTAG ──
+function copyHash(el){
+  navigator.clipboard.writeText(el.textContent).then(()=>{
+    const orig={bg:el.style.background,bc:el.style.borderColor,c:el.style.color};
+    el.style.background='rgba(46,204,113,0.15)';el.style.borderColor='#2ecc71';el.style.color='#2ecc71';
+    setTimeout(()=>{el.style.background=orig.bg;el.style.borderColor=orig.bc;el.style.color=orig.c;},700);
+  });
+}
+function copyCombo(id,btn){
+  navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>{
+    btn.textContent='✓ Copiat!';btn.style.color='var(--green)';btn.style.borderColor='var(--green)';
+    setTimeout(()=>{btn.textContent='📋 Copiază combo';btn.style.color='';btn.style.borderColor='';},2000);
+  });
 }
 
-function nextSlide() {
-  currentSlide = (currentSlide+1) % totalSlides;
-  updateCarousel();
-}
-function prevSlide() {
-  currentSlide = (currentSlide-1+totalSlides) % totalSlides;
-  updateCarousel();
-}
-function goSlide(i) {
-  currentSlide = i;
-  updateCarousel();
-}
-
-// ── TABS ──
-function switchTab(name, btn) {
-  document.querySelectorAll('.out-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.out-pane').forEach(p=>p.classList.remove('active'));
-  btn.classList.add('active');
-  const pane = document.getElementById('pane-'+name);
-  if (pane) pane.classList.add('active');
-}
-
-// ── COPY ──
-function copyText(btn, text) {
+// ── POSTARE COPY ──
+function copyOut(btn,text){
   navigator.clipboard.writeText(text).then(()=>{
-    btn.textContent = '✓ Copiat!';
-    btn.classList.add('ok');
-    setTimeout(()=>{ btn.classList.remove('ok'); btn.textContent = 'Copiază'; }, 2000);
+    btn.textContent='✓ Copiat!';btn.classList.add('ok');
+    setTimeout(()=>{btn.textContent='Copiază';btn.classList.remove('ok');},2000);
   });
 }
 
-function escapeTpl(str) {
-  return (str||'').replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$/g,'\\$');
-}
+function esc(str){return(str||'').replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$/g,'\\$');}
 </script>
 </body>
 </html>
