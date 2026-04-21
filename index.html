@@ -887,11 +887,11 @@ function showReelPreview(){
   document.getElementById('reelOut').innerHTML=`
     <div class="preview-section fade-up" style="display:flex;flex-direction:column;gap:14px">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px">🎬 ${allFrames.length} cadre generate</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px">🎬 ${allFrames.length} cadre</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="secondary-btn" onclick="genReel()">↺ Regenerează</button>
-          <button class="secondary-btn" id="expWebm" onclick="exportVid('webm')">⬇ WebM</button>
-          <button class="secondary-btn" id="expMp4" onclick="exportVid('mp4')" style="border-color:var(--gold);color:var(--gold)">⬇ MP4 HD</button>
+          <button class="secondary-btn" onclick="genReel()">↺ Regenereaza imagini</button>
+          <button class="secondary-btn" id="expDl" onclick="exportFramesPng()" style="border-color:#2ecc71;color:#2ecc71">⬇ JPG Cadre</button>
+          <button class="secondary-btn" id="expVid" onclick="exportVid()" style="border-color:var(--gold);color:var(--gold)">⬇ Descarca Video</button>
         </div>
       </div>
       <div class="story-viewer">
@@ -904,24 +904,49 @@ function showReelPreview(){
         <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
         <div class="ctrl-info">
           <strong id="ctrlT">Cadru 1 din ${allFrames.length}</strong>
-          <span>Tap stânga/dreapta • ${reelFrameDur}s per cadru</span>
+          <span>Tap stanga/dreapta pentru navigare</span>
         </div>
       </div>
+
+      <!-- EDITOR CADRU CURENT -->
+      <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:10px;padding:16px">
+        <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:#f4c430;font-weight:700;margin-bottom:12px">✏️ Editeaza cadrul curent</div>
+        <div style="font-size:0.72rem;color:#55556a;margin-bottom:8px">Modifica textul, durata sau sterge cadrul — fara sa regenerezi imaginile.</div>
+        <textarea id="editFrameText" rows="3" style="width:100%;background:#0f0f1a;border:1px solid #1e1e2e;border-radius:7px;padding:10px;color:#eeeef5;font-family:Sora,sans-serif;font-size:0.82rem;outline:none;resize:vertical;line-height:1.5;margin-bottom:8px" placeholder="Textul cadrului curent..."></textarea>
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+          <span style="font-size:0.72rem;color:#55556a;white-space:nowrap">Durata cadru:</span>
+          <input type="range" min="1" max="10" value="3" step="0.5" id="editFrameDur" oninput="document.getElementById('editDurVal').textContent=this.value+'s'" style="flex:1;accent-color:#e63946">
+          <span id="editDurVal" style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:#e63946;min-width:36px">3s</span>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="secondary-btn" onclick="applyFrameEdit()" style="flex:1;border-color:#e63946;color:#e63946">✓ Aplica modificarile</button>
+          <button class="secondary-btn" onclick="deleteFrame()" style="border-color:#55556a;color:#55556a">🗑 Sterge cadru</button>
+          <button class="secondary-btn" onclick="moveFrameUp()" title="Muta sus">↑</button>
+          <button class="secondary-btn" onclick="moveFrameDown()" title="Muta jos">↓</button>
+        </div>
+      </div>
+
       <div class="slides-overview">
-        <div class="sov-title">Structura reelului</div>
+        <div class="sov-title">Toate cadrele — click pentru a edita</div>
         <div class="slide-rows" id="slideRows"></div>
       </div>
     </div>`;
 
   const cv=document.getElementById('pCanvas');const d=getDims();cv.width=d.w;cv.height=d.h;
   document.getElementById('sBars').innerHTML=allFrames.map((_,i)=>`<div class="story-bar"><div class="story-bar-fill" id="bf${i}"></div></div>`).join('');
-  document.getElementById('slideRows').innerHTML=allFrames.map((f,i)=>`
-    <div class="slide-row ${i===0?'active':''}" id="row${i}" onclick="goFr(${i})">
-      <div class="sr-num">${i+1}</div>
-      <div class="sr-text">${stories[f.si].chunks[f.ci]}</div>
-      <div class="sr-badge">Știrea ${f.si+1}</div>
-    </div>`).join('');
+  renderSlideRows();
   goFr(0);
+}
+
+function renderSlideRows(){
+  const container = document.getElementById('slideRows');
+  if(!container) return;
+  container.innerHTML = allFrames.map((f,i)=>`
+    <div class="slide-row ${i===curFrame?'active':''}" id="row${i}" onclick="goFr(${i})">
+      <div class="sr-num">${i+1}</div>
+      <div class="sr-text">${stories[f.si] ? stories[f.si].chunks[f.ci] : ''}</div>
+      <div class="sr-badge">Stirea ${f.si+1}</div>
+    </div>`).join('');
 }
 
 function goFr(idx){
@@ -932,7 +957,75 @@ function goFr(idx){
   drawFrame(cv.getContext('2d'),stories[f.si],f.ci,getDims());
   allFrames.forEach((_,i)=>{const bf=document.getElementById('bf'+i);if(bf)bf.className='story-bar-fill'+(i<idx?' done':'');});
   document.querySelectorAll('.slide-row').forEach((r,i)=>r.classList.toggle('active',i===idx));
-  const ct=document.getElementById('ctrlT');if(ct)ct.textContent=`Cadru ${idx+1} din ${allFrames.length} • Știrea ${allFrames[idx].si+1}`;
+  const ct=document.getElementById('ctrlT');
+  if(ct)ct.textContent='Cadru '+(idx+1)+' din '+allFrames.length+' - Stirea '+(allFrames[idx].si+1);
+  // Update editor fields
+  const et=document.getElementById('editFrameText');
+  if(et) et.value = stories[f.si] ? stories[f.si].chunks[f.ci] : '';
+  const ed=document.getElementById('editFrameDur');
+  if(ed){ ed.value=f.customDur||reelFrameDur; document.getElementById('editDurVal').textContent=(f.customDur||reelFrameDur)+'s'; }
+}
+
+function applyFrameEdit(){
+  if(curFrame<0||curFrame>=allFrames.length)return;
+  const newText=document.getElementById('editFrameText').value.trim();
+  const newDur=parseFloat(document.getElementById('editFrameDur').value);
+  const f=allFrames[curFrame];
+  // Update text in story chunk
+  if(stories[f.si] && newText){
+    stories[f.si].chunks[f.ci]=newText;
+    f.customDur=newDur;
+  }
+  // Redraw frame with new text
+  const dims=getDims();
+  const c=document.createElement('canvas');c.width=dims.w;c.height=dims.h;
+  drawFrame(c.getContext('2d'),stories[f.si],f.ci,dims);
+  f.canvas=c; f.dataUrl=c.toDataURL('image/jpeg',0.92);
+  // Refresh preview and rows
+  const cv=document.getElementById('pCanvas');
+  if(cv) drawFrame(cv.getContext('2d'),stories[f.si],f.ci,dims);
+  renderSlideRows();
+  // Flash feedback
+  const btn=event.target;
+  const orig=btn.textContent;
+  btn.textContent='✓ Salvat!'; btn.style.color='#2ecc71'; btn.style.borderColor='#2ecc71';
+  setTimeout(()=>{ btn.textContent=orig; btn.style.color=''; btn.style.borderColor=''; },1500);
+}
+
+function deleteFrame(){
+  if(allFrames.length<=1){alert('Nu poti sterge singurul cadru!');return;}
+  allFrames.splice(curFrame,1);
+  // Rebuild story bars
+  document.getElementById('sBars').innerHTML=allFrames.map((_,i)=>`<div class="story-bar"><div class="story-bar-fill" id="bf${i}"></div></div>`).join('');
+  renderSlideRows();
+  goFr(Math.min(curFrame,allFrames.length-1));
+}
+
+function moveFrameUp(){
+  if(curFrame<=0)return;
+  const tmp=allFrames[curFrame];
+  allFrames[curFrame]=allFrames[curFrame-1];
+  allFrames[curFrame-1]=tmp;
+  renderSlideRows();
+  goFr(curFrame-1);
+}
+
+function moveFrameDown(){
+  if(curFrame>=allFrames.length-1)return;
+  const tmp=allFrames[curFrame];
+  allFrames[curFrame]=allFrames[curFrame+1];
+  allFrames[curFrame+1]=tmp;
+  renderSlideRows();
+  goFr(curFrame+1);
+}
+
+function exportFramesPng(){
+  allFrames.forEach((f,i)=>{
+    const a=document.createElement('a');
+    a.href=f.dataUrl;
+    a.download='stiriro-cadru-'+(i+1)+'.jpg';
+    a.click();
+  });
 }
 function nextFr(){if(curFrame<allFrames.length-1)goFr(curFrame+1);else stopPlay();}
 function prevFr(){if(curFrame>0)goFr(curFrame-1);}
@@ -945,65 +1038,91 @@ function stopPlay(){
   isPlaying=false;const b=document.getElementById('playBtn');if(b)b.textContent='▶';clearInterval(playIv);
 }
 
-async function exportVid(fmt){
-  const btnId = 'exp' + fmt.charAt(0).toUpperCase() + fmt.slice(1);
-  const btn = document.getElementById(btnId);
+async function exportVid(){
+  const btn = document.getElementById('expVid');
   if(btn){ btn.textContent = '⏳ Se exporta...'; btn.disabled = true; }
   stopPlay(); stopTTS();
 
   const d = getDims();
+
+  // Pre-load all images from dataUrls
+  const imgs = [];
+  for(let i = 0; i < allFrames.length; i++){
+    await new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => { imgs.push({img, dur: allFrames[i].customDur || reelFrameDur}); resolve(); };
+      img.onerror = () => { imgs.push({img: null, dur: allFrames[i].customDur || reelFrameDur}); resolve(); };
+      img.src = allFrames[i].dataUrl;
+    });
+  }
+
+  // Create recording canvas
   const ec = document.createElement('canvas');
   ec.width = d.w; ec.height = d.h;
   const ctx = ec.getContext('2d');
 
-  // Pre-load all frame images first
-  const loadedImgs = [];
-  for(let i = 0; i < allFrames.length; i++){
-    const img = new Image();
-    img.src = allFrames[i].dataUrl;
-    await new Promise(r => { img.onload = r; img.onerror = r; if(img.complete) r(); });
-    loadedImgs.push(img);
-  }
+  // Draw first frame before starting stream
+  if(imgs[0] && imgs[0].img) ctx.drawImage(imgs[0].img, 0, 0, d.w, d.h);
+  else { ctx.fillStyle = '#0d0d12'; ctx.fillRect(0, 0, d.w, d.h); }
 
-  // Draw first frame so stream starts with content
-  ctx.drawImage(loadedImgs[0], 0, 0, d.w, d.h);
-  await new Promise(r => setTimeout(r, 100));
+  // Wait a tick so stream captures the drawn frame
+  await new Promise(r => setTimeout(r, 200));
 
-  const stream = ec.captureStream(30);
-  const mimes = fmt === 'mp4'
-    ? ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9', 'video/webm']
-    : ['video/webm;codecs=vp9', 'video/webm'];
-  const mime = mimes.find(m => MediaRecorder.isTypeSupported(m)) || 'video/webm';
-  const bitrate = reelQuality === 'hd' ? 10000000 : 5000000;
+  const stream = ec.captureStream(25);
+
+  // Try formats in order of compatibility
+  const tryMimes = [
+    'video/webm;codecs=vp9',
+    'video/webm;codecs=vp8',
+    'video/webm'
+  ];
+  const mime = tryMimes.find(m => MediaRecorder.isTypeSupported(m)) || 'video/webm';
+  const bitrate = reelQuality === 'hd' ? 8000000 : 4000000;
+
   const rec = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: bitrate });
   const chunks = [];
-  rec.ondataavailable = e => { if(e.data.size > 0) chunks.push(e.data); };
+  rec.ondataavailable = e => { if(e.data && e.data.size > 0) chunks.push(e.data); };
+
   rec.onstop = () => {
     const blob = new Blob(chunks, { type: mime });
+    if(blob.size < 1000){
+      alert('Exportul a esuat. Incearca sa descarci cadrele JPG in schimb.');
+      if(btn){ btn.textContent = '⬇ Descarca Video'; btn.disabled = false; }
+      return;
+    }
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    const ext = (fmt === 'mp4' && mime.includes('mp4')) ? 'mp4' : 'webm';
-    a.href = url; a.download = 'reel-stiriro-' + Date.now() + '.' + ext;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    if(btn){ btn.textContent = fmt === 'mp4' ? '\u2b07 MP4 HD' : '\u2b07 WebM'; btn.disabled = false; }
+    a.href = url;
+    a.download = 'reel-stiriro-' + Date.now() + '.webm';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 3000);
+    if(btn){ btn.textContent = '⬇ Descarca Video'; btn.disabled = false; }
+    // Show info about converting
+    const info = document.createElement('div');
+    info.style.cssText = 'margin-top:8px;padding:10px 14px;background:#0f1a0f;border:1px solid #2ecc71;border-radius:7px;font-size:0.75rem;color:#2ecc71;line-height:1.6';
+    info.innerHTML = '✓ Video descarcat ca .webm<br><span style="color:#55556a">Pentru MP4 compatibil cu iPhone/Android, converteste gratuit pe <strong style="color:#f4c430">cloudconvert.com</strong> sau <strong style="color:#f4c430">handbrake.fr</strong></span>';
+    btn.parentNode.insertAdjacentElement('afterend', info);
+    setTimeout(() => info.remove(), 8000);
   };
 
-  rec.start(100); // collect data every 100ms
-  const fps = 30;
-  const frameDurMs = reelFrameDur * 1000;
-  const framesPerSlide = Math.max(1, Math.round(frameDurMs / (1000 / fps)));
+  rec.start(500); // collect chunks every 500ms
 
-  for(let i = 0; i < loadedImgs.length; i++){
-    // Draw frame repeatedly for its duration
-    for(let f = 0; f < framesPerSlide; f++){
-      ctx.drawImage(loadedImgs[i], 0, 0, d.w, d.h);
-      await new Promise(r => setTimeout(r, 1000 / fps));
+  const fps = 25;
+  for(let i = 0; i < imgs.length; i++){
+    const {img, dur} = imgs[i];
+    const totalMs = dur * 1000;
+    const frameMs = 1000 / fps;
+    const numFrames = Math.max(1, Math.round(totalMs / frameMs));
+    for(let f = 0; f < numFrames; f++){
+      if(img) ctx.drawImage(img, 0, 0, d.w, d.h);
+      else { ctx.fillStyle = '#0d0d12'; ctx.fillRect(0, 0, d.w, d.h); }
+      await new Promise(r => setTimeout(r, frameMs));
     }
   }
 
-  // Small pause then stop
-  await new Promise(r => setTimeout(r, 200));
+  await new Promise(r => setTimeout(r, 500));
   rec.stop();
 }
 
