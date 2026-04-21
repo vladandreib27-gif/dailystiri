@@ -376,6 +376,30 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
         </div>
       </div>
 
+      <div class="ctrl-section">
+        <span class="ctrl-label">🎵 Sunet fundal reel</span>
+        <div class="chip-wrap" style="margin-bottom:8px">
+          <button class="chip active" data-audio="none" onclick="selAudio(this)">🔇 Fara sunet</button>
+          <button class="chip" data-audio="upload" onclick="selAudio(this)">📁 Upload audio</button>
+          <button class="chip" data-audio="tts" onclick="selAudio(this)">🎙️ Voiceover AI</button>
+        </div>
+        <div id="audioUploadWrap" style="display:none;margin-top:8px">
+          <input type="file" id="audioFileIn" accept="audio/*" onchange="loadAudioFile(this)" style="display:none">
+          <button class="secondary-btn" onclick="document.getElementById('audioFileIn').click()" style="width:100%">📂 Alege fisier MP3/WAV</button>
+          <div id="audioFileName" style="font-size:0.72rem;color:#55556a;margin-top:5px;text-align:center"></div>
+        </div>
+        <div id="audioTtsWrap" style="display:none;margin-top:8px">
+          <div style="font-size:0.72rem;color:#55556a;line-height:1.5;padding:8px 10px;background:#0f0f1a;border-radius:6px">Voiceover-ul citeste automat textul fiecarei stiri in timpul reelului, folosind sinteza vocala a browserului.</div>
+          <div style="margin-top:8px">
+            <span class="ctrl-label" style="margin-bottom:6px;display:block">Viteza voce</span>
+            <div class="slider-row">
+              <input type="range" min="0.5" max="1.5" value="0.9" step="0.1" id="ttsRate" oninput="document.getElementById('ttsRateVal').textContent=this.value+'x'">
+              <div class="slider-val" id="ttsRateVal">0.9x</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <button class="primary-btn" id="genReelBtn" onclick="genReel()">🎬 Generează Reel</button>
     </div>
 
@@ -457,6 +481,20 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
         <div class="combo-title">🏛️ Știre politică</div>
         <div class="combo-body" id="combo3">#romania #politicaromana #stiriromania #guvern #parlament #alegeri #presedintie #ue #stiriazi #actualitati #breaking #stiriurgente #news #diplomatiero #romaniaazi #evenimentezilei #stiri #informatii #mediaro #newsromania</div>
         <button class="secondary-btn" onclick="copyCombo('combo3',this)">📋 Copiează combo</button>
+      </div>
+      <!-- COMBO-URI CUSTOM -->
+      <div style="margin-top:24px">
+        <div class="hash-group-label" style="color:#4361ee">🔵 Combo-urile mele custom</div>
+        <div id="customCombos" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px"></div>
+        <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:9px;padding:16px">
+          <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:#f4c430;font-weight:700;margin-bottom:10px">+ Combo nou</div>
+          <input class="txt-input" id="comboNameIn" placeholder="Nume combo (ex: Stiri Locale)" style="margin-bottom:8px">
+          <textarea class="txt-input" id="comboTagsIn" rows="3" placeholder="#hashtag1 #hashtag2 #hashtag3 ..."></textarea>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="secondary-btn" onclick="addCustomCombo()" style="flex:1">+ Salveaza combo</button>
+            <button class="secondary-btn" onclick="genHashAI()" style="flex:1;border-color:#7c3aed;color:#7c3aed">✨ AI sugereaza</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -550,29 +588,51 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
     </div>
 
     <div class="tab-pane" id="tpl-guide">
-      <div style="display:flex;flex-direction:column;gap:20px;max-width:600px">
-        <a href="https://canva.com" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:var(--dark,#111);color:#fff;border-radius:6px;text-decoration:none;font-size:0.88rem;font-weight:600;width:fit-content;border:1px solid var(--border)">🎨 Deschide Canva.com</a>
-        ${['Creează design nou — Post Instagram (1080×1080px)','Setează fundalul: Dark=#0d0d0d / Clean=#ffffff / Gold=#111111','Adaugă linie accent roșu (#d62828) de 1080×8px sus','Titlu: Bebas Neue, 80-100px. Tag categorie: 20px, Sora','Salvează ca template → Duplicate page pentru fiecare postare','Exportă PNG calitate maximă → programează cu Meta Business Suite'].map((s,i)=>`
-          <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--border)">
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--accent);line-height:1;min-width:40px">${String(i+1).padStart(2,'0')}</div>
-            <div style="padding-top:4px;font-size:0.83rem;line-height:1.6;color:var(--muted)">${s}</div>
-          </div>`).join('')}
+      <div style="display:flex;flex-direction:column;gap:0;max-width:600px">
+        <a href="https://canva.com" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:#111;color:#fff;border-radius:6px;text-decoration:none;font-size:0.88rem;font-weight:600;width:fit-content;border:1px solid #1e1e2e;margin-bottom:24px">🎨 Deschide Canva.com</a>
+        <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid #1e1e2e;margin-bottom:18px"><div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#e63946;line-height:1;min-width:40px">01</div><div style="padding-top:6px;font-size:0.83rem;line-height:1.6;color:#55556a">Creeaza design nou — Post Instagram (1080x1080px)</div></div>
+        <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid #1e1e2e;margin-bottom:18px"><div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#e63946;line-height:1;min-width:40px">02</div><div style="padding-top:6px;font-size:0.83rem;line-height:1.6;color:#55556a">Seteaza fundalul: Dark=#0d0d0d / Clean=#ffffff / Gold=#111111</div></div>
+        <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid #1e1e2e;margin-bottom:18px"><div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#e63946;line-height:1;min-width:40px">03</div><div style="padding-top:6px;font-size:0.83rem;line-height:1.6;color:#55556a">Adauga linie accent rosu (#d62828) de 1080x8px sus</div></div>
+        <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid #1e1e2e;margin-bottom:18px"><div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#e63946;line-height:1;min-width:40px">04</div><div style="padding-top:6px;font-size:0.83rem;line-height:1.6;color:#55556a">Titlu: Bebas Neue, 80-100px. Tag categorie: 20px, Sora</div></div>
+        <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid #1e1e2e;margin-bottom:18px"><div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#e63946;line-height:1;min-width:40px">05</div><div style="padding-top:6px;font-size:0.83rem;line-height:1.6;color:#55556a">Salveaza ca template → Duplicate page pentru fiecare postare</div></div>
+        <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid #1e1e2e"><div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#e63946;line-height:1;min-width:40px">06</div><div style="padding-top:6px;font-size:0.83rem;line-height:1.6;color:#55556a">Exporta PNG calitate maxima → programeaza cu Meta Business Suite</div></div>
+      </div>
+      <div style="margin-top:28px">
+        <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:#f4c430;font-weight:700;margin-bottom:12px">⭐ Template-urile mele custom</div>
+        <div id="customTemplates" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px"></div>
+        <div style="display:grid;grid-template-columns:1fr 46px;gap:8px;margin-bottom:8px">
+          <input class="txt-input" id="tplName" placeholder="Nume template (ex: Breaking Rosu)">
+          <input type="color" id="tplBg" value="#0d0d0d" style="width:46px;height:38px;border-radius:6px;border:1px solid #1e1e2e;background:#14141f;cursor:pointer;padding:2px">
+        </div>
+        <div style="display:grid;grid-template-columns:46px 1fr;gap:8px;margin-bottom:8px">
+          <input type="color" id="tplAccent" value="#e63946" style="width:46px;height:38px;border-radius:6px;border:1px solid #1e1e2e;background:#14141f;cursor:pointer;padding:2px">
+          <input class="txt-input" id="tplFont" placeholder="Font (ex: Bebas Neue)">
+        </div>
+        <input class="txt-input" id="tplNotes" placeholder="Link Canva sau note (optional)" style="margin-bottom:8px">
+        <button class="secondary-btn" onclick="addCustomTpl()" style="width:100%">+ Salveaza template</button>
       </div>
     </div>
 
     <div class="tab-pane" id="tpl-specs">
+      <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:#f4c430;font-weight:700;margin-bottom:12px">Dimensiuni</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:24px">
-        ${[['Post Instagram/Facebook','1080 × 1080px','pătrat'],['Story/Reels Cover','1080 × 1920px','vertical 9:16'],['Cover Facebook Page','820 × 312px','orizontal'],['Export format','PNG','calitate maximă']].map(([l,v,n])=>`
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:16px">
-            <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:5px">${l}</div>
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px">${v}</div>
-            <div style="font-size:0.7rem;color:var(--muted);margin-top:3px">${n}</div>
-          </div>`).join('')}
+        <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:6px;padding:16px"><div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;margin-bottom:5px">Post Instagram/Facebook</div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px">1080 x 1080px</div><div style="font-size:0.7rem;color:#55556a;margin-top:3px">patrat</div></div>
+        <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:6px;padding:16px"><div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;margin-bottom:5px">Story / Reels Cover</div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px">1080 x 1920px</div><div style="font-size:0.7rem;color:#55556a;margin-top:3px">vertical 9:16</div></div>
+        <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:6px;padding:16px"><div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;margin-bottom:5px">Cover Facebook Page</div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px">820 x 312px</div><div style="font-size:0.7rem;color:#55556a;margin-top:3px">orizontal</div></div>
+        <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:6px;padding:16px"><div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;margin-bottom:5px">Export format</div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px">PNG</div><div style="font-size:0.7rem;color:#55556a;margin-top:3px">calitate maxima</div></div>
       </div>
-      <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);font-weight:700;margin-bottom:12px">Paletă culori</div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap">
-        ${[['#0d0d0d','Negru'],['#d62828','Roșu'],['#f7b731','Auriu'],['#ffffff','Alb'],['#f5f0e8','Crem']].map(([c,n])=>`
-          <div style="text-align:center"><div style="width:52px;height:52px;border-radius:4px;background:${c};border:1px solid rgba(255,255,255,0.1);margin-bottom:5px"></div><div style="font-size:0.7rem;font-weight:600;margin-bottom:2px">${n}</div><div style="font-size:0.62rem;color:var(--muted);font-family:monospace">${c}</div></div>`).join('')}
+      <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:#e63946;font-weight:700;margin-bottom:12px">Paleta culori brand</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px">
+        <div style="text-align:center"><div style="width:52px;height:52px;border-radius:4px;background:#0d0d0d;border:1px solid rgba(255,255,255,0.1);margin-bottom:5px"></div><div style="font-size:0.7rem;font-weight:600;margin-bottom:2px">Negru</div><div style="font-size:0.62rem;color:#55556a;font-family:monospace">#0d0d0d</div></div>
+        <div style="text-align:center"><div style="width:52px;height:52px;border-radius:4px;background:#d62828;border:1px solid rgba(255,255,255,0.1);margin-bottom:5px"></div><div style="font-size:0.7rem;font-weight:600;margin-bottom:2px">Rosu</div><div style="font-size:0.62rem;color:#55556a;font-family:monospace">#d62828</div></div>
+        <div style="text-align:center"><div style="width:52px;height:52px;border-radius:4px;background:#f7b731;border:1px solid rgba(255,255,255,0.1);margin-bottom:5px"></div><div style="font-size:0.7rem;font-weight:600;margin-bottom:2px">Auriu</div><div style="font-size:0.62rem;color:#55556a;font-family:monospace">#f7b731</div></div>
+        <div style="text-align:center"><div style="width:52px;height:52px;border-radius:4px;background:#ffffff;border:1px solid rgba(255,255,255,0.1);margin-bottom:5px"></div><div style="font-size:0.7rem;font-weight:600;margin-bottom:2px">Alb</div><div style="font-size:0.62rem;color:#55556a;font-family:monospace">#ffffff</div></div>
+        <div style="text-align:center"><div style="width:52px;height:52px;border-radius:4px;background:#f5f0e8;border:1px solid rgba(255,255,255,0.1);margin-bottom:5px"></div><div style="font-size:0.7rem;font-weight:600;margin-bottom:2px">Crem</div><div style="font-size:0.62rem;color:#55556a;font-family:monospace">#f5f0e8</div></div>
+      </div>
+      <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:#f4c430;font-weight:700;margin-bottom:12px">Fonturi recomandate</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px">
+        <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:6px;padding:16px"><div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;margin-bottom:5px">Titluri / Logo</div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:1px">Bebas Neue</div><div style="font-size:0.7rem;color:#55556a;margin-top:3px">Bold, impactant</div></div>
+        <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:6px;padding:16px"><div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;margin-bottom:5px">Text / Subtitluri</div><div style="font-size:1rem;font-weight:600">Sora / Montserrat</div><div style="font-size:0.7rem;color:#55556a;margin-top:3px">Lizibil, modern</div></div>
       </div>
     </div>
   </div>
@@ -941,6 +1001,164 @@ function copyOut(btn,text){
 }
 
 function esc(str){return(str||'').replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$/g,'\\$');}
+
+// ── AUDIO STATE ──
+let audioMode = 'none';
+let audioBuffer = null;
+let audioCtx = null;
+let uploadedAudio = null;
+
+function selAudio(btn) {
+  document.querySelectorAll('[data-audio]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  audioMode = btn.dataset.audio;
+  document.getElementById('audioUploadWrap').style.display = audioMode === 'upload' ? 'block' : 'none';
+  document.getElementById('audioTtsWrap').style.display = audioMode === 'tts' ? 'block' : 'none';
+}
+
+function loadAudioFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  uploadedAudio = file;
+  document.getElementById('audioFileName').textContent = '✓ ' + file.name;
+}
+
+function playTTS(text) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'ro-RO';
+  utt.rate = parseFloat(document.getElementById('ttsRate')?.value || 0.9);
+  const voices = window.speechSynthesis.getVoices();
+  const roVoice = voices.find(v => v.lang.startsWith('ro'));
+  if (roVoice) utt.voice = roVoice;
+  window.speechSynthesis.speak(utt);
+}
+
+function stopTTS() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+}
+
+// Override goFr to add TTS
+const _origGoFr = goFr;
+window.goFr = function(idx) {
+  _origGoFr(idx);
+  if (audioMode === 'tts' && allFrames[idx]) {
+    const f = allFrames[idx];
+    const chunk = stories[f.si]?.chunks[f.ci] || '';
+    playTTS(chunk);
+  }
+};
+
+// ── CUSTOM TEMPLATES ──
+let customTemplates = JSON.parse(localStorage.getItem('stiriro_templates') || '[]');
+
+function renderCustomTemplates() {
+  const container = document.getElementById('customTemplates');
+  if (!container) return;
+  if (!customTemplates.length) {
+    container.innerHTML = '<div style="font-size:0.75rem;color:#55556a;padding:8px 0">Niciun template salvat inca.</div>';
+    return;
+  }
+  container.innerHTML = customTemplates.map((t, i) => `
+    <div style="background:#0f0f1a;border:1px solid #1e1e2e;border-radius:7px;padding:12px;display:flex;align-items:center;gap:10px">
+      <div style="width:28px;height:28px;border-radius:4px;background:${t.bg};border:2px solid ${t.accent};flex-shrink:0"></div>
+      <div style="flex:1">
+        <div style="font-size:0.8rem;font-weight:700">${t.name}</div>
+        ${t.notes ? `<div style="font-size:0.7rem;color:#55556a">${t.notes}</div>` : ''}
+        <div style="font-size:0.68rem;color:#55556a;margin-top:2px">Font: ${t.font || 'Bebas Neue'} • BG: ${t.bg} • Accent: ${t.accent}</div>
+      </div>
+      <button onclick="deleteCustomTpl(${i})" style="background:transparent;border:none;color:#55556a;cursor:pointer;font-size:0.8rem">✕</button>
+    </div>
+  `).join('');
+}
+
+function addCustomTpl() {
+  const name = document.getElementById('tplName')?.value.trim();
+  const bg = document.getElementById('tplBg')?.value || '#0d0d0d';
+  const accent = document.getElementById('tplAccent')?.value || '#e63946';
+  const font = document.getElementById('tplFont')?.value.trim() || 'Bebas Neue';
+  const notes = document.getElementById('tplNotes')?.value.trim() || '';
+  if (!name) { alert('Adauga un nume pentru template!'); return; }
+  customTemplates.push({ name, bg, accent, font, notes });
+  localStorage.setItem('stiriro_templates', JSON.stringify(customTemplates));
+  renderCustomTemplates();
+  document.getElementById('tplName').value = '';
+  document.getElementById('tplNotes').value = '';
+  document.getElementById('tplFont').value = '';
+}
+
+function deleteCustomTpl(i) {
+  customTemplates.splice(i, 1);
+  localStorage.setItem('stiriro_templates', JSON.stringify(customTemplates));
+  renderCustomTemplates();
+}
+
+// ── CUSTOM COMBOS ──
+let customCombos = JSON.parse(localStorage.getItem('stiriro_combos') || '[]');
+
+function renderCustomCombos() {
+  const container = document.getElementById('customCombos');
+  if (!container) return;
+  if (!customCombos.length) {
+    container.innerHTML = '<div style="font-size:0.75rem;color:#55556a;padding:4px 0">Niciun combo salvat inca.</div>';
+    return;
+  }
+  container.innerHTML = customCombos.map((c, i) => `
+    <div class="combo-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div class="combo-title" style="margin-bottom:0">🔵 ${c.name}</div>
+        <button onclick="deleteCustomCombo(${i})" style="background:transparent;border:none;color:#55556a;cursor:pointer;font-size:0.8rem">✕</button>
+      </div>
+      <div class="combo-body" id="cc${i}">${c.tags}</div>
+      <button class="secondary-btn" onclick="copyCombo('cc${i}',this)">📋 Copiaza</button>
+    </div>
+  `).join('');
+}
+
+function addCustomCombo() {
+  const name = document.getElementById('comboNameIn')?.value.trim();
+  const tags = document.getElementById('comboTagsIn')?.value.trim();
+  if (!name || !tags) { alert('Completeaza numele si hashtag-urile!'); return; }
+  customCombos.push({ name, tags });
+  localStorage.setItem('stiriro_combos', JSON.stringify(customCombos));
+  renderCustomCombos();
+  document.getElementById('comboNameIn').value = '';
+  document.getElementById('comboTagsIn').value = '';
+}
+
+function deleteCustomCombo(i) {
+  customCombos.splice(i, 1);
+  localStorage.setItem('stiriro_combos', JSON.stringify(customCombos));
+  renderCustomCombos();
+}
+
+async function genHashAI() {
+  const topic = prompt('Despre ce subiect vrei hashtag-uri? (ex: stiri economice Romania)');
+  if (!topic) return;
+  const btn = event.target;
+  btn.textContent = '⏳ Generez...'; btn.disabled = true;
+  try {
+    const res = await fetch(API, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ max_tokens: 300, messages: [{ role: 'user', content: `Genereaza 20 hashtag-uri relevante pentru Instagram/Facebook despre: "${topic}". Focus pe audienta din Romania. Raspunde DOAR cu hashtag-urile separate prin spatiu, fara altceva.` }] })
+    });
+    const data = await res.json();
+    const tags = data.content[0].text.trim();
+    document.getElementById('comboTagsIn').value = tags;
+    document.getElementById('comboNameIn').value = topic;
+  } catch(e) {}
+  btn.textContent = '✨ AI sugereaza'; btn.disabled = false;
+}
+
+// ── INIT ON PAGE LOAD ──
+document.addEventListener('DOMContentLoaded', () => {
+  renderCustomTemplates();
+  renderCustomCombos();
+});
+// Also init immediately in case DOM is ready
+setTimeout(() => { renderCustomTemplates(); renderCustomCombos(); }, 100);
+
 </script>
 </body>
 </html>
