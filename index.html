@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="ro">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CeTrebuieSaStiiAzi — Studio</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root {
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   CeTrebuieSaStiiAzi — Studio
+  </title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Sora:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <style>
+   :root {
   --bg:#080810;--surface:#0f0f1a;--card:#14141f;--border:#1e1e2e;
   --accent:#e63946;--gold:#f4c430;--blue:#4361ee;--text:#eeeef5;
   --muted:#55556a;--green:#2ecc71;--purple:#7c3aed;
@@ -256,405 +258,1171 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
   .nav-logo{margin-right:12px;font-size:1.2rem;}
   .nav-tab{padding:0 12px;font-size:0.7rem;}
 }
-</style>
-</head>
-<body>
-
-<nav>
-  <div class="nav-logo">Ce<em>Trebuie</em><span>SaStiiAzi</span></div>
-  <div class="nav-tabs">
-    <button class="nav-tab active" onclick="goPage('postare',this)"><span class="ti">✍️</span>Postare AI</button>
-    <button class="nav-tab" onclick="goPage('reel',this)"><span class="ti">🎬</span>Reel Generator</button>
-    <button class="nav-tab" onclick="goPage('hashtag',this)"><span class="ti">#</span>Hashtag-uri</button>
-    <button class="nav-tab" onclick="goPage('calendar',this)"><span class="ti">📅</span>Calendar</button>
-    <button class="nav-tab" onclick="goPage('template',this)"><span class="ti">🎨</span>Template Canva</button>
-  </div>
-</nav>
-
-<!-- ═══════════ PAGE: POSTARE ═══════════ -->
-<div class="page active" id="page-postare">
-  <div style="display:grid;grid-template-columns:320px 1fr;min-height:calc(100vh - 56px)">
+  </style>
+ </head>
+ <body>
+  <nav>
+   <div class="nav-logo">
+    Ce
+    <em>
+     Trebuie
+    </em>
+    <span>
+     SaStiiAzi
+    </span>
+   </div>
+   <div class="nav-tabs">
+    <button class="nav-tab active" onclick="goPage('postare',this)">
+     <span class="ti">
+      ✍️
+     </span>
+     Postare AI
+    </button>
+    <button class="nav-tab" onclick="goPage('reel',this)">
+     <span class="ti">
+      🎬
+     </span>
+     Reel Generator
+    </button>
+    <button class="nav-tab" onclick="goPage('hashtag',this)">
+     <span class="ti">
+      #
+     </span>
+     Hashtag-uri
+    </button>
+    <button class="nav-tab" onclick="goPage('calendar',this)">
+     <span class="ti">
+      📅
+     </span>
+     Calendar
+    </button>
+    <button class="nav-tab" onclick="goPage('template',this)">
+     <span class="ti">
+      🎨
+     </span>
+     Template Canva
+    </button>
+   </div>
+  </nav>
+  <!-- ═══════════ PAGE: POSTARE ═══════════ -->
+  <div class="page active" id="page-postare">
+   <div style="display:grid;grid-template-columns:320px 1fr;min-height:calc(100vh - 56px)">
     <div class="panel-l">
-      <h2 class="ptitle">AI<br><em>Asistent</em></h2>
-      <p class="psub">Cere orice — postări, idei, analize, strategii, scripturi, hashtag-uri, titluri.</p>
-
-      <div class="ctrl-section">
-        <span class="ctrl-label">Comenzi rapide</span>
-        <div style="display:flex;flex-direction:column;gap:6px">
-          <button class="secondary-btn" style="text-align:left;font-size:0.75rem" onclick="quickCmd('Scrie 5 idei de postări virale pentru un cont de știri din România')">💡 Idei postări virale</button>
-          <button class="secondary-btn" style="text-align:left;font-size:0.75rem" onclick="quickCmd('Scrie un caption Instagram pentru știrea: ')">📸 Caption Instagram</button>
-          <button class="secondary-btn" style="text-align:left;font-size:0.75rem" onclick="quickCmd('Scrie un script pentru un Reel de 30 secunde despre: ')">🎬 Script Reel 30s</button>
-          <button class="secondary-btn" style="text-align:left;font-size:0.75rem" onclick="quickCmd('Analizează această știre și explică impactul ei asupra României: ')">🔍 Analiză știre</button>
-          <button class="secondary-btn" style="text-align:left;font-size:0.75rem" onclick="quickCmd('Generează 20 hashtag-uri relevante pentru: ')">🏷️ Hashtag-uri custom</button>
-          <button class="secondary-btn" style="text-align:left;font-size:0.75rem" onclick="quickCmd('Scrie un titlu captivant și un hook pentru postarea despre: ')">🪝 Titlu + Hook</button>
-          <button class="secondary-btn" style="text-align:left;font-size:0.75rem" onclick="quickCmd('Scrie variante de CTA (call to action) pentru un cont de știri din România')">📢 Call to Action</button>
-          <button class="secondary-btn" style="text-align:left;font-size:0.75rem" onclick="quickCmd('Creează o strategie de creștere pentru un cont de știri pe Instagram cu 0 urmăritori')">📈 Strategie creștere</button>
-        </div>
+     <h2 class="ptitle">
+      AI
+      <br/>
+      <em>
+       Asistent
+      </em>
+     </h2>
+     <p class="psub">
+      Cere orice — postări, idei, analize, strategii, scripturi, hashtag-uri, titluri.
+     </p>
+     <div class="ctrl-section">
+      <span class="ctrl-label">
+       Comenzi rapide
+      </span>
+      <div style="display:flex;flex-direction:column;gap:6px">
+       <button class="secondary-btn" onclick="quickCmd('Scrie 5 idei de postări virale pentru un cont de știri din România')" style="text-align:left;font-size:0.75rem">
+        💡 Idei postări virale
+       </button>
+       <button class="secondary-btn" onclick="quickCmd('Scrie un caption Instagram pentru știrea: ')" style="text-align:left;font-size:0.75rem">
+        📸 Caption Instagram
+       </button>
+       <button class="secondary-btn" onclick="quickCmd('Scrie un script pentru un Reel de 30 secunde despre: ')" style="text-align:left;font-size:0.75rem">
+        🎬 Script Reel 30s
+       </button>
+       <button class="secondary-btn" onclick="quickCmd('Analizează această știre și explică impactul ei asupra României: ')" style="text-align:left;font-size:0.75rem">
+        🔍 Analiză știre
+       </button>
+       <button class="secondary-btn" onclick="quickCmd('Generează 20 hashtag-uri relevante pentru: ')" style="text-align:left;font-size:0.75rem">
+        🏷️ Hashtag-uri custom
+       </button>
+       <button class="secondary-btn" onclick="quickCmd('Scrie un titlu captivant și un hook pentru postarea despre: ')" style="text-align:left;font-size:0.75rem">
+        🪝 Titlu + Hook
+       </button>
+       <button class="secondary-btn" onclick="quickCmd('Scrie variante de CTA (call to action) pentru un cont de știri din România')" style="text-align:left;font-size:0.75rem">
+        📢 Call to Action
+       </button>
+       <button class="secondary-btn" onclick="quickCmd('Creează o strategie de creștere pentru un cont de știri pe Instagram cu 0 urmăritori')" style="text-align:left;font-size:0.75rem">
+        📈 Strategie creștere
+       </button>
       </div>
-
-      <div class="ctrl-section" style="margin-top:8px">
-        <span class="ctrl-label">Ton răspuns</span>
-        <div class="chip-wrap">
-          <button class="chip active" data-aitone="profesionist" onclick="selAiTone(this)">🎯 Profesionist</button>
-          <button class="chip" data-aitone="casual" onclick="selAiTone(this)">😎 Casual</button>
-          <button class="chip" data-aitone="creativ" onclick="selAiTone(this)">🎨 Creativ</button>
-          <button class="chip" data-aitone="scurt" onclick="selAiTone(this)">⚡ Scurt</button>
-        </div>
+     </div>
+     <div class="ctrl-section" style="margin-top:8px">
+      <span class="ctrl-label">
+       Ton răspuns
+      </span>
+      <div class="chip-wrap">
+       <button class="chip active" data-aitone="profesionist" onclick="selAiTone(this)">
+        🎯 Profesionist
+       </button>
+       <button class="chip" data-aitone="casual" onclick="selAiTone(this)">
+        😎 Casual
+       </button>
+       <button class="chip" data-aitone="creativ" onclick="selAiTone(this)">
+        🎨 Creativ
+       </button>
+       <button class="chip" data-aitone="scurt" onclick="selAiTone(this)">
+        ⚡ Scurt
+       </button>
       </div>
-
-      <button class="secondary-btn" onclick="clearChat()" style="width:100%;margin-top:8px;color:var(--muted)">🗑 Șterge conversația</button>
+     </div>
+     <button class="secondary-btn" onclick="clearChat()" style="width:100%;margin-top:8px;color:var(--muted)">
+      🗑 Șterge conversația
+     </button>
     </div>
-
     <div style="display:flex;flex-direction:column;height:calc(100vh - 56px)">
-      <!-- Chat messages -->
-      <div id="chatMessages" style="flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px">
-        <div style="text-align:center;padding:40px 20px">
-          <div style="font-size:3rem;opacity:0.15;margin-bottom:12px">🤖</div>
-          <div style="font-size:0.85rem;color:var(--muted);line-height:1.6;max-width:340px;margin:0 auto">Bună! Sunt asistentul tău AI pentru CeTrebuieSaStiiAzi. Pot scrie postari, scripturi, analize, strategii — orice ai nevoie.</div>
-        </div>
+     <!-- Chat messages -->
+     <div id="chatMessages" style="flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px">
+      <div style="text-align:center;padding:40px 20px">
+       <div style="font-size:3rem;opacity:0.15;margin-bottom:12px">
+        🤖
+       </div>
+       <div style="font-size:0.85rem;color:var(--muted);line-height:1.6;max-width:340px;margin:0 auto">
+        Bună! Sunt asistentul tău AI pentru CeTrebuieSaStiiAzi. Pot scrie postari, scripturi, analize, strategii — orice ai nevoie.
+       </div>
       </div>
-
-      <!-- Input area -->
-      <div style="padding:16px 24px;border-top:1px solid var(--border);background:var(--surface)">
-        <div style="display:flex;gap:10px;align-items:flex-end">
-          <textarea id="chatInput" rows="2" class="txt-input" placeholder="Scrie orice întrebare sau cerere..." style="flex:1;resize:none;line-height:1.5" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
-          <button onclick="sendChat()" id="chatSendBtn" style="width:44px;height:44px;background:var(--accent);border:none;border-radius:9px;color:white;font-size:1.1rem;cursor:pointer;flex-shrink:0;transition:all 0.2s" onmouseover="this.style.background='#ff4757'" onmouseout="this.style.background='var(--accent)'">➤</button>
-        </div>
-        <div style="font-size:0.65rem;color:var(--muted);margin-top:6px">Enter = trimite • Shift+Enter = linie nouă</div>
+     </div>
+     <!-- Input area -->
+     <div style="padding:16px 24px;border-top:1px solid var(--border);background:var(--surface)">
+      <div style="display:flex;gap:10px;align-items:flex-end">
+       <textarea class="txt-input" id="chatInput" onkeydown="if(event.key==='Enter'&amp;&amp;!event.shiftKey){event.preventDefault();sendChat()}" placeholder="Scrie orice întrebare sau cerere..." rows="2" style="flex:1;resize:none;line-height:1.5"></textarea>
+       <button id="chatSendBtn" onclick="sendChat()" onmouseout="this.style.background='var(--accent)'" onmouseover="this.style.background='#ff4757'" style="width:44px;height:44px;background:var(--accent);border:none;border-radius:9px;color:white;font-size:1.1rem;cursor:pointer;flex-shrink:0;transition:all 0.2s">
+        ➤
+       </button>
       </div>
+      <div style="font-size:0.65rem;color:var(--muted);margin-top:6px">
+       Enter = trimite • Shift+Enter = linie nouă
+      </div>
+     </div>
     </div>
+   </div>
   </div>
-</div>
-
-<!-- ═══════════ PAGE: REEL ═══════════ -->
-<div class="page" id="page-reel">
-  <div class="split">
+  <!-- ═══════════ PAGE: REEL ═══════════ -->
+  <div class="page" id="page-reel">
+   <div class="split">
     <div class="panel-l">
-      <h2 class="ptitle">Reel<br><em>Generator</em></h2>
-      <p class="psub">O imagine AI per știre. Textul apare progresiv pe mai multe cadre.</p>
-
-      <div class="news-list" id="reelNewsList"></div>
-      <button class="add-news-btn" onclick="addReelNews()">+ Adaugă știre</button>
-
-      <div class="ctrl-section">
-        <span class="ctrl-label">Format video</span>
-        <div class="row3">
-          <button class="pill-btn active" data-ratio="9:16" onclick="selRatio(this)"><span class="bi">📱</span>9:16 Reel</button>
-          <button class="pill-btn" data-ratio="1:1" onclick="selRatio(this)"><span class="bi">⬛</span>1:1 Post</button>
-          <button class="pill-btn" data-ratio="16:9" onclick="selRatio(this)"><span class="bi">🖥️</span>16:9</button>
-        </div>
+     <h2 class="ptitle">
+      Reel
+      <br/>
+      <em>
+       Generator
+      </em>
+     </h2>
+     <p class="psub">
+      O imagine AI per știre. Textul apare progresiv pe mai multe cadre.
+     </p>
+     <div class="news-list" id="reelNewsList">
+     </div>
+     <button class="add-news-btn" onclick="addReelNews()">
+      + Adaugă știre
+     </button>
+     <div class="ctrl-section">
+      <span class="ctrl-label">
+       Format video
+      </span>
+      <div class="row3">
+       <button class="pill-btn active" data-ratio="9:16" onclick="selRatio(this)">
+        <span class="bi">
+         📱
+        </span>
+        9:16 Reel
+       </button>
+       <button class="pill-btn" data-ratio="1:1" onclick="selRatio(this)">
+        <span class="bi">
+         ⬛
+        </span>
+        1:1 Post
+       </button>
+       <button class="pill-btn" data-ratio="16:9" onclick="selRatio(this)">
+        <span class="bi">
+         🖥️
+        </span>
+        16:9
+       </button>
       </div>
-
-      <div class="ctrl-section">
-        <span class="ctrl-label">Stil imagini</span>
-        <div class="chip-wrap">
-          <button class="chip active" data-style="photorealistic news photography, ultra detailed 4k" onclick="selStyle(this)">📸 Foto HD</button>
-          <button class="chip" data-style="cinematic dramatic lighting, film grain, 8k" onclick="selStyle(this)">🎬 Cinematic</button>
-          <button class="chip" data-style="digital illustration flat design colorful" onclick="selStyle(this)">🎨 Ilustrație</button>
-          <button class="chip" data-style="dark moody editorial photography, high contrast" onclick="selStyle(this)">🌑 Editorial</button>
-        </div>
+     </div>
+     <div class="ctrl-section">
+      <span class="ctrl-label">
+       Stil imagini
+      </span>
+      <div class="chip-wrap">
+       <button class="chip active" data-style="photorealistic news photography, ultra detailed 4k" onclick="selStyle(this)">
+        📸 Foto HD
+       </button>
+       <button class="chip" data-style="cinematic dramatic lighting, film grain, 8k" onclick="selStyle(this)">
+        🎬 Cinematic
+       </button>
+       <button class="chip" data-style="digital illustration flat design colorful" onclick="selStyle(this)">
+        🎨 Ilustrație
+       </button>
+       <button class="chip" data-style="dark moody editorial photography, high contrast" onclick="selStyle(this)">
+        🌑 Editorial
+       </button>
       </div>
-
-      <div class="ctrl-section">
-        <span class="ctrl-label">Cuvinte pe cadru</span>
+     </div>
+     <div class="ctrl-section">
+      <span class="ctrl-label">
+       Cuvinte pe cadru
+      </span>
+      <div class="slider-row">
+       <input id="wordsSlider" max="25" min="4" oninput="updWords(this.value)" type="range" value="10"/>
+       <div class="slider-val" id="wordsVal">
+        10 cuv.
+       </div>
+      </div>
+     </div>
+     <div class="ctrl-section">
+      <span class="ctrl-label">
+       Durată cadru (secunde)
+      </span>
+      <div class="slider-row">
+       <input id="durSlider" max="8" min="1" oninput="updDur(this.value)" step="0.5" type="range" value="3"/>
+       <div class="slider-val" id="durVal">
+        3s
+       </div>
+      </div>
+     </div>
+     <div class="ctrl-section">
+      <span class="ctrl-label">
+       Dimensiune text
+      </span>
+      <div class="slider-row">
+       <input id="txtSizeSlider" max="10" min="2" oninput="updTxtSize(this.value)" type="range" value="6"/>
+       <div class="slider-val" id="txtSizeVal">
+        6%
+       </div>
+      </div>
+     </div>
+     <div class="ctrl-section">
+      <span class="ctrl-label">
+       Calitate imagine
+      </span>
+      <div class="row2">
+       <button class="pill-btn active" data-quality="standard" onclick="selQuality(this)">
+        <span class="bi">
+         🖼️
+        </span>
+        Standard
+       </button>
+       <button class="pill-btn" data-quality="hd" onclick="selQuality(this)">
+        <span class="bi">
+         ⭐
+        </span>
+        HD (mai lent)
+       </button>
+      </div>
+     </div>
+     <div class="ctrl-section">
+      <span class="ctrl-label">
+       🎵 Audio fundal
+      </span>
+      <div class="chip-wrap" style="margin-bottom:8px">
+       <button class="chip active" data-audio="none" onclick="selAudio(this)">
+        🔇 Fără
+       </button>
+       <button class="chip" data-audio="upload" onclick="selAudio(this)">
+        📁 Upload
+       </button>
+       <button class="chip" data-audio="tts" onclick="selAudio(this)">
+        🎙️ Voiceover
+       </button>
+      </div>
+      <div id="audioUploadWrap" style="display:none">
+       <input accept="audio/*" id="audioFileIn" onchange="loadAudioFile(this)" style="display:none" type="file"/>
+       <button class="secondary-btn" onclick="document.getElementById('audioFileIn').click()" style="width:100%">
+        📂 Alege MP3/WAV
+       </button>
+       <div id="audioFileName" style="font-size:0.72rem;color:#55556a;margin-top:5px;text-align:center">
+       </div>
+       <div style="margin-top:8px">
+        <span class="ctrl-label" style="margin-bottom:4px;display:block">
+         Volum
+        </span>
         <div class="slider-row">
-          <input type="range" min="4" max="25" value="10" id="wordsSlider" oninput="updWords(this.value)">
-          <div class="slider-val" id="wordsVal">10 cuv.</div>
+         <input id="audioVol" max="100" min="0" oninput="setAudioVol(this.value)" type="range" value="70"/>
+         <div class="slider-val" id="audioVolVal">
+          70%
+         </div>
         </div>
+       </div>
       </div>
-
-      <div class="ctrl-section">
-        <span class="ctrl-label">Durată cadru (secunde)</span>
-        <div class="slider-row">
-          <input type="range" min="1" max="8" value="3" step="0.5" id="durSlider" oninput="updDur(this.value)">
-          <div class="slider-val" id="durVal">3s</div>
+      <div id="audioTtsWrap" style="display:none">
+       <div style="font-size:0.72rem;color:#55556a;line-height:1.5;padding:8px 10px;background:#0f0f1a;border-radius:6px;margin-bottom:8px">
+        Browserul citește textul fiecărui cadru în română.
+       </div>
+       <div class="slider-row">
+        <input id="ttsRate" max="1.5" min="0.5" oninput="document.getElementById('ttsRateVal').textContent=this.value+'x'" step="0.1" type="range" value="0.9"/>
+        <div class="slider-val" id="ttsRateVal">
+         0.9x
         </div>
+       </div>
       </div>
-
-      <div class="ctrl-section">
-        <span class="ctrl-label">Dimensiune text</span>
-        <div class="slider-row">
-          <input type="range" min="2" max="10" value="6" id="txtSizeSlider" oninput="updTxtSize(this.value)">
-          <div class="slider-val" id="txtSizeVal">6%</div>
-        </div>
-      </div>
-
-      <div class="ctrl-section">
-        <span class="ctrl-label">Calitate imagine</span>
-        <div class="row2">
-          <button class="pill-btn active" data-quality="standard" onclick="selQuality(this)"><span class="bi">🖼️</span>Standard</button>
-          <button class="pill-btn" data-quality="hd" onclick="selQuality(this)"><span class="bi">⭐</span>HD (mai lent)</button>
-        </div>
-      </div>
-
-      <div class="ctrl-section">
-        <span class="ctrl-label">🎵 Audio fundal</span>
-        <div class="chip-wrap" style="margin-bottom:8px">
-          <button class="chip active" data-audio="none" onclick="selAudio(this)">🔇 Fără</button>
-          <button class="chip" data-audio="upload" onclick="selAudio(this)">📁 Upload</button>
-          <button class="chip" data-audio="tts" onclick="selAudio(this)">🎙️ Voiceover</button>
-        </div>
-        <div id="audioUploadWrap" style="display:none">
-          <input type="file" id="audioFileIn" accept="audio/*" onchange="loadAudioFile(this)" style="display:none">
-          <button class="secondary-btn" onclick="document.getElementById('audioFileIn').click()" style="width:100%">📂 Alege MP3/WAV</button>
-          <div id="audioFileName" style="font-size:0.72rem;color:#55556a;margin-top:5px;text-align:center"></div>
-          <div style="margin-top:8px">
-            <span class="ctrl-label" style="margin-bottom:4px;display:block">Volum</span>
-            <div class="slider-row">
-              <input type="range" min="0" max="100" value="70" id="audioVol" oninput="setAudioVol(this.value)">
-              <div class="slider-val" id="audioVolVal">70%</div>
-            </div>
-          </div>
-        </div>
-        <div id="audioTtsWrap" style="display:none">
-          <div style="font-size:0.72rem;color:#55556a;line-height:1.5;padding:8px 10px;background:#0f0f1a;border-radius:6px;margin-bottom:8px">Browserul citește textul fiecărui cadru în română.</div>
-          <div class="slider-row">
-            <input type="range" min="0.5" max="1.5" value="0.9" step="0.1" id="ttsRate" oninput="document.getElementById('ttsRateVal').textContent=this.value+'x'">
-            <div class="slider-val" id="ttsRateVal">0.9x</div>
-          </div>
-        </div>
-      </div>
-
-      <button class="primary-btn" id="genReelBtn" onclick="genReel()">🎬 Generează Reel</button>
+     </div>
+     <button class="primary-btn" id="genReelBtn" onclick="genReel()">
+      🎬 Generează Reel
+     </button>
     </div>
-
     <div class="panel-r" id="reelOut">
-      <div class="placeholder">
-        <div class="ph-icon">🎬</div>
-        <p class="ph-text">Adaugă știrile, configurează opțiunile și apasă Generează Reel.</p>
-        <p style="font-size:0.72rem;margin-top:6px;color:var(--muted)">Imagini AI generate • Text progresiv • Export MP4/WebM</p>
+     <div class="placeholder">
+      <div class="ph-icon">
+       🎬
       </div>
+      <p class="ph-text">
+       Adaugă știrile, configurează opțiunile și apasă Generează Reel.
+      </p>
+      <p style="font-size:0.72rem;margin-top:6px;color:var(--muted)">
+       Imagini AI generate • Text progresiv • Export MP4/WebM
+      </p>
+     </div>
     </div>
+   </div>
   </div>
-</div>
-
-<!-- ═══════════ PAGE: HASHTAG ═══════════ -->
-<div class="page" id="page-hashtag">
-  <div style="max-width:900px;margin:0 auto;padding:32px 24px">
-    <h2 class="ptitle" style="margin-bottom:4px">Hashtag-uri<br><em>România</em></h2>
-    <p class="psub">Click pe orice hashtag pentru a-l copia. Combo-uri gata de utilizat.</p>
-
+  <!-- ═══════════ PAGE: HASHTAG ═══════════ -->
+  <div class="page" id="page-hashtag">
+   <div style="max-width:900px;margin:0 auto;padding:32px 24px">
+    <h2 class="ptitle" style="margin-bottom:4px">
+     Hashtag-uri
+     <br/>
+     <em>
+      România
+     </em>
+    </h2>
+    <p class="psub">
+     Click pe orice hashtag pentru a-l copia. Combo-uri gata de utilizat.
+    </p>
     <div class="hash-section">
-      <div class="hash-group-label" style="color:#fc5c7d">🔴 Hashtag-uri mari — volum ridicat</div>
-      <div class="hashtag-grid">
-        <span class="hashtag hash-big" onclick="copyHash(this)">#romania</span>
-        <span class="hashtag hash-big" onclick="copyHash(this)">#stiri</span>
-        <span class="hashtag hash-big" onclick="copyHash(this)">#stiridezazi</span>
-        <span class="hashtag hash-big" onclick="copyHash(this)">#news</span>
-        <span class="hashtag hash-big" onclick="copyHash(this)">#breaking</span>
-        <span class="hashtag hash-big" onclick="copyHash(this)">#actualitati</span>
-        <span class="hashtag hash-big" onclick="copyHash(this)">#bucuresti</span>
-        <span class="hashtag hash-big" onclick="copyHash(this)">#politica</span>
-      </div>
+     <div class="hash-group-label" style="color:#fc5c7d">
+      🔴 Hashtag-uri mari — volum ridicat
+     </div>
+     <div class="hashtag-grid">
+      <span class="hashtag hash-big" onclick="copyHash(this)">
+       #romania
+      </span>
+      <span class="hashtag hash-big" onclick="copyHash(this)">
+       #stiri
+      </span>
+      <span class="hashtag hash-big" onclick="copyHash(this)">
+       #stiridezazi
+      </span>
+      <span class="hashtag hash-big" onclick="copyHash(this)">
+       #news
+      </span>
+      <span class="hashtag hash-big" onclick="copyHash(this)">
+       #breaking
+      </span>
+      <span class="hashtag hash-big" onclick="copyHash(this)">
+       #actualitati
+      </span>
+      <span class="hashtag hash-big" onclick="copyHash(this)">
+       #bucuresti
+      </span>
+      <span class="hashtag hash-big" onclick="copyHash(this)">
+       #politica
+      </span>
+     </div>
     </div>
-
     <div class="hash-section">
-      <div class="hash-group-label" style="color:#9b8ff5">🟣 Hashtag-uri medii — echilibru optim</div>
-      <div class="hashtag-grid">
-        <span class="hashtag hash-mid" onclick="copyHash(this)">#stiriromania</span>
-        <span class="hashtag hash-mid" onclick="copyHash(this)">#newsromania</span>
-        <span class="hashtag hash-mid" onclick="copyHash(this)">#romanianews</span>
-        <span class="hashtag hash-mid" onclick="copyHash(this)">#stiriazi</span>
-        <span class="hashtag hash-mid" onclick="copyHash(this)">#mediaro</span>
-        <span class="hashtag hash-mid" onclick="copyHash(this)">#evenimentezilei</span>
-        <span class="hashtag hash-mid" onclick="copyHash(this)">#stiriurgente</span>
-        <span class="hashtag hash-mid" onclick="copyHash(this)">#presaromana</span>
-        <span class="hashtag hash-mid" onclick="copyHash(this)">#jurnalism</span>
-        <span class="hashtag hash-mid" onclick="copyHash(this)">#romaniaazi</span>
-      </div>
+     <div class="hash-group-label" style="color:#9b8ff5">
+      🟣 Hashtag-uri medii — echilibru optim
+     </div>
+     <div class="hashtag-grid">
+      <span class="hashtag hash-mid" onclick="copyHash(this)">
+       #stiriromania
+      </span>
+      <span class="hashtag hash-mid" onclick="copyHash(this)">
+       #newsromania
+      </span>
+      <span class="hashtag hash-mid" onclick="copyHash(this)">
+       #romanianews
+      </span>
+      <span class="hashtag hash-mid" onclick="copyHash(this)">
+       #stiriazi
+      </span>
+      <span class="hashtag hash-mid" onclick="copyHash(this)">
+       #mediaro
+      </span>
+      <span class="hashtag hash-mid" onclick="copyHash(this)">
+       #evenimentezilei
+      </span>
+      <span class="hashtag hash-mid" onclick="copyHash(this)">
+       #stiriurgente
+      </span>
+      <span class="hashtag hash-mid" onclick="copyHash(this)">
+       #presaromana
+      </span>
+      <span class="hashtag hash-mid" onclick="copyHash(this)">
+       #jurnalism
+      </span>
+      <span class="hashtag hash-mid" onclick="copyHash(this)">
+       #romaniaazi
+      </span>
+     </div>
     </div>
-
     <div class="hash-section">
-      <div class="hash-group-label" style="color:var(--gold)">🟡 Hashtag-uri nișă — engagement ridicat</div>
-      <div class="hashtag-grid">
-        <span class="hashtag hash-small" onclick="copyHash(this)">#stiridimineata</span>
-        <span class="hashtag hash-small" onclick="copyHash(this)">#stirisera</span>
-        <span class="hashtag hash-small" onclick="copyHash(this)">#stirilocale</span>
-        <span class="hashtag hash-small" onclick="copyHash(this)">#informatiiimportante</span>
-        <span class="hashtag hash-small" onclick="copyHash(this)">#ceseintampla</span>
-        <span class="hashtag hash-small" onclick="copyHash(this)">#economie</span>
-        <span class="hashtag hash-small" onclick="copyHash(this)">#politicaromana</span>
-        <span class="hashtag hash-small" onclick="copyHash(this)">#guvern</span>
-        <span class="hashtag hash-small" onclick="copyHash(this)">#salariuminim</span>
-        <span class="hashtag hash-small" onclick="copyHash(this)">#inflatiero</span>
-      </div>
+     <div class="hash-group-label" style="color:var(--gold)">
+      🟡 Hashtag-uri nișă — engagement ridicat
+     </div>
+     <div class="hashtag-grid">
+      <span class="hashtag hash-small" onclick="copyHash(this)">
+       #stiridimineata
+      </span>
+      <span class="hashtag hash-small" onclick="copyHash(this)">
+       #stirisera
+      </span>
+      <span class="hashtag hash-small" onclick="copyHash(this)">
+       #stirilocale
+      </span>
+      <span class="hashtag hash-small" onclick="copyHash(this)">
+       #informatiiimportante
+      </span>
+      <span class="hashtag hash-small" onclick="copyHash(this)">
+       #ceseintampla
+      </span>
+      <span class="hashtag hash-small" onclick="copyHash(this)">
+       #economie
+      </span>
+      <span class="hashtag hash-small" onclick="copyHash(this)">
+       #politicaromana
+      </span>
+      <span class="hashtag hash-small" onclick="copyHash(this)">
+       #guvern
+      </span>
+      <span class="hashtag hash-small" onclick="copyHash(this)">
+       #salariuminim
+      </span>
+      <span class="hashtag hash-small" onclick="copyHash(this)">
+       #inflatiero
+      </span>
+     </div>
     </div>
-
     <div class="hash-section">
-      <div class="hash-group-label" style="color:var(--muted)">⚡ Combo-uri gata de copiat</div>
-      <div class="combo-card">
-        <div class="combo-title">📰 Știre generală zilnică</div>
-        <div class="combo-body" id="combo1">#romania #stiri #stiriromania #newsromania #stiriazi #romaniaazi #actualitati #stiridezazi #evenimentezilei #jurnalism #informatii #presaromana #mediaro #stiridimineata #ceseintampla #news #breaking #stiriurgente #informatiiimportante #newsziua</div>
-        <button class="secondary-btn" onclick="copyCombo('combo1',this)">📋 Copiază combo</button>
+     <div class="hash-group-label" style="color:var(--muted)">
+      ⚡ Combo-uri gata de copiat
+     </div>
+     <div class="combo-card">
+      <div class="combo-title">
+       📰 Știre generală zilnică
       </div>
-      <div class="combo-card">
-        <div class="combo-title">💰 Știre economică</div>
-        <div class="combo-body" id="combo2">#romania #economie #stiriromania #salariuminim #inflatiero #bnr #pensii #taxe #buget #eurron #stiriazi #actualitati #news #romaniaazi #informatiiimportante #evenimentezilei #stiri #mediaro #newsromania #informatii</div>
-        <button class="secondary-btn" onclick="copyCombo('combo2',this)">📋 Copiază combo</button>
+      <div class="combo-body" id="combo1">
+       #romania #stiri #stiriromania #newsromania #stiriazi #romaniaazi #actualitati #stiridezazi #evenimentezilei #jurnalism #informatii #presaromana #mediaro #stiridimineata #ceseintampla #news #breaking #stiriurgente #informatiiimportante #newsziua
       </div>
-      <div class="combo-card">
-        <div class="combo-title">🏛️ Știre politică</div>
-        <div class="combo-body" id="combo3">#romania #politicaromana #stiriromania #guvern #parlament #alegeri #presedintie #ue #stiriazi #actualitati #breaking #stiriurgente #news #diplomatiero #romaniaazi #evenimentezilei #stiri #informatii #mediaro #newsromania</div>
-        <button class="secondary-btn" onclick="copyCombo('combo3',this)">📋 Copiează combo</button>
+      <button class="secondary-btn" onclick="copyCombo('combo1',this)">
+       📋 Copiază combo
+      </button>
+     </div>
+     <div class="combo-card">
+      <div class="combo-title">
+       💰 Știre economică
       </div>
-      <!-- COMBO-URI CUSTOM -->
-      <div style="margin-top:24px">
-        <div class="hash-group-label" style="color:#4361ee">🔵 Combo-urile mele custom</div>
-        <div id="customCombos" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px"></div>
-        <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:9px;padding:16px">
-          <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:#f4c430;font-weight:700;margin-bottom:10px">+ Combo nou</div>
-          <input class="txt-input" id="comboNameIn" placeholder="Nume combo (ex: Stiri Locale)" style="margin-bottom:8px">
-          <textarea class="txt-input" id="comboTagsIn" rows="3" placeholder="#hashtag1 #hashtag2 #hashtag3 ..."></textarea>
-          <div style="display:flex;gap:8px;margin-top:8px">
-            <button class="secondary-btn" onclick="addCustomCombo()" style="flex:1">+ Salveaza combo</button>
-            <button class="secondary-btn" onclick="genHashAI()" style="flex:1;border-color:#7c3aed;color:#7c3aed">✨ AI sugereaza</button>
-          </div>
-        </div>
+      <div class="combo-body" id="combo2">
+       #romania #economie #stiriromania #salariuminim #inflatiero #bnr #pensii #taxe #buget #eurron #stiriazi #actualitati #news #romaniaazi #informatiiimportante #evenimentezilei #stiri #mediaro #newsromania #informatii
       </div>
+      <button class="secondary-btn" onclick="copyCombo('combo2',this)">
+       📋 Copiază combo
+      </button>
+     </div>
+     <div class="combo-card">
+      <div class="combo-title">
+       🏛️ Știre politică
+      </div>
+      <div class="combo-body" id="combo3">
+       #romania #politicaromana #stiriromania #guvern #parlament #alegeri #presedintie #ue #stiriazi #actualitati #breaking #stiriurgente #news #diplomatiero #romaniaazi #evenimentezilei #stiri #informatii #mediaro #newsromania
+      </div>
+      <button class="secondary-btn" onclick="copyCombo('combo3',this)">
+       📋 Copiează combo
+      </button>
+     </div>
+     <!-- COMBO-URI CUSTOM -->
+     <div style="margin-top:24px">
+      <div class="hash-group-label" style="color:#4361ee">
+       🔵 Combo-urile mele custom
+      </div>
+      <div id="customCombos" style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">
+      </div>
+      <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:9px;padding:16px">
+       <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:#f4c430;font-weight:700;margin-bottom:10px">
+        + Combo nou
+       </div>
+       <input class="txt-input" id="comboNameIn" placeholder="Nume combo (ex: Stiri Locale)" style="margin-bottom:8px"/>
+       <textarea class="txt-input" id="comboTagsIn" placeholder="#hashtag1 #hashtag2 #hashtag3 ..." rows="3"></textarea>
+       <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="secondary-btn" onclick="addCustomCombo()" style="flex:1">
+         + Salveaza combo
+        </button>
+        <button class="secondary-btn" onclick="genHashAI()" style="flex:1;border-color:#7c3aed;color:#7c3aed">
+         ✨ AI sugereaza
+        </button>
+       </div>
+      </div>
+     </div>
     </div>
+   </div>
   </div>
-</div>
-
-<!-- ═══════════ PAGE: CALENDAR ═══════════ -->
-<div class="page" id="page-calendar">
-  <div style="padding:24px">
-    <h2 class="ptitle" style="margin-bottom:4px">Calendar<br><em>Editorial</em></h2>
-    <p class="psub">21 postări/săptămână • ore fixe de trafic maxim</p>
+  <!-- ═══════════ PAGE: CALENDAR ═══════════ -->
+  <div class="page" id="page-calendar">
+   <div style="padding:24px">
+    <h2 class="ptitle" style="margin-bottom:4px">
+     Calendar
+     <br/>
+     <em>
+      Editorial
+     </em>
+    </h2>
+    <p class="psub">
+     21 postări/săptămână • ore fixe de trafic maxim
+    </p>
     <div class="cal-wrap">
-      <div class="week-grid">
-        <div class="day-hdr"></div>
-        <div class="day-hdr">Luni</div><div class="day-hdr">Marți</div><div class="day-hdr">Miercuri</div>
-        <div class="day-hdr">Joi</div><div class="day-hdr">Vineri</div><div class="day-hdr">Sâmbătă</div><div class="day-hdr">Duminică</div>
-        <!-- 08:00 -->
-        <div class="time-lbl"><span>08:00</span><span class="tl-slot">☀️ dimineață</span></div>
-        <div class="post-cell"><div class="post-card morning"><div class="post-type">Top 3 știri</div><div class="post-title">Rezumat weekend</div><div class="post-hint">Ce s-a întâmplat sâmbătă-duminică</div></div></div>
-        <div class="post-cell"><div class="post-card morning"><div class="post-type">Economie</div><div class="post-title">Știre economică</div><div class="post-hint">Curs, prețuri, salarii, taxe</div></div></div>
-        <div class="post-cell"><div class="post-card morning"><div class="post-type">Politică</div><div class="post-title">Știre politică</div><div class="post-hint">Decizii guvern, parlament</div></div></div>
-        <div class="post-cell"><div class="post-card morning"><div class="post-type">Internațional</div><div class="post-title">România în lume</div><div class="post-hint">UE, NATO, vecini</div></div></div>
-        <div class="post-cell"><div class="post-card morning"><div class="post-type">Cifra zilei</div><div class="post-title">Statistică</div><div class="post-hint">Un număr important, vizual</div></div></div>
-        <div class="post-cell"><div class="post-card morning"><div class="post-type">Weekend</div><div class="post-title">Știre ușoară</div><div class="post-hint">Subiect relaxat, pozitiv</div></div></div>
-        <div class="post-cell"><div class="post-card morning"><div class="post-type">Preview</div><div class="post-title">Ce urmează</div><div class="post-hint">Agenda săptămânii viitoare</div></div></div>
-        <!-- 13:00 -->
-        <div class="time-lbl"><span>13:00</span><span class="tl-slot">🔴 prânz</span></div>
-        <div class="post-cell"><div class="post-card noon"><div class="post-type">Breaking</div><div class="post-title">Cea mai mare știre</div><div class="post-hint">Hook puternic, ton urgent</div></div></div>
-        <div class="post-cell"><div class="post-card noon"><div class="post-type">Breaking</div><div class="post-title">Știre fierbinte</div><div class="post-hint">Ce discută toată lumea azi</div></div></div>
-        <div class="post-cell"><div class="post-card noon"><div class="post-type">Breaking</div><div class="post-title">Update important</div><div class="post-hint">Dezvoltare subiect anterior</div></div></div>
-        <div class="post-cell"><div class="post-card noon"><div class="post-type">Breaking</div><div class="post-title">Anunț oficial</div><div class="post-hint">Eveniment neprevăzut</div></div></div>
-        <div class="post-cell"><div class="post-card noon"><div class="post-type">Recapitulare</div><div class="post-title">Top 5 ale săptămânii</div><div class="post-hint">Carousel, performează bine</div></div></div>
-        <div class="post-cell"><div class="post-card noon"><div class="post-type">Sondaj</div><div class="post-title">Tu ce crezi?</div><div class="post-hint">Engagement maxim sâmbătă</div></div></div>
-        <div class="post-cell"><div class="post-card noon"><div class="post-type">Culise</div><div class="post-title">Behind the scenes</div><div class="post-hint">Cum funcționează contul</div></div></div>
-        <!-- 20:00 -->
-        <div class="time-lbl"><span>20:00</span><span class="tl-slot">🌙 seară</span></div>
-        <div class="post-cell"><div class="post-card evening"><div class="post-type">Rezumat zilei</div><div class="post-title">Ce s-a întâmplat azi</div><div class="post-hint">3 știri din ziua curentă</div></div></div>
-        <div class="post-cell"><div class="post-card evening"><div class="post-type">Analiză</div><div class="post-title">De ce contează</div><div class="post-hint">Impactul știrii principale</div></div></div>
-        <div class="post-cell"><div class="post-card evening"><div class="post-type">Rezumat zilei</div><div class="post-title">Știrile serii</div><div class="post-hint">3 puncte cheie</div></div></div>
-        <div class="post-cell"><div class="post-card evening"><div class="post-type">Dezbatere</div><div class="post-title">Tu ce crezi?</div><div class="post-hint">2 perspective, invită comentarii</div></div></div>
-        <div class="post-cell"><div class="post-card evening"><div class="post-type">Vineri seară</div><div class="post-title">Știre pozitivă</div><div class="post-hint">O veste bună din România</div></div></div>
-        <div class="post-cell"><div class="post-card evening"><div class="post-type">Rezumat</div><div class="post-title">Știrile de sâmbătă</div><div class="post-hint">Ce s-a întâmplat important</div></div></div>
-        <div class="post-cell"><div class="post-card evening"><div class="post-type">Preview luni</div><div class="post-title">Ce urmează</div><div class="post-hint">Creezi așteptare pentru mâine</div></div></div>
+     <div class="week-grid">
+      <div class="day-hdr">
       </div>
+      <div class="day-hdr">
+       Luni
+      </div>
+      <div class="day-hdr">
+       Marți
+      </div>
+      <div class="day-hdr">
+       Miercuri
+      </div>
+      <div class="day-hdr">
+       Joi
+      </div>
+      <div class="day-hdr">
+       Vineri
+      </div>
+      <div class="day-hdr">
+       Sâmbătă
+      </div>
+      <div class="day-hdr">
+       Duminică
+      </div>
+      <!-- 08:00 -->
+      <div class="time-lbl">
+       <span>
+        08:00
+       </span>
+       <span class="tl-slot">
+        ☀️ dimineață
+       </span>
+      </div>
+      <div class="post-cell">
+       <div class="post-card morning">
+        <div class="post-type">
+         Top 3 știri
+        </div>
+        <div class="post-title">
+         Rezumat weekend
+        </div>
+        <div class="post-hint">
+         Ce s-a întâmplat sâmbătă-duminică
+        </div>
+       </div>
+      </div>
+      <div class="post-cell">
+       <div class="post-card morning">
+        <div class="post-type">
+         Economie
+        </div>
+        <div class="post-title">
+         Știre economică
+        </div>
+        <div class="post-hint">
+         Curs, prețuri, salarii, taxe
+        </div>
+       </div>
+      </div>
+      <div class="post-cell">
+       <div class="post-card morning">
+        <div class="post-type">
+         Politică
+        </div>
+        <div class="post-title">
+         Știre politică
+        </div>
+        <div class="post-hint">
+         Decizii guvern, parlament
+        </div>
+       </div>
+      </div>
+      <div class="post-cell">
+       <div class="post-card morning">
+        <div class="post-type">
+         Internațional
+        </div>
+        <div class="post-title">
+         România în lume
+        </div>
+        <div class="post-hint">
+         UE, NATO, vecini
+        </div>
+       </div>
+      </div>
+      <div class="post-cell">
+       <div class="post-card morning">
+        <div class="post-type">
+         Cifra zilei
+        </div>
+        <div class="post-title">
+         Statistică
+        </div>
+        <div class="post-hint">
+         Un număr important, vizual
+        </div>
+       </div>
+      </div>
+      <div class="post-cell">
+       <div class="post-card morning">
+        <div class="post-type">
+         Weekend
+        </div>
+        <div class="post-title">
+         Știre ușoară
+        </div>
+        <div class="post-hint">
+         Subiect relaxat, pozitiv
+        </div>
+       </div>
+      </div>
+      <div class="post-cell">
+       <div class="post-card morning">
+        <div class="post-type">
+         Preview
+        </div>
+        <div class="post-title">
+         Ce urmează
+        </div>
+        <div class="post-hint">
+         Agenda săptămânii viitoare
+        </div>
+       </div>
+      </div>
+      <!-- 13:00 -->
+      <div class="time-lbl">
+       <span>
+        13:00
+       </span>
+       <span class="tl-slot">
+        🔴 prânz
+       </span>
+      </div>
+      <div class="post-cell">
+       <div class="post-card noon">
+        <div class="post-type">
+         Breaking
+        </div>
+        <div class="post-title">
+         Cea mai mare știre
+        </div>
+        <div class="post-hint">
+         Hook puternic, ton urgent
+        </div>
+       </div>
+      </div>
+      <div class="post-cell">
+       <div class="post-card noon">
+        <div class="post-type">
+         Breaking
+        </div>
+        <div class="post-title">
+         Știre fierbinte
+        </div>
+        <div class="post-hint">
+         Ce discută toată lumea azi
+        </div>
+       </div>
+      </div>
+      <div class="post-cell">
+       <div class="post-card noon">
+        <div class="post-type">
+         Breaking
+        </div>
+        <div class="post-title">
+         Update important
+        </div>
+        <div class="post-hint">
+         Dezvoltare subiect anterior
+        </div>
+       </div>
+      </div>
+      <div class="post-cell">
+       <div class="post-card noon">
+        <div class="post-type">
+         Breaking
+        </div>
+        <div class="post-title">
+         Anunț oficial
+        </div>
+        <div class="post-hint">
+         Eveniment neprevăzut
+        </div>
+       </div>
+      </div>
+      <div class="post-cell">
+       <div class="post-card noon">
+        <div class="post-type">
+         Recapitulare
+        </div>
+        <div class="post-title">
+         Top 5 ale săptămânii
+        </div>
+        <div class="post-hint">
+         Carousel, performează bine
+        </div>
+       </div>
+      </div>
+      <div class="post-cell">
+       <div class="post-card noon">
+        <div class="post-type">
+         Sondaj
+        </div>
+        <div class="post-title">
+         Tu ce crezi?
+        </div>
+        <div class="post-hint">
+         Engagement maxim sâmbătă
+        </div>
+       </div>
+      </div>
+      <div class="post-cell">
+       <div class="post-card noon">
+        <div class="post-type">
+         Culise
+        </div>
+        <div class="post-title">
+         Behind the scenes
+        </div>
+        <div class="post-hint">
+         Cum funcționează contul
+        </div>
+       </div>
+      </div>
+      <!-- 20:00 -->
+      <div class="time-lbl">
+       <span>
+        20:00
+       </span>
+       <span class="tl-slot">
+        🌙 seară
+       </span>
+      </div>
+      <div class="post-cell">
+       <div class="post-card evening">
+        <div class="post-type">
+         Rezumat zilei
+        </div>
+        <div class="post-title">
+         Ce s-a întâmplat azi
+        </div>
+        <div class="post-hint">
+         3 știri din ziua curentă
+        </div>
+       </div>
+      </div>
+      <div class="post-cell">
+       <div class="post-card evening">
+        <div class="post-type">
+         Analiză
+        </div>
+        <div class="post-title">
+         De ce contează
+        </div>
+        <div class="post-hint">
+         Impactul știrii principale
+        </div>
+       </div>
+      </div>
+      <div class="post-cell">
+       <div class="post-card evening">
+        <div class="post-type">
+         Rezumat zilei
+        </div>
+        <div class="post-title">
+         Știrile serii
+        </div>
+        <div class="post-hint">
+         3 puncte cheie
+        </div>
+       </div>
+      </div>
+      <div class="post-cell">
+       <div class="post-card evening">
+        <div class="post-type">
+         Dezbatere
+        </div>
+        <div class="post-title">
+         Tu ce crezi?
+        </div>
+        <div class="post-hint">
+         2 perspective, invită comentarii
+        </div>
+       </div>
+      </div>
+      <div class="post-cell">
+       <div class="post-card evening">
+        <div class="post-type">
+         Vineri seară
+        </div>
+        <div class="post-title">
+         Știre pozitivă
+        </div>
+        <div class="post-hint">
+         O veste bună din România
+        </div>
+       </div>
+      </div>
+      <div class="post-cell">
+       <div class="post-card evening">
+        <div class="post-type">
+         Rezumat
+        </div>
+        <div class="post-title">
+         Știrile de sâmbătă
+        </div>
+        <div class="post-hint">
+         Ce s-a întâmplat important
+        </div>
+       </div>
+      </div>
+      <div class="post-cell">
+       <div class="post-card evening">
+        <div class="post-type">
+         Preview luni
+        </div>
+        <div class="post-title">
+         Ce urmează
+        </div>
+        <div class="post-hint">
+         Creezi așteptare pentru mâine
+        </div>
+       </div>
+      </div>
+     </div>
     </div>
+   </div>
   </div>
-</div>
-
-<!-- ═══════════ PAGE: TEMPLATE ═══════════ -->
-<div class="page" id="page-template">
-  <div style="max-width:900px;margin:0 auto;padding:32px 24px">
-    <h2 class="ptitle" style="margin-bottom:4px">Template-uri<br><em>Canva</em></h2>
-    <p class="psub">3 stiluri + ghid pas cu pas + specificații complete</p>
-
+  <!-- ═══════════ PAGE: TEMPLATE ═══════════ -->
+  <div class="page" id="page-template">
+   <div style="max-width:900px;margin:0 auto;padding:32px 24px">
+    <h2 class="ptitle" style="margin-bottom:4px">
+     Template-uri
+     <br/>
+     <em>
+      Canva
+     </em>
+    </h2>
+    <p class="psub">
+     3 stiluri + ghid pas cu pas + specificații complete
+    </p>
     <div class="page-tabs">
-      <button class="page-tab active" onclick="selTab('tpl-preview',this)">Preview</button>
-      <button class="page-tab" onclick="selTab('tpl-guide',this)">Ghid Canva</button>
-      <button class="page-tab" onclick="selTab('tpl-specs',this)">Specificații</button>
+     <button class="page-tab active" onclick="selTab('tpl-preview',this)">
+      Preview
+     </button>
+     <button class="page-tab" onclick="selTab('tpl-guide',this)">
+      Ghid Canva
+     </button>
+     <button class="page-tab" onclick="selTab('tpl-specs',this)">
+      Specificații
+     </button>
     </div>
-
     <div class="tab-pane active" id="tpl-preview">
-      <div class="tmpl-grid">
-        <div class="tmpl-card">
-          <div class="tpl-preview tpl-dark">
-            <div style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--accent)"></div>
-            <div style="position:absolute;left:18px;top:24px;width:2px;height:50px;background:var(--gold)"></div>
-            <div style="font-size:0.6rem;letter-spacing:3px;color:var(--accent);margin-bottom:6px;text-transform:uppercase">⚡ Breaking News</div>
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;line-height:1.1;margin-bottom:8px">TITLUL ȘTIRII MERGE AICI</div>
-            <div style="font-size:0.65rem;color:#333;letter-spacing:2px;font-family:'Bebas Neue',sans-serif">ȘTIRIRO</div>
-          </div>
-          <div class="tpl-label-wrap"><div class="tpl-name">🖤 Breaking Dark</div><div class="tpl-desc">Fundal negru, accent roșu. Știri urgente.</div></div>
+     <div class="tmpl-grid">
+      <div class="tmpl-card">
+       <div class="tpl-preview tpl-dark">
+        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--accent)">
         </div>
-        <div class="tmpl-card">
-          <div class="tpl-preview tpl-white" style="border-top:6px solid #111;justify-content:space-between">
-            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:'Bebas Neue',sans-serif;font-size:0.9rem;letter-spacing:2px;color:#111">ȘTIRIRO</span><span style="font-size:0.55rem;color:#999;text-transform:uppercase;letter-spacing:1px">21 APR 2026</span></div>
-            <div><div style="display:inline-block;background:#d62828;color:#fff;font-size:0.55rem;font-weight:700;padding:2px 8px;border-radius:2px;letter-spacing:2px;text-transform:uppercase;margin-bottom:7px">Știre zilei</div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;line-height:1.1;color:#111">TITLUL ȘTIRII MERGE AICI</div></div>
-            <div style="font-size:0.6rem;color:#999;border-top:1px solid #eee;padding-top:7px">sursă: digi24.ro • cetrebuiesaştiiazi.ro</div>
-          </div>
-          <div class="tpl-label-wrap"><div class="tpl-name">🤍 Clean Ziar</div><div class="tpl-desc">Alb cu accente negre. Aspect serios.</div></div>
+        <div style="position:absolute;left:18px;top:24px;width:2px;height:50px;background:var(--gold)">
         </div>
-        <div class="tmpl-card">
-          <div class="tpl-preview tpl-gold" style="justify-content:center">
-            <div style="position:absolute;top:12px;right:14px;font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:var(--gold);opacity:0.1;line-height:1">01</div>
-            <div style="font-size:0.58rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px">📰 România Azi</div>
-            <div style="width:35px;height:3px;background:var(--gold);margin-bottom:10px"></div>
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;line-height:1.15;margin-bottom:10px">TITLUL ȘTIRII MERGE AICI</div>
-            <div style="font-size:0.6rem;letter-spacing:2px;color:#444;font-family:'Bebas Neue',sans-serif">ȘTIRIRO</div>
-          </div>
-          <div class="tpl-label-wrap"><div class="tpl-name">✨ Gold Editorial</div><div class="tpl-desc">Negru cu aur. Aspect premium.</div></div>
+        <div style="font-size:0.6rem;letter-spacing:3px;color:var(--accent);margin-bottom:6px;text-transform:uppercase">
+         ⚡ Breaking News
         </div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;line-height:1.1;margin-bottom:8px">
+         TITLUL ȘTIRII MERGE AICI
+        </div>
+        <div style="font-size:0.65rem;color:#333;letter-spacing:2px;font-family:'Bebas Neue',sans-serif">
+         ȘTIRIRO
+        </div>
+       </div>
+       <div class="tpl-label-wrap">
+        <div class="tpl-name">
+         🖤 Breaking Dark
+        </div>
+        <div class="tpl-desc">
+         Fundal negru, accent roșu. Știri urgente.
+        </div>
+       </div>
       </div>
+      <div class="tmpl-card">
+       <div class="tpl-preview tpl-white" style="border-top:6px solid #111;justify-content:space-between">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+         <span style="font-family:'Bebas Neue',sans-serif;font-size:0.9rem;letter-spacing:2px;color:#111">
+          ȘTIRIRO
+         </span>
+         <span style="font-size:0.55rem;color:#999;text-transform:uppercase;letter-spacing:1px">
+          21 APR 2026
+         </span>
+        </div>
+        <div>
+         <div style="display:inline-block;background:#d62828;color:#fff;font-size:0.55rem;font-weight:700;padding:2px 8px;border-radius:2px;letter-spacing:2px;text-transform:uppercase;margin-bottom:7px">
+          Știre zilei
+         </div>
+         <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;line-height:1.1;color:#111">
+          TITLUL ȘTIRII MERGE AICI
+         </div>
+        </div>
+        <div style="font-size:0.6rem;color:#999;border-top:1px solid #eee;padding-top:7px">
+         sursă: digi24.ro • cetrebuiesaştiiazi.ro
+        </div>
+       </div>
+       <div class="tpl-label-wrap">
+        <div class="tpl-name">
+         🤍 Clean Ziar
+        </div>
+        <div class="tpl-desc">
+         Alb cu accente negre. Aspect serios.
+        </div>
+       </div>
+      </div>
+      <div class="tmpl-card">
+       <div class="tpl-preview tpl-gold" style="justify-content:center">
+        <div style="position:absolute;top:12px;right:14px;font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:var(--gold);opacity:0.1;line-height:1">
+         01
+        </div>
+        <div style="font-size:0.58rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px">
+         📰 România Azi
+        </div>
+        <div style="width:35px;height:3px;background:var(--gold);margin-bottom:10px">
+        </div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;line-height:1.15;margin-bottom:10px">
+         TITLUL ȘTIRII MERGE AICI
+        </div>
+        <div style="font-size:0.6rem;letter-spacing:2px;color:#444;font-family:'Bebas Neue',sans-serif">
+         ȘTIRIRO
+        </div>
+       </div>
+       <div class="tpl-label-wrap">
+        <div class="tpl-name">
+         ✨ Gold Editorial
+        </div>
+        <div class="tpl-desc">
+         Negru cu aur. Aspect premium.
+        </div>
+       </div>
+      </div>
+     </div>
     </div>
-
     <div class="tab-pane" id="tpl-guide">
-      <div style="display:flex;flex-direction:column;gap:0;max-width:600px">
-        <a href="https://canva.com" target="_blank" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:#111;color:#fff;border-radius:6px;text-decoration:none;font-size:0.88rem;font-weight:600;width:fit-content;border:1px solid #1e1e2e;margin-bottom:24px">🎨 Deschide Canva.com</a>
-        <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid #1e1e2e;margin-bottom:18px"><div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#e63946;line-height:1;min-width:40px">01</div><div style="padding-top:6px;font-size:0.83rem;line-height:1.6;color:#55556a">Creeaza design nou — Post Instagram (1080x1080px)</div></div>
-        <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid #1e1e2e;margin-bottom:18px"><div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#e63946;line-height:1;min-width:40px">02</div><div style="padding-top:6px;font-size:0.83rem;line-height:1.6;color:#55556a">Seteaza fundalul: Dark=#0d0d0d / Clean=#ffffff / Gold=#111111</div></div>
-        <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid #1e1e2e;margin-bottom:18px"><div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#e63946;line-height:1;min-width:40px">03</div><div style="padding-top:6px;font-size:0.83rem;line-height:1.6;color:#55556a">Adauga linie accent rosu (#d62828) de 1080x8px sus</div></div>
-        <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid #1e1e2e;margin-bottom:18px"><div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#e63946;line-height:1;min-width:40px">04</div><div style="padding-top:6px;font-size:0.83rem;line-height:1.6;color:#55556a">Titlu: Bebas Neue, 80-100px. Tag categorie: 20px, Sora</div></div>
-        <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid #1e1e2e;margin-bottom:18px"><div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#e63946;line-height:1;min-width:40px">05</div><div style="padding-top:6px;font-size:0.83rem;line-height:1.6;color:#55556a">Salveaza ca template → Duplicate page pentru fiecare postare</div></div>
-        <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid #1e1e2e"><div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#e63946;line-height:1;min-width:40px">06</div><div style="padding-top:6px;font-size:0.83rem;line-height:1.6;color:#55556a">Exporta PNG calitate maxima → programeaza cu Meta Business Suite</div></div>
+     <div style="display:flex;flex-direction:column;gap:0;max-width:600px">
+      <a href="https://canva.com" style="display:inline-flex;align-items:center;gap:8px;padding:12px 22px;background:#111;color:#fff;border-radius:6px;text-decoration:none;font-size:0.88rem;font-weight:600;width:fit-content;border:1px solid #1e1e2e;margin-bottom:24px" target="_blank">
+       🎨 Deschide Canva.com
+      </a>
+      <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid #1e1e2e;margin-bottom:18px">
+       <div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#e63946;line-height:1;min-width:40px">
+        01
+       </div>
+       <div style="padding-top:6px;font-size:0.83rem;line-height:1.6;color:#55556a">
+        Creeaza design nou — Post Instagram (1080x1080px)
+       </div>
       </div>
-      <div style="margin-top:28px">
-        <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:#f4c430;font-weight:700;margin-bottom:12px">⭐ Template-urile mele custom</div>
-        <div id="customTemplates" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px"></div>
-        <div style="display:grid;grid-template-columns:1fr 46px;gap:8px;margin-bottom:8px">
-          <input class="txt-input" id="tplName" placeholder="Nume template (ex: Breaking Rosu)">
-          <input type="color" id="tplBg" value="#0d0d0d" style="width:46px;height:38px;border-radius:6px;border:1px solid #1e1e2e;background:#14141f;cursor:pointer;padding:2px">
-        </div>
-        <div style="display:grid;grid-template-columns:46px 1fr;gap:8px;margin-bottom:8px">
-          <input type="color" id="tplAccent" value="#e63946" style="width:46px;height:38px;border-radius:6px;border:1px solid #1e1e2e;background:#14141f;cursor:pointer;padding:2px">
-          <input class="txt-input" id="tplFont" placeholder="Font (ex: Bebas Neue)">
-        </div>
-        <input class="txt-input" id="tplNotes" placeholder="Link Canva sau note (optional)" style="margin-bottom:8px">
-        <button class="secondary-btn" onclick="addCustomTpl()" style="width:100%">+ Salveaza template</button>
+      <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid #1e1e2e;margin-bottom:18px">
+       <div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#e63946;line-height:1;min-width:40px">
+        02
+       </div>
+       <div style="padding-top:6px;font-size:0.83rem;line-height:1.6;color:#55556a">
+        Seteaza fundalul: Dark=#0d0d0d / Clean=#ffffff / Gold=#111111
+       </div>
       </div>
+      <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid #1e1e2e;margin-bottom:18px">
+       <div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#e63946;line-height:1;min-width:40px">
+        03
+       </div>
+       <div style="padding-top:6px;font-size:0.83rem;line-height:1.6;color:#55556a">
+        Adauga linie accent rosu (#d62828) de 1080x8px sus
+       </div>
+      </div>
+      <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid #1e1e2e;margin-bottom:18px">
+       <div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#e63946;line-height:1;min-width:40px">
+        04
+       </div>
+       <div style="padding-top:6px;font-size:0.83rem;line-height:1.6;color:#55556a">
+        Titlu: Bebas Neue, 80-100px. Tag categorie: 20px, Sora
+       </div>
+      </div>
+      <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid #1e1e2e;margin-bottom:18px">
+       <div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#e63946;line-height:1;min-width:40px">
+        05
+       </div>
+       <div style="padding-top:6px;font-size:0.83rem;line-height:1.6;color:#55556a">
+        Salveaza ca template → Duplicate page pentru fiecare postare
+       </div>
+      </div>
+      <div style="display:flex;gap:16px;padding-bottom:18px;border-bottom:1px solid #1e1e2e">
+       <div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:#e63946;line-height:1;min-width:40px">
+        06
+       </div>
+       <div style="padding-top:6px;font-size:0.83rem;line-height:1.6;color:#55556a">
+        Exporta PNG calitate maxima → programeaza cu Meta Business Suite
+       </div>
+      </div>
+     </div>
+     <div style="margin-top:28px">
+      <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:#f4c430;font-weight:700;margin-bottom:12px">
+       ⭐ Template-urile mele custom
+      </div>
+      <div id="customTemplates" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 46px;gap:8px;margin-bottom:8px">
+       <input class="txt-input" id="tplName" placeholder="Nume template (ex: Breaking Rosu)"/>
+       <input id="tplBg" style="width:46px;height:38px;border-radius:6px;border:1px solid #1e1e2e;background:#14141f;cursor:pointer;padding:2px" type="color" value="#0d0d0d"/>
+      </div>
+      <div style="display:grid;grid-template-columns:46px 1fr;gap:8px;margin-bottom:8px">
+       <input id="tplAccent" style="width:46px;height:38px;border-radius:6px;border:1px solid #1e1e2e;background:#14141f;cursor:pointer;padding:2px" type="color" value="#e63946"/>
+       <input class="txt-input" id="tplFont" placeholder="Font (ex: Bebas Neue)"/>
+      </div>
+      <input class="txt-input" id="tplNotes" placeholder="Link Canva sau note (optional)" style="margin-bottom:8px"/>
+      <button class="secondary-btn" onclick="addCustomTpl()" style="width:100%">
+       + Salveaza template
+      </button>
+     </div>
     </div>
-
     <div class="tab-pane" id="tpl-specs">
-      <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:#f4c430;font-weight:700;margin-bottom:12px">Dimensiuni</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:24px">
-        <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:6px;padding:16px"><div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;margin-bottom:5px">Post Instagram/Facebook</div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px">1080 x 1080px</div><div style="font-size:0.7rem;color:#55556a;margin-top:3px">patrat</div></div>
-        <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:6px;padding:16px"><div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;margin-bottom:5px">Story / Reels Cover</div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px">1080 x 1920px</div><div style="font-size:0.7rem;color:#55556a;margin-top:3px">vertical 9:16</div></div>
-        <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:6px;padding:16px"><div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;margin-bottom:5px">Cover Facebook Page</div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px">820 x 312px</div><div style="font-size:0.7rem;color:#55556a;margin-top:3px">orizontal</div></div>
-        <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:6px;padding:16px"><div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;margin-bottom:5px">Export format</div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px">PNG</div><div style="font-size:0.7rem;color:#55556a;margin-top:3px">calitate maxima</div></div>
+     <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:#f4c430;font-weight:700;margin-bottom:12px">
+      Dimensiuni
+     </div>
+     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:24px">
+      <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:6px;padding:16px">
+       <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;margin-bottom:5px">
+        Post Instagram/Facebook
+       </div>
+       <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px">
+        1080 x 1080px
+       </div>
+       <div style="font-size:0.7rem;color:#55556a;margin-top:3px">
+        patrat
+       </div>
       </div>
-      <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:#e63946;font-weight:700;margin-bottom:12px">Paleta culori brand</div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px">
-        <div style="text-align:center"><div style="width:52px;height:52px;border-radius:4px;background:#0d0d0d;border:1px solid rgba(255,255,255,0.1);margin-bottom:5px"></div><div style="font-size:0.7rem;font-weight:600;margin-bottom:2px">Negru</div><div style="font-size:0.62rem;color:#55556a;font-family:monospace">#0d0d0d</div></div>
-        <div style="text-align:center"><div style="width:52px;height:52px;border-radius:4px;background:#d62828;border:1px solid rgba(255,255,255,0.1);margin-bottom:5px"></div><div style="font-size:0.7rem;font-weight:600;margin-bottom:2px">Rosu</div><div style="font-size:0.62rem;color:#55556a;font-family:monospace">#d62828</div></div>
-        <div style="text-align:center"><div style="width:52px;height:52px;border-radius:4px;background:#f7b731;border:1px solid rgba(255,255,255,0.1);margin-bottom:5px"></div><div style="font-size:0.7rem;font-weight:600;margin-bottom:2px">Auriu</div><div style="font-size:0.62rem;color:#55556a;font-family:monospace">#f7b731</div></div>
-        <div style="text-align:center"><div style="width:52px;height:52px;border-radius:4px;background:#ffffff;border:1px solid rgba(255,255,255,0.1);margin-bottom:5px"></div><div style="font-size:0.7rem;font-weight:600;margin-bottom:2px">Alb</div><div style="font-size:0.62rem;color:#55556a;font-family:monospace">#ffffff</div></div>
-        <div style="text-align:center"><div style="width:52px;height:52px;border-radius:4px;background:#f5f0e8;border:1px solid rgba(255,255,255,0.1);margin-bottom:5px"></div><div style="font-size:0.7rem;font-weight:600;margin-bottom:2px">Crem</div><div style="font-size:0.62rem;color:#55556a;font-family:monospace">#f5f0e8</div></div>
+      <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:6px;padding:16px">
+       <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;margin-bottom:5px">
+        Story / Reels Cover
+       </div>
+       <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px">
+        1080 x 1920px
+       </div>
+       <div style="font-size:0.7rem;color:#55556a;margin-top:3px">
+        vertical 9:16
+       </div>
       </div>
-      <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:#f4c430;font-weight:700;margin-bottom:12px">Fonturi recomandate</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px">
-        <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:6px;padding:16px"><div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;margin-bottom:5px">Titluri / Logo</div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:1px">Bebas Neue</div><div style="font-size:0.7rem;color:#55556a;margin-top:3px">Bold, impactant</div></div>
-        <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:6px;padding:16px"><div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;margin-bottom:5px">Text / Subtitluri</div><div style="font-size:1rem;font-weight:600">Sora / Montserrat</div><div style="font-size:0.7rem;color:#55556a;margin-top:3px">Lizibil, modern</div></div>
+      <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:6px;padding:16px">
+       <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;margin-bottom:5px">
+        Cover Facebook Page
+       </div>
+       <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px">
+        820 x 312px
+       </div>
+       <div style="font-size:0.7rem;color:#55556a;margin-top:3px">
+        orizontal
+       </div>
       </div>
+      <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:6px;padding:16px">
+       <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;margin-bottom:5px">
+        Export format
+       </div>
+       <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px">
+        PNG
+       </div>
+       <div style="font-size:0.7rem;color:#55556a;margin-top:3px">
+        calitate maxima
+       </div>
+      </div>
+     </div>
+     <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:#e63946;font-weight:700;margin-bottom:12px">
+      Paleta culori brand
+     </div>
+     <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px">
+      <div style="text-align:center">
+       <div style="width:52px;height:52px;border-radius:4px;background:#0d0d0d;border:1px solid rgba(255,255,255,0.1);margin-bottom:5px">
+       </div>
+       <div style="font-size:0.7rem;font-weight:600;margin-bottom:2px">
+        Negru
+       </div>
+       <div style="font-size:0.62rem;color:#55556a;font-family:monospace">
+        #0d0d0d
+       </div>
+      </div>
+      <div style="text-align:center">
+       <div style="width:52px;height:52px;border-radius:4px;background:#d62828;border:1px solid rgba(255,255,255,0.1);margin-bottom:5px">
+       </div>
+       <div style="font-size:0.7rem;font-weight:600;margin-bottom:2px">
+        Rosu
+       </div>
+       <div style="font-size:0.62rem;color:#55556a;font-family:monospace">
+        #d62828
+       </div>
+      </div>
+      <div style="text-align:center">
+       <div style="width:52px;height:52px;border-radius:4px;background:#f7b731;border:1px solid rgba(255,255,255,0.1);margin-bottom:5px">
+       </div>
+       <div style="font-size:0.7rem;font-weight:600;margin-bottom:2px">
+        Auriu
+       </div>
+       <div style="font-size:0.62rem;color:#55556a;font-family:monospace">
+        #f7b731
+       </div>
+      </div>
+      <div style="text-align:center">
+       <div style="width:52px;height:52px;border-radius:4px;background:#ffffff;border:1px solid rgba(255,255,255,0.1);margin-bottom:5px">
+       </div>
+       <div style="font-size:0.7rem;font-weight:600;margin-bottom:2px">
+        Alb
+       </div>
+       <div style="font-size:0.62rem;color:#55556a;font-family:monospace">
+        #ffffff
+       </div>
+      </div>
+      <div style="text-align:center">
+       <div style="width:52px;height:52px;border-radius:4px;background:#f5f0e8;border:1px solid rgba(255,255,255,0.1);margin-bottom:5px">
+       </div>
+       <div style="font-size:0.7rem;font-weight:600;margin-bottom:2px">
+        Crem
+       </div>
+       <div style="font-size:0.62rem;color:#55556a;font-family:monospace">
+        #f5f0e8
+       </div>
+      </div>
+     </div>
+     <div style="font-size:0.62rem;text-transform:uppercase;letter-spacing:2px;color:#f4c430;font-weight:700;margin-bottom:12px">
+      Fonturi recomandate
+     </div>
+     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px">
+      <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:6px;padding:16px">
+       <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;margin-bottom:5px">
+        Titluri / Logo
+       </div>
+       <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:1px">
+        Bebas Neue
+       </div>
+       <div style="font-size:0.7rem;color:#55556a;margin-top:3px">
+        Bold, impactant
+       </div>
+      </div>
+      <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:6px;padding:16px">
+       <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;margin-bottom:5px">
+        Text / Subtitluri
+       </div>
+       <div style="font-size:1rem;font-weight:600">
+        Sora / Montserrat
+       </div>
+       <div style="font-size:0.7rem;color:#55556a;margin-top:3px">
+        Lizibil, modern
+       </div>
+      </div>
+     </div>
     </div>
+   </div>
   </div>
-</div>
-
-<script>
-<script>
+  <script>
+   <script>
 const API = 'https://dailystiri.vercel.app/api/generate';
 const IMG_API = 'https://dailystiri.vercel.app/api/image';
 
@@ -1740,6 +2508,6 @@ function duplicateFrame(){
   renderSlideRows();
   goFr(curFrame+1);
 }
-
-</script></body>
+  </script>
+ </body>
 </html>
