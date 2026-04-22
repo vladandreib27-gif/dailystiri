@@ -759,20 +759,12 @@ async function sendChat() {
 
   const systemPrompt = toneMap[aiTone] || toneMap.profesionist;
   const messages = [
-    { role: 'user', content: systemPrompt + '
-
-Intrebare/Cerere: ' + chatHistory[0].content }
+    { role: 'user', content: systemPrompt + '\n\nIntrebare/Cerere: ' + chatHistory[0].content }
   ];
   if (chatHistory.length > 1) {
     // Include conversation context
-    const allMsgs = chatHistory.slice(0, -1).map(m => m.role + ': ' + m.content).join('
-');
-    messages[0].content = systemPrompt + '
-
-Conversatie anterioara:
-' + allMsgs + '
-
-Mesaj curent: ' + msg;
+    const allMsgs = chatHistory.slice(0, -1).map(m => m.role + ': ' + m.content).join('\n');
+    messages[0].content = systemPrompt + '\n\nConversatie anterioara:\n' + allMsgs + '\n\nMesaj curent: ' + msg;
   }
 
   try {
