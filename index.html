@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ȘtiriRO — Studio</title>
+<title>CeTrebuieSaStiiAzi — Studio</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -20,7 +20,7 @@ nav{
   display:flex;align-items:center;gap:0;padding:0 24px;
   position:sticky;top:0;z-index:200;backdrop-filter:blur(16px);height:56px;
 }
-.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:2px;margin-right:28px;white-space:nowrap;}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1.5px;margin-right:16px;white-space:nowrap;}
 .nav-logo em{color:var(--accent);font-style:normal;}
 .nav-logo span{font-size:0.6rem;background:var(--accent);color:#fff;padding:2px 8px;border-radius:10px;letter-spacing:1px;text-transform:uppercase;font-weight:700;margin-left:8px;vertical-align:middle;}
 .nav-tabs{display:flex;gap:0;overflow-x:auto;flex:1;}
@@ -261,7 +261,7 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
 <body>
 
 <nav>
-  <div class="nav-logo">Știri<em>RO</em><span>Studio</span></div>
+  <div class="nav-logo">Ce<em>Trebuie</em><span>SaStiiAzi</span></div>
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="goPage('postare',this)"><span class="ti">✍️</span>Postare AI</button>
     <button class="nav-tab" onclick="goPage('reel',this)"><span class="ti">🎬</span>Reel Generator</button>
@@ -310,7 +310,7 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
       <div id="chatMessages" style="flex:1;overflow-y:auto;padding:20px 24px;display:flex;flex-direction:column;gap:14px">
         <div style="text-align:center;padding:40px 20px">
           <div style="font-size:3rem;opacity:0.15;margin-bottom:12px">🤖</div>
-          <div style="font-size:0.85rem;color:var(--muted);line-height:1.6;max-width:340px;margin:0 auto">Bună! Sunt asistentul tău AI pentru ȘtiriRO. Pot scrie postări, scripturi, analize, strategii — orice ai nevoie pentru contul tău.</div>
+          <div style="font-size:0.85rem;color:var(--muted);line-height:1.6;max-width:340px;margin:0 auto">Bună! Sunt asistentul tău AI pentru CeTrebuieSaStiiAzi. Pot scrie postari, scripturi, analize, strategii — orice ai nevoie.</div>
         </div>
       </div>
 
@@ -585,7 +585,7 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
           <div class="tpl-preview tpl-white" style="border-top:6px solid #111;justify-content:space-between">
             <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:'Bebas Neue',sans-serif;font-size:0.9rem;letter-spacing:2px;color:#111">ȘTIRIRO</span><span style="font-size:0.55rem;color:#999;text-transform:uppercase;letter-spacing:1px">21 APR 2026</span></div>
             <div><div style="display:inline-block;background:#d62828;color:#fff;font-size:0.55rem;font-weight:700;padding:2px 8px;border-radius:2px;letter-spacing:2px;text-transform:uppercase;margin-bottom:7px">Știre zilei</div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;line-height:1.1;color:#111">TITLUL ȘTIRII MERGE AICI</div></div>
-            <div style="font-size:0.6rem;color:#999;border-top:1px solid #eee;padding-top:7px">sursă: digi24.ro • stiriro.ro</div>
+            <div style="font-size:0.6rem;color:#999;border-top:1px solid #eee;padding-top:7px">sursă: digi24.ro • cetrebuiesaştiiazi.ro</div>
           </div>
           <div class="tpl-label-wrap"><div class="tpl-name">🤍 Clean Ziar</div><div class="tpl-desc">Alb cu accente negre. Aspect serios.</div></div>
         </div>
@@ -695,7 +695,7 @@ function clearChat() {
   document.getElementById('chatMessages').innerHTML = `
     <div style="text-align:center;padding:40px 20px">
       <div style="font-size:3rem;opacity:0.15;margin-bottom:12px">🤖</div>
-      <div style="font-size:0.85rem;color:var(--muted);line-height:1.6;max-width:340px;margin:0 auto">Bună! Sunt asistentul tău AI pentru ȘtiriRO. Pot scrie postări, scripturi, analize, strategii — orice ai nevoie.</div>
+      <div style="font-size:0.85rem;color:var(--muted);line-height:1.6;max-width:340px;margin:0 auto">Bună! Sunt asistentul tău AI pentru CeTrebuieSaStiiAzi. Pot scrie postări, scripturi, analize, strategii — orice ai nevoie.</div>
     </div>`;
 }
 
@@ -836,8 +836,16 @@ function selAudio(btn){
   document.querySelectorAll('[data-audio]').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   audioMode=btn.dataset.audio;
-  document.getElementById('audioUploadWrap').style.display=audioMode==='upload'?'block':'none';
-  document.getElementById('audioTtsWrap').style.display=audioMode==='tts'?'block':'none';
+  // Left panel
+  const uw=document.getElementById('audioUploadWrap');if(uw)uw.style.display=audioMode==='upload'?'block':'none';
+  const tw=document.getElementById('audioTtsWrap');if(tw)tw.style.display=audioMode==='tts'?'block':'none';
+  // Editor tab
+  ['upload','tts','none'].forEach(m=>{
+    const el=document.getElementById('audioEdit'+m.charAt(0).toUpperCase()+m.slice(1));
+    if(el)el.style.display=audioMode===m?'block':'none';
+  });
+  if(audioMode!=='upload')stopAudio();
+  if(audioMode!=='tts')stopTTS();
 }
 
 function loadAudioFile(input){
@@ -846,31 +854,46 @@ function loadAudioFile(input){
   if(uploadedAudioUrl)URL.revokeObjectURL(uploadedAudioUrl);
   uploadedAudioUrl=URL.createObjectURL(file);
   document.getElementById('audioFileName').textContent='✓ '+file.name;
+  // Pre-create audio element
+  if(audioEl){ audioEl.pause(); }
+  audioEl=new Audio(uploadedAudioUrl);
+  audioEl.loop=true;
+  audioEl.volume=audioVolume;
+  // Test load
+  audioEl.load();
+  document.getElementById('audioFileName').textContent='✓ '+file.name+' (gata)';
 }
 
 function playAudio(){
   if(audioMode==='upload'&&uploadedAudioUrl){
-    if(!audioEl){audioEl=new Audio();audioEl.loop=true;}
-    audioEl.src=uploadedAudioUrl;
+    if(!audioEl){ audioEl=new Audio(); audioEl.loop=true; }
+    if(audioEl.src!==uploadedAudioUrl){ audioEl.src=uploadedAudioUrl; }
     audioEl.volume=audioVolume;
-    audioEl.play().catch(()=>{});
+    const p=audioEl.play();
+    if(p) p.catch(e=>console.log('Audio play blocked:',e));
   }
 }
 function stopAudio(){
-  if(audioEl){audioEl.pause();audioEl.currentTime=0;}
+  if(audioEl){ audioEl.pause(); audioEl.currentTime=0; }
   stopTTS();
 }
-function stopTTS(){if(window.speechSynthesis)window.speechSynthesis.cancel();}
+function stopTTS(){ if(window.speechSynthesis) window.speechSynthesis.cancel(); }
 function playTTS(text){
-  if(!window.speechSynthesis)return;
+  if(!window.speechSynthesis) return;
   window.speechSynthesis.cancel();
   const utt=new SpeechSynthesisUtterance(text);
   utt.lang='ro-RO';
   utt.rate=parseFloat(document.getElementById('ttsRate')?.value||0.9);
-  const voices=window.speechSynthesis.getVoices();
-  const ro=voices.find(v=>v.lang.startsWith('ro'));
-  if(ro)utt.voice=ro;
-  window.speechSynthesis.speak(utt);
+  // Wait for voices to load
+  const doSpeak=()=>{
+    const voices=window.speechSynthesis.getVoices();
+    const ro=voices.find(v=>v.lang&&v.lang.startsWith('ro'));
+    if(ro) utt.voice=ro;
+    window.speechSynthesis.speak(utt);
+  };
+  if(window.speechSynthesis.getVoices().length===0){
+    window.speechSynthesis.onvoiceschanged=doSpeak;
+  } else { doSpeak(); }
 }
 
 function getDims(){
@@ -935,19 +958,41 @@ async function genReel(){
 
 async function genImgPrompts(arr){
   try{
+    const newsContext=arr.map((n,i)=>`${i+1}. ${n.text}`).join('\n');
+    const req=`You are a visual director for Romanian news. For each story, write ONE specific image generation prompt in English (10-15 words max).
+Rules: visually specific to story topic, include subject+setting+mood, style: ${reelStyle}, NO text/watermarks.
+- Politics: parliament, politicians, government buildings Romania
+- Economy: money, markets, prices, people budgeting
+- Social: streets, protests, daily life Bucharest
+- International: world map, flags, EU institutions
+- Health: hospital, doctors, patients
+- Weather/disaster: storm, flood, damaged infrastructure
+
+Stories:
+${newsContext}
+
+Respond ONLY with JSON array: ["prompt1","prompt2"]`;
     const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({max_tokens:600,messages:[{role:'user',content:`Pentru fiecare stire scrie un prompt scurt in engleza (max 12 cuvinte) pentru generare imagine AI. Stil: ${reelStyle}. Fara text in imagine.
-
-${arr.map((n,i)=>`${i+1}. ${n.text}`).join('
-')}
-
-Raspunde DOAR cu JSON array de strings.`}]})
+      body:JSON.stringify({max_tokens:800,messages:[{role:'user',content:req}]})
     });
     const data=await res.json();
-    return JSON.parse(data.content[0].text.replace(/\`\`\`json|\`\`\`/g,'').trim());
+    const raw=data.content[0].text.replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(raw);
+    if(Array.isArray(parsed)&&parsed.length===arr.length) return parsed;
+    throw new Error('bad response');
   }catch(e){
-    return arr.map(n=>reelStyle+' Romania: '+n.text.substring(0,40));
+    console.log('prompt fallback:',e);
+    return arr.map(n=>{
+      const t=n.text.toLowerCase();
+      let ctx='Romania news ';
+      if(t.includes('politic')||t.includes('guvern')||t.includes('parlament')) ctx='Romanian parliament Bucharest politicians meeting ';
+      else if(t.includes('econom')||t.includes('salar')||t.includes('pret')) ctx='Romanian economy money market prices ';
+      else if(t.includes('protest')||t.includes('strada')) ctx='street protest Bucharest crowd Romania ';
+      else if(t.includes('sanat')||t.includes('spital')) ctx='hospital medical Romania ';
+      return ctx+reelStyle+' cinematic no text';
+    });
   }
+}
 }
 
 function buildImgUrl(prompt,w,h){
@@ -983,7 +1028,7 @@ function drawFrame(ctx,story,ci,dims){
 
   ctx.font='600 '+Math.round(w*0.038)+'px Sora,sans-serif';
   ctx.fillStyle='rgba(255,255,255,0.5)';ctx.textAlign='left';
-  ctx.fillText('STIRIRO',w*0.05,h*0.065);
+  ctx.fillText('Ce Trebuie Sa Stii Azi',w*0.05,h*0.065);
 
   ctx.font='500 '+Math.round(w*0.032)+'px Sora,sans-serif';
   ctx.fillStyle='rgba(255,255,255,0.4)';ctx.textAlign='right';
@@ -1010,7 +1055,7 @@ function drawFrame(ctx,story,ci,dims){
 
   if(ci===total-1){
     ctx.font='500 '+Math.round(w*0.03)+'px Sora,sans-serif';ctx.fillStyle='rgba(244,196,48,0.9)';
-    const cta=story.idx+1<stories.length?'Stirea urmatoare':'Urmareste @StiriRO';
+    const cta=story.idx+1<stories.length?'Stirea urmatoare':'Urmareste @CeTrebuieSaStiiAzi';
     const ctaW=ctx.measureText(cta).width;ctx.fillText(cta,(w-ctaW)*0.5,h*0.91);
   }
   ctx.fillStyle='#e63946';ctx.fillRect(0,h-5,w,5);
@@ -1032,18 +1077,18 @@ function showReelPreview(){
   document.getElementById('reelOut').innerHTML=`
     <div class="preview-section fade-up" style="display:flex;flex-direction:column;gap:14px">
 
-      <!-- HEADER -->
+      <!-- HEADER BUTTONS -->
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:1px">${allFrames.length} CADRE GENERATE</div>
-        <div style="display:flex;gap:7px;flex-wrap:wrap">
-          <button class="secondary-btn" onclick="genReel()">Regenereaza imagini</button>
-          <button class="secondary-btn" id="expJpg" onclick="exportFramesPng()" style="border-color:#2ecc71;color:#2ecc71">Descarca JPG</button>
-          <button class="secondary-btn" id="expVid" onclick="exportVid()" style="border-color:var(--gold);color:var(--gold)">Descarca Video</button>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;color:var(--text)">${allFrames.length} CADRE</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="secondary-btn" onclick="genReel()" style="font-size:0.72rem">↺ Regenereaza</button>
+          <button class="secondary-btn" id="expJpg" onclick="exportFramesPng()" style="border-color:#2ecc71;color:#2ecc71;font-size:0.72rem">⬇ JPG</button>
+          <button class="secondary-btn" id="expVid" onclick="exportVid()" style="border-color:var(--gold);color:var(--gold);font-size:0.72rem">⬇ Video WebM</button>
         </div>
       </div>
 
       <!-- VIEWER -->
-      <div class="story-viewer">
+      <div class="story-viewer" id="storyViewer">
         <div class="story-bars" id="sBars"></div>
         <div class="tap-l" onclick="prevFr()"></div>
         <div class="tap-r" onclick="nextFr()"></div>
@@ -1055,69 +1100,193 @@ function showReelPreview(){
         <button class="play-btn" id="playBtn" onclick="togglePlay()">&#9654;</button>
         <div class="ctrl-info">
           <strong id="ctrlT">Cadru 1 din ${allFrames.length}</strong>
-          <span>Tap stanga/dreapta pentru navigare</span>
+          <span id="ctrlSub">Tap stanga/dreapta pentru navigare</span>
         </div>
-        <button onclick="stopAudio()" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:1rem" title="Opreste audio">🔇</button>
+        <button onclick="stopAudio()" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:4px" title="Opreste audio">🔇</button>
       </div>
 
-      <!-- EDITOR -->
-      <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:10px;padding:16px">
-        <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:#f4c430;font-weight:700;margin-bottom:12px">EDITEAZA CADRUL CURENT</div>
+      <!-- EDITOR TABS -->
+      <div style="background:#14141f;border:1px solid #1e1e2e;border-radius:10px;overflow:hidden">
+        <div style="display:flex;border-bottom:1px solid #1e1e2e">
+          <button class="editor-tab active" id="etab-text" onclick="switchEditorTab('text')">✏️ Text</button>
+          <button class="editor-tab" id="etab-audio" onclick="switchEditorTab('audio')">🎵 Audio</button>
+          <button class="editor-tab" id="etab-img" onclick="switchEditorTab('img')">🖼️ Imagine</button>
+          <button class="editor-tab" id="etab-order" onclick="switchEditorTab('order')">⇅ Ordine</button>
+        </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-          <div>
-            <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;display:block;margin-bottom:5px">Text cadru</span>
-            <textarea id="editFrameText" rows="4" style="width:100%;background:#0f0f1a;border:1px solid #1e1e2e;border-radius:7px;padding:9px;color:#eeeef5;font-family:Sora,sans-serif;font-size:0.8rem;outline:none;resize:vertical;line-height:1.5"></textarea>
+        <!-- TAB: TEXT -->
+        <div id="epane-text" class="editor-pane" style="padding:14px;display:block">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <div>
+              <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;display:block;margin-bottom:5px">Text cadru curent</span>
+              <textarea id="editFrameText" rows="5" style="width:100%;background:#0f0f1a;border:1px solid #1e1e2e;border-radius:7px;padding:9px;color:#eeeef5;font-family:Sora,sans-serif;font-size:0.8rem;outline:none;resize:vertical;line-height:1.5"></textarea>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div>
+                <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;display:block;margin-bottom:4px">Durata cadru</span>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <input type="range" min="1" max="12" value="3" step="0.5" id="editFrameDur" oninput="document.getElementById('editDurVal').textContent=this.value+'s'" style="flex:1;accent-color:#e63946">
+                  <span id="editDurVal" style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:#e63946;min-width:30px">3s</span>
+                </div>
+              </div>
+              <div>
+                <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;display:block;margin-bottom:4px">Marime text (global)</span>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <input type="range" min="2" max="12" value="${reelTxtSize}" id="editTxtSize" oninput="updateTxtSizeGlobal(this.value)" style="flex:1;accent-color:#f4c430">
+                  <span id="editTxtSizeVal" style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:#f4c430;min-width:30px">${reelTxtSize}%</span>
+                </div>
+              </div>
+              <div>
+                <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;display:block;margin-bottom:4px">Cuvinte/cadru (global)</span>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <input type="range" min="4" max="25" value="${reelWordsPerFrame}" id="editWords" oninput="document.getElementById('editWordsVal').textContent=this.value+' c.'" style="flex:1;accent-color:#4361ee">
+                  <span id="editWordsVal" style="font-family:'Bebas Neue',sans-serif;font-size:0.85rem;color:#4361ee;min-width:32px">${reelWordsPerFrame} c.</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px">
+            <button class="secondary-btn" onclick="applyFrameEdit()" style="flex:1;border-color:#e63946;color:#e63946;font-size:0.78rem">✓ Aplica text + durata</button>
+            <button class="secondary-btn" onclick="rewordFrame()" style="flex:1;border-color:#7c3aed;color:#7c3aed;font-size:0.78rem">✨ AI rescrie</button>
+          </div>
+          <button class="secondary-btn" onclick="rebuildAllText()" style="width:100%;border-color:#4361ee;color:#4361ee;font-size:0.78rem">↺ Reimpartati tot textul cu noile setari</button>
+        </div>
+
+        <!-- TAB: AUDIO -->
+        <div id="epane-audio" class="editor-pane" style="padding:14px;display:none">
+          <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;margin-bottom:12px">Setari audio reel</div>
+
+          <div style="display:flex;gap:7px;margin-bottom:14px">
+            <button class="chip ${audioMode==='none'?'active':''}" data-audio="none" onclick="selAudio(this)">🔇 Fara</button>
+            <button class="chip ${audioMode==='upload'?'active':''}" data-audio="upload" onclick="selAudio(this)">📁 Muzica</button>
+            <button class="chip ${audioMode==='tts'?'active':''}" data-audio="tts" onclick="selAudio(this)">🎙️ Voiceover</button>
+          </div>
+
+          <div id="audioEditUpload" style="display:${audioMode==='upload'?'block':'none'}">
+            <input type="file" id="audioFileIn2" accept="audio/*" onchange="loadAudioFile(this)" style="display:none">
+            <button class="secondary-btn" onclick="document.getElementById('audioFileIn2').click()" style="width:100%;margin-bottom:8px">📂 Alege MP3/WAV/OGG</button>
+            <div id="audioFileName2" style="font-size:0.72rem;color:#55556a;margin-bottom:10px;text-align:center">${uploadedAudioUrl?'Fisier incarcat':'Niciun fisier ales'}</div>
             <div>
-              <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;display:block;margin-bottom:5px">Durata cadru</span>
+              <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;display:block;margin-bottom:4px">Volum</span>
               <div style="display:flex;align-items:center;gap:8px">
-                <input type="range" min="1" max="10" value="3" step="0.5" id="editFrameDur" oninput="document.getElementById('editDurVal').textContent=this.value+'s'" style="flex:1;accent-color:#e63946">
-                <span id="editDurVal" style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:#e63946;min-width:32px">3s</span>
+                <input type="range" min="0" max="100" value="${Math.round(audioVolume*100)}" id="audioVolEdit" oninput="setAudioVol(this.value)" style="flex:1;accent-color:#2ecc71">
+                <span id="audioVolVal2" style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:#2ecc71;min-width:40px">${Math.round(audioVolume*100)}%</span>
               </div>
             </div>
-            <div>
-              <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;display:block;margin-bottom:5px">Dim. text global</span>
+            <div style="margin-top:10px">
+              <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;display:block;margin-bottom:4px">Fade in (secunde)</span>
               <div style="display:flex;align-items:center;gap:8px">
-                <input type="range" min="2" max="12" value="${reelTxtSize}" id="editTxtSize" oninput="updateTxtSizeGlobal(this.value)" style="flex:1;accent-color:#f4c430">
-                <span id="editTxtSizeVal" style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:#f4c430;min-width:32px">${reelTxtSize}%</span>
+                <input type="range" min="0" max="5" value="0" step="0.5" id="audioFadeIn" style="flex:1;accent-color:#2ecc71">
+                <span id="audioFadeInVal" style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:#2ecc71;min-width:30px">0s</span>
               </div>
             </div>
+            <div style="margin-top:8px">
+              <button class="secondary-btn" onclick="testAudio()" style="width:100%;border-color:#2ecc71;color:#2ecc71">▶ Testeaza audio acum</button>
+            </div>
+          </div>
+
+          <div id="audioEditTts" style="display:${audioMode==='tts'?'block':'none'}">
+            <div style="font-size:0.78rem;color:#55556a;line-height:1.6;margin-bottom:10px;padding:8px 10px;background:#0f0f1a;border-radius:6px">Browserul citeste textul fiecarui cadru in romana. Apasa Play pentru a auzi.</div>
             <div>
-              <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;display:block;margin-bottom:5px">Cuv/cadru global</span>
+              <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;display:block;margin-bottom:4px">Viteza voce</span>
               <div style="display:flex;align-items:center;gap:8px">
-                <input type="range" min="4" max="25" value="${reelWordsPerFrame}" id="editWords" oninput="document.getElementById('editWordsVal').textContent=this.value+' c.'" style="flex:1;accent-color:#4361ee">
-                <span id="editWordsVal" style="font-family:'Bebas Neue',sans-serif;font-size:0.9rem;color:#4361ee;min-width:32px">${reelWordsPerFrame} c.</span>
+                <input type="range" min="0.5" max="1.5" value="0.9" step="0.1" id="ttsRate" oninput="document.getElementById('ttsRateVal2').textContent=this.value+'x'" style="flex:1;accent-color:#9b59b6">
+                <span id="ttsRateVal2" style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:#9b59b6;min-width:35px">0.9x</span>
               </div>
+            </div>
+            <button class="secondary-btn" style="width:100%;margin-top:10px" onclick="playTTS(stories[allFrames[curFrame]?.si]?.chunks[allFrames[curFrame]?.ci]||'')">▶ Testeaza voiceover</button>
+          </div>
+
+          <div id="audioEditNone" style="display:${audioMode==='none'?'block':'none'};font-size:0.78rem;color:#55556a;padding:8px 0">Niciun audio. Selecteaza Muzica sau Voiceover.</div>
+        </div>
+
+        <!-- TAB: IMAGINE -->
+        <div id="epane-img" class="editor-pane" style="padding:14px;display:none">
+          <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;margin-bottom:10px">Schimba imaginea cadrului curent</div>
+          <div style="display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap">
+            <button class="secondary-btn" onclick="regenerateFrameImg()" style="flex:1;border-color:#4361ee;color:#4361ee;font-size:0.78rem">🔄 Regenereaza cu AI</button>
+            <button class="secondary-btn" onclick="document.getElementById('customImgIn').click()" style="flex:1;font-size:0.78rem">📁 Upload imagine proprie</button>
+          </div>
+          <input type="file" id="customImgIn" accept="image/*" onchange="loadCustomImg(this)" style="display:none">
+          <div style="font-size:0.72rem;color:#55556a;margin-bottom:10px">Sau adauga un cadru NOU cu imagine proprie:</div>
+          <input type="file" id="newFrameImgIn" accept="image/*" onchange="addFrameWithImg(this)" style="display:none">
+          <div style="display:flex;gap:7px">
+            <button class="secondary-btn" onclick="document.getElementById('newFrameImgIn').click()" style="flex:1;border-color:#f4c430;color:#f4c430;font-size:0.78rem">+ Cadru nou cu imagine</button>
+            <button class="secondary-btn" onclick="addBlankFrame()" style="font-size:0.78rem">+ Cadru gol</button>
+          </div>
+          <div style="margin-top:12px">
+            <span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;display:block;margin-bottom:5px">Fundal cadru (culoare)</span>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input type="color" id="frameBgColor" value="#0d0d12" style="width:46px;height:36px;border-radius:6px;border:1px solid #1e1e2e;cursor:pointer;padding:2px;background:#14141f">
+              <button class="secondary-btn" onclick="applyBgColor()" style="flex:1;font-size:0.78rem">Aplica culoare fundal</button>
             </div>
           </div>
         </div>
 
-        <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px">
-          <button class="secondary-btn" onclick="applyFrameEdit()" style="flex:1;border-color:#e63946;color:#e63946">Aplica text + durata</button>
-          <button class="secondary-btn" onclick="rewordFrame()" style="flex:1;border-color:#7c3aed;color:#7c3aed">AI rescrie textul</button>
-        </div>
-        <div style="display:flex;gap:7px">
-          <button class="secondary-btn" onclick="rebuildAllText()" style="flex:1;border-color:#4361ee;color:#4361ee">Reimparte tot textul</button>
-          <button class="secondary-btn" onclick="moveFrameUp()">Sus</button>
-          <button class="secondary-btn" onclick="moveFrameDown()">Jos</button>
-          <button class="secondary-btn" onclick="deleteFrame()" style="color:#55556a">Sterge</button>
+        <!-- TAB: ORDINE -->
+        <div id="epane-order" class="editor-pane" style="padding:14px;display:none">
+          <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;margin-bottom:10px">Reordoneaza cadrele</div>
+          <div style="display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap">
+            <button class="secondary-btn" onclick="moveFrameUp()" style="flex:1">↑ Muta sus</button>
+            <button class="secondary-btn" onclick="moveFrameDown()" style="flex:1">↓ Muta jos</button>
+            <button class="secondary-btn" onclick="duplicateFrame()" style="flex:1;border-color:#f4c430;color:#f4c430">⧉ Duplica</button>
+            <button class="secondary-btn" onclick="deleteFrame()" style="color:#55556a">🗑 Sterge</button>
+          </div>
+          <div style="font-size:0.72rem;color:#55556a;padding:8px 10px;background:#0f0f1a;border-radius:6px">
+            Cadru curent: <strong style="color:var(--text)">#${0+1}</strong> din <strong style="color:var(--text)">${allFrames.length}</strong><br>
+            Stire: <strong style="color:var(--accent)" id="orderInfo">-</strong>
+          </div>
         </div>
       </div>
 
       <!-- SLIDE LIST -->
       <div class="slides-overview">
-        <div class="sov-title">Toate cadrele</div>
+        <div class="sov-title">Toate cadrele — click pentru a edita</div>
         <div class="slide-rows" id="slideRows"></div>
       </div>
 
     </div>`;
 
+  // Add editor tab styles if not present
+  if(!document.getElementById('editorTabStyle')){
+    const s=document.createElement('style');
+    s.id='editorTabStyle';
+    s.textContent='.editor-tab{padding:9px 14px;background:transparent;border:none;color:var(--muted);font-family:Sora,sans-serif;font-size:0.72rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;}.editor-tab.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(230,57,70,0.06);}.editor-pane{display:none;}.editor-pane.active{display:block;}';
+    document.head.appendChild(s);
+  }
+
   const cv=document.getElementById('pCanvas');const d=getDims();cv.width=d.w;cv.height=d.h;
   document.getElementById('sBars').innerHTML=allFrames.map((_,i)=>`<div class="story-bar"><div class="story-bar-fill" id="bf${i}"></div></div>`).join('');
+
+  // Sync audio upload input
+  const af2=document.getElementById('audioFileIn2');
+  if(af2)af2.onchange=loadAudioFile.bind(null,af2);
+
   renderSlideRows();
   goFr(0);
+}
+
+function switchEditorTab(tab){
+  ['text','audio','img','order'].forEach(t=>{
+    const btn=document.getElementById('etab-'+t);
+    const pane=document.getElementById('epane-'+t);
+    if(btn)btn.classList.toggle('active',t===tab);
+    if(pane)pane.style.display=t===tab?'block':'none';
+  });
+  if(tab==='audio'){
+    ['upload','tts','none'].forEach(m=>{
+      const el=document.getElementById('audioEdit'+m.charAt(0).toUpperCase()+m.slice(1));
+      if(el)el.style.display=audioMode===m?'block':'none';
+    });
+  }
+}
+
+function testAudio(){
+  stopAudio();
+  playAudio();
+  setTimeout(()=>stopAudio(),3000);
+}
+
 }
 
 function renderSlideRows(){
@@ -1143,6 +1312,9 @@ function goFr(idx){
   // Update editor
   const et=document.getElementById('editFrameText');if(et)et.value=stories[f.si]?stories[f.si].chunks[f.ci]:'';
   const ed=document.getElementById('editFrameDur');if(ed){ed.value=f.dur||reelFrameDur;document.getElementById('editDurVal').textContent=(f.dur||reelFrameDur)+'s';}
+  // Update order tab info
+  const oi=document.getElementById('orderInfo');
+  if(oi && stories[f.si]) oi.textContent='Stirea '+(f.si+1)+': '+stories[f.si].text.substring(0,40)+'...';
   // Audio
   if(audioMode==='tts'&&stories[f.si])playTTS(stories[f.si].chunks[f.ci]);
 }
@@ -1263,7 +1435,7 @@ function exportFramesPng(){
   allFrames.forEach((f,i)=>{
     const a=document.createElement('a');
     a.href=f.dataUrl;
-    a.download='stiriro-cadru-'+(i+1)+'.jpg';
+    a.download='ctsaz-cadru-'+(i+1)+'.jpg';
     document.body.appendChild(a);a.click();document.body.removeChild(a);
   });
 }
@@ -1320,7 +1492,7 @@ async function exportVid(){
     }
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');
-    a.href=url;a.download='reel-stiriro-'+Date.now()+'.webm';
+    a.href=url;a.download='reel-ctsaz-'+Date.now()+'.webm';
     document.body.appendChild(a);a.click();document.body.removeChild(a);
     setTimeout(()=>URL.revokeObjectURL(url),5000);
     if(btn){btn.textContent='Descarca Video';btn.disabled=false;}
@@ -1425,5 +1597,149 @@ async function genHashAI(){
 
 // ── INIT ──
 setTimeout(()=>{renderCustomTemplates();renderCustomCombos();},200);
+
+// ── EXTRA EDITOR FUNCTIONS ──
+
+function setAudioVol(v){
+  audioVolume=parseInt(v)/100;
+  const v1=document.getElementById('audioVolVal');if(v1)v1.textContent=v+'%';
+  const v2=document.getElementById('audioVolVal2');if(v2)v2.textContent=v+'%';
+  document.getElementById('audioFadeIn')?.addEventListener('input',function(){document.getElementById('audioFadeInVal').textContent=this.value+'s';});
+  if(audioEl)audioEl.volume=audioVolume;
+}
+
+async function regenerateFrameImg(){
+  if(curFrame<0||curFrame>=allFrames.length)return;
+  const f=allFrames[curFrame];
+  const s=stories[f.si];
+  const btn=event.target;btn.textContent='Se genereaza...';btn.disabled=true;
+  try{
+    const promptArr=[{text:s.text}];
+    const prompts=await genImgPrompts(promptArr);
+    const dims=getDims();
+    const newImg=await loadImg(buildImgUrl(prompts[0],dims.w,dims.h));
+    // Update image for all frames of this story
+    s.img=newImg;
+    // Redraw all frames of this story
+    allFrames.forEach((fr,i)=>{
+      if(fr.si===f.si){
+        const canvas=document.createElement('canvas');canvas.width=dims.w;canvas.height=dims.h;
+        drawFrame(canvas.getContext('2d'),s,fr.ci,dims);
+        allFrames[i].canvas=canvas;allFrames[i].dataUrl=canvas.toDataURL('image/jpeg',0.92);
+      }
+    });
+    // Refresh current frame display
+    const cv=document.getElementById('pCanvas');
+    if(cv)drawFrame(cv.getContext('2d'),s,f.ci,dims);
+  }catch(e){alert('Eroare la regenerare imagine.');}
+  btn.textContent='Regenereaza cu AI';btn.disabled=false;
+}
+
+function loadCustomImg(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      const f=allFrames[curFrame];
+      const s=stories[f.si];
+      s.img=img;
+      const dims=getDims();
+      // Redraw all frames of this story
+      allFrames.forEach((fr,i)=>{
+        if(fr.si===f.si){
+          const canvas=document.createElement('canvas');canvas.width=dims.w;canvas.height=dims.h;
+          drawFrame(canvas.getContext('2d'),s,fr.ci,dims);
+          allFrames[i].canvas=canvas;allFrames[i].dataUrl=canvas.toDataURL('image/jpeg',0.92);
+        }
+      });
+      const cv=document.getElementById('pCanvas');
+      if(cv)drawFrame(cv.getContext('2d'),s,f.ci,dims);
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function addFrameWithImg(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      const dims=getDims();
+      // Create a new story entry for this custom image
+      const newStoryIdx=stories.length;
+      const text='Adauga textul tau aici';
+      stories.push({text,chunks:[text],img,idx:newStoryIdx});
+      const canvas=document.createElement('canvas');canvas.width=dims.w;canvas.height=dims.h;
+      drawFrame(canvas.getContext('2d'),stories[newStoryIdx],0,dims);
+      const newFrame={canvas,dataUrl:canvas.toDataURL('image/jpeg',0.92),si:newStoryIdx,ci:0,dur:reelFrameDur};
+      // Insert after current frame
+      allFrames.splice(curFrame+1,0,newFrame);
+      // Rebuild bars
+      document.getElementById('sBars').innerHTML=allFrames.map((_,i)=>`<div class="story-bar"><div class="story-bar-fill" id="bf${i}"></div></div>`).join('');
+      renderSlideRows();
+      goFr(curFrame+1);
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function addBlankFrame(){
+  const dims=getDims();
+  const newStoryIdx=stories.length;
+  const text='Text cadru nou';
+  // Create blank canvas
+  const blankCanvas=document.createElement('canvas');blankCanvas.width=dims.w;blankCanvas.height=dims.h;
+  const bctx=blankCanvas.getContext('2d');
+  const g=bctx.createLinearGradient(0,0,dims.w,dims.h);g.addColorStop(0,'#1a1a2e');g.addColorStop(1,'#0d0d12');
+  bctx.fillStyle=g;bctx.fillRect(0,0,dims.w,dims.h);
+  // Fake HTMLImageElement from canvas
+  const fakeImg=new Image();
+  fakeImg.src=blankCanvas.toDataURL();
+  stories.push({text,chunks:[text],img:fakeImg,idx:newStoryIdx});
+  const canvas=document.createElement('canvas');canvas.width=dims.w;canvas.height=dims.h;
+  drawFrame(canvas.getContext('2d'),stories[newStoryIdx],0,dims);
+  const newFrame={canvas,dataUrl:canvas.toDataURL('image/jpeg',0.92),si:newStoryIdx,ci:0,dur:reelFrameDur};
+  allFrames.splice(curFrame+1,0,newFrame);
+  document.getElementById('sBars').innerHTML=allFrames.map((_,i)=>`<div class="story-bar"><div class="story-bar-fill" id="bf${i}"></div></div>`).join('');
+  renderSlideRows();
+  goFr(curFrame+1);
+}
+
+function applyBgColor(){
+  const color=document.getElementById('frameBgColor')?.value||'#0d0d12';
+  const f=allFrames[curFrame];const s=stories[f.si];
+  const dims=getDims();
+  // Create colored canvas as new image
+  const bc=document.createElement('canvas');bc.width=dims.w;bc.height=dims.h;
+  bc.getContext('2d').fillStyle=color;bc.getContext('2d').fillRect(0,0,dims.w,dims.h);
+  const img=new Image();
+  img.onload=()=>{
+    s.img=img;
+    allFrames.forEach((fr,i)=>{
+      if(fr.si===f.si){
+        const canvas=document.createElement('canvas');canvas.width=dims.w;canvas.height=dims.h;
+        drawFrame(canvas.getContext('2d'),s,fr.ci,dims);
+        allFrames[i].canvas=canvas;allFrames[i].dataUrl=canvas.toDataURL('image/jpeg',0.92);
+      }
+    });
+    const cv=document.getElementById('pCanvas');
+    if(cv)drawFrame(cv.getContext('2d'),s,f.ci,dims);
+  };
+  img.src=bc.toDataURL();
+}
+
+function duplicateFrame(){
+  const f=allFrames[curFrame];
+  const newFrame={...f,canvas:f.canvas,dataUrl:f.dataUrl,dur:f.dur||reelFrameDur};
+  allFrames.splice(curFrame+1,0,newFrame);
+  document.getElementById('sBars').innerHTML=allFrames.map((_,i)=>`<div class="story-bar"><div class="story-bar-fill" id="bf${i}"></div></div>`).join('');
+  renderSlideRows();
+  goFr(curFrame+1);
+}
+
 </script></body>
 </html>
