@@ -1338,15 +1338,21 @@ async function exportVid(){
   const btn=document.getElementById('expVid');
   if(btn){btn.textContent='Se exporta...';btn.disabled=true;}
   stopPlay();stopAudio();stopTTS();
+
+  // Reset to first frame before export
+  curFrame=0;
+
   const d=getDims();
   const progDiv=document.createElement('div');
-  progDiv.style.cssText='margin-top:8px;padding:10px 14px;background:#14141f;border:1px solid #1e1e2e;border-radius:7px;font-size:0.75rem;color:#55556a';
   progDiv.id='exportProg';
+  progDiv.style.cssText='margin-top:8px;padding:10px 14px;background:#14141f;border:1px solid #1e1e2e;border-radius:7px;font-size:0.75rem;color:#aaa;line-height:1.6';
+  progDiv.innerHTML='Pregatesc imaginile...';
   if(btn)btn.parentNode.insertAdjacentElement('afterend',progDiv);
 
+  // Pre-load ALL frame images first
   const imgs=[];
   for(let i=0;i<allFrames.length;i++){
-    progDiv.textContent='Pregatesc cadrul '+(i+1)+' din '+allFrames.length+'...';
+    progDiv.innerHTML='Incarc imaginea '+(i+1)+' din '+allFrames.length+'...';
     await new Promise(resolve=>{
       const img=new Image();
       img.onload=()=>{imgs.push({img,dur:allFrames[i].dur||reelFrameDur});resolve();};
@@ -1355,111 +1361,99 @@ async function exportVid(){
     });
   }
 
+  // Calculate total video duration in ms
+  const totalDurMs=imgs.reduce((sum,f)=>sum+(f.dur*1000),0);
+  const totalSec=(totalDurMs/1000).toFixed(1);
+  progDiv.innerHTML='Durata totala video: '+totalSec+'s. Inregistrez...';
+
+  // Setup canvas and recorder
   const ec=document.createElement('canvas');ec.width=d.w;ec.height=d.h;
   const ctx=ec.getContext('2d');
-  if(imgs[0]?.img)ctx.drawImage(imgs[0].img,0,0,d.w,d.h);
-  await new Promise(r=>setTimeout(r,150));
 
-  const stream=ec.captureStream(25);
+  // Draw first frame before stream starts
+  if(imgs[0]?.img)ctx.drawImage(imgs[0].img,0,0,d.w,d.h);
+  await new Promise(r=>setTimeout(r,100));
+
+  const stream=ec.captureStream(30);
   const tryMimes=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];
   const mime=tryMimes.find(m=>MediaRecorder.isTypeSupported(m))||'video/webm';
-  const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:reelQuality==='hd'?8000000:4000000});
+  const bitrate=reelQuality==='hd'?10000000:6000000;
+  const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:bitrate});
   const chunks=[];
   rec.ondataavailable=e=>{if(e.data&&e.data.size>0)chunks.push(e.data);};
+
   rec.onstop=()=>{
-    document.getElementById('exportProg')?.remove();
+    progDiv.remove();
     const blob=new Blob(chunks,{type:mime});
-    if(blob.size<5000){if(btn){btn.textContent='Descarca Video';btn.disabled=false;}alert('Export esuat. Descarca JPG in schimb.');return;}
+    if(blob.size<5000){
+      if(btn){btn.textContent='Descarca Video';btn.disabled=false;}
+      alert('Export esuat. Descarca JPG in schimb.');
+      return;
+    }
     const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');a.href=url;a.download='reel-ctsaz-'+Date.now()+'.webm';
+    const a=document.createElement('a');
+    a.href=url;
+    a.download='reel-ctsaz-'+Date.now()+'.webm';
     document.body.appendChild(a);a.click();document.body.removeChild(a);
-    setTimeout(()=>URL.revokeObjectURL(url),5000);
+    setTimeout(()=>URL.revokeObjectURL(url),8000);
     if(btn){btn.textContent='Descarca Video';btn.disabled=false;}
+
+    // Show conversion tip
+    const tip=document.createElement('div');
+    tip.style.cssText='margin-top:8px;padding:10px 14px;background:#0f1a0f;border:1px solid #2ecc71;border-radius:7px;font-size:0.75rem;color:#2ecc71;line-height:1.7';
+    tip.innerHTML='Video descarcat ('+totalSec+'s, '+mime.split(';')[0]+').<br><span style="color:#55556a">Pentru MP4: cloudconvert.com (gratuit, incarca fisierul .webm)</span>';
+    if(btn)btn.parentNode.insertAdjacentElement('afterend',tip);
+    setTimeout(()=>tip.remove(),12000);
   };
 
-  rec.start(200);
-  const fps=25;
-  for(let i=0;i<imgs.length;i++){
-    progDiv.textContent='Inregistrez cadrul '+(i+1)+' din '+imgs.length+'...';
-    const{img,dur}=imgs[i];
-    const numF=Math.max(fps,Math.round(dur*1000/(1000/fps)));
-    for(let f=0;f<numF;f++){
-      if(img)ctx.drawImage(img,0,0,d.w,d.h);
-      await new Promise(r=>setTimeout(r,1000/fps));
+  // Use requestAnimationFrame for precise frame timing
+  rec.start(100);
+
+  await new Promise(resolve=>{
+    let frameIdx=0;
+    let frameElapsed=0;
+    let lastTime=null;
+
+    function renderLoop(timestamp){
+      if(lastTime===null)lastTime=timestamp;
+      const delta=timestamp-lastTime;
+      lastTime=timestamp;
+
+      if(frameIdx>=imgs.length){
+        resolve();
+        return;
+      }
+
+      const{img,dur}=imgs[frameIdx];
+      const frameDurMs=dur*1000;
+
+      // Draw current frame
+      if(img){
+        ctx.drawImage(img,0,0,d.w,d.h);
+      } else {
+        ctx.fillStyle='#0d0d12';
+        ctx.fillRect(0,0,d.w,d.h);
+      }
+
+      frameElapsed+=delta;
+
+      // Show progress
+      const pct=Math.round(((frameIdx+(frameElapsed/frameDurMs))/imgs.length)*100);
+      if(progDiv.isConnected)progDiv.innerHTML='Inregistrez cadrul '+(frameIdx+1)+' din '+imgs.length+' ('+pct+'%)...';
+
+      if(frameElapsed>=frameDurMs){
+        frameElapsed=0;
+        frameIdx++;
+      }
+
+      requestAnimationFrame(renderLoop);
     }
-  }
-  await new Promise(r=>setTimeout(r,300));
+
+    requestAnimationFrame(renderLoop);
+  });
+
+  await new Promise(r=>setTimeout(r,200));
   rec.stop();
-}
-
-/* HASHTAG */
-function copyHash(el){
-  navigator.clipboard.writeText(el.textContent).then(()=>{
-    const s={bg:el.style.background,bc:el.style.borderColor,c:el.style.color};
-    el.style.background='rgba(46,204,113,0.15)';el.style.borderColor='#2ecc71';el.style.color='#2ecc71';
-    setTimeout(()=>{el.style.background=s.bg;el.style.borderColor=s.bc;el.style.color=s.c;},700);
-  });
-}
-function copyCombo(id,btn){
-  navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>{
-    btn.textContent='Copiat!';btn.style.color='var(--green)';
-    setTimeout(()=>{btn.textContent='Copiaza combo';btn.style.color='';},2000);
-  });
-}
-
-/* CUSTOM TEMPLATES & COMBOS */
-let customTemplates=JSON.parse(localStorage.getItem('ctsaz_templates')||'[]');
-let customCombos=JSON.parse(localStorage.getItem('ctsaz_combos')||'[]');
-
-function renderCustomTemplates(){
-  const c=document.getElementById('customTemplates');if(!c)return;
-  if(!customTemplates.length){c.innerHTML='<div style="font-size:0.75rem;color:#55556a;padding:6px 0">Niciun template salvat.</div>';return;}
-  c.innerHTML=customTemplates.map((t,i)=>'<div style="background:#0f0f1a;border:1px solid #1e1e2e;border-radius:7px;padding:10px;display:flex;align-items:center;gap:10px">'+
-    '<div style="width:28px;height:28px;border-radius:4px;background:'+t.bg+';border:2px solid '+t.accent+';flex-shrink:0"></div>'+
-    '<div style="flex:1"><div style="font-size:0.8rem;font-weight:700">'+t.name+'</div>'+(t.notes?'<div style="font-size:0.7rem;color:#55556a">'+t.notes+'</div>':'')+
-    '<div style="font-size:0.68rem;color:#55556a;margin-top:2px">BG:'+t.bg+' Accent:'+t.accent+'</div></div>'+
-    '<button onclick="delTpl('+i+')" style="background:transparent;border:none;color:#55556a;cursor:pointer">x</button></div>').join('');
-}
-function addCustomTpl(){
-  const name=document.getElementById('tplName')?.value.trim();
-  if(!name){alert('Adauga un nume!');return;}
-  customTemplates.push({name,bg:document.getElementById('tplBg').value,accent:document.getElementById('tplAccent').value,font:document.getElementById('tplFont')?.value||'Bebas Neue',notes:document.getElementById('tplNotes')?.value||''});
-  localStorage.setItem('ctsaz_templates',JSON.stringify(customTemplates));
-  renderCustomTemplates();
-  ['tplName','tplFont','tplNotes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-}
-function delTpl(i){customTemplates.splice(i,1);localStorage.setItem('ctsaz_templates',JSON.stringify(customTemplates));renderCustomTemplates();}
-
-function renderCustomCombos(){
-  const c=document.getElementById('customCombos');if(!c)return;
-  if(!customCombos.length){c.innerHTML='<div style="font-size:0.75rem;color:#55556a;padding:4px 0">Niciun combo salvat.</div>';return;}
-  c.innerHTML=customCombos.map((cb,i)=>'<div class="combo-card">'+
-    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">'+
-    '<div class="combo-title" style="margin-bottom:0">'+cb.name+'</div>'+
-    '<button onclick="delCombo('+i+')" style="background:transparent;border:none;color:#55556a;cursor:pointer;font-size:0.8rem">x</button></div>'+
-    '<div class="combo-body" id="cc'+i+'">'+cb.tags+'</div>'+
-    '<button class="secondary-btn" onclick="copyCombo(\'cc'+i+'\',this)">Copiaza</button></div>').join('');
-}
-function addCustomCombo(){
-  const name=document.getElementById('comboNameIn')?.value.trim();
-  const tags=document.getElementById('comboTagsIn')?.value.trim();
-  if(!name||!tags){alert('Completeaza numele si hashtag-urile!');return;}
-  customCombos.push({name,tags});
-  localStorage.setItem('ctsaz_combos',JSON.stringify(customCombos));
-  renderCustomCombos();
-  document.getElementById('comboNameIn').value='';document.getElementById('comboTagsIn').value='';
-}
-function delCombo(i){customCombos.splice(i,1);localStorage.setItem('ctsaz_combos',JSON.stringify(customCombos));renderCustomCombos();}
-async function genHashAI(){
-  const topic=prompt('Despre ce subiect vrei hashtag-uri?');if(!topic)return;
-  const btn=event.target;btn.textContent='Generez...';btn.disabled=true;
-  try{
-    const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({max_tokens:200,messages:[{role:'user',content:'Genereaza 20 hashtag-uri pentru Instagram/Facebook despre: "'+topic+'". Focus Romania. Raspunde DOAR cu hashtag-urile separate prin spatiu.'}]})});
-    const data=await res.json();
-    document.getElementById('comboTagsIn').value=data.content[0].text.trim();
-    document.getElementById('comboNameIn').value=topic;
-  }catch(e){}
-  btn.textContent='AI sugereaza';btn.disabled=false;
 }
 
 setTimeout(()=>{renderCustomTemplates();renderCustomCombos();},200);
