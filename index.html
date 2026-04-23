@@ -667,7 +667,7 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
 const API='https://dailystiri.vercel.app/api/generate';
 const IMG_API='https://dailystiri.vercel.app/api/image';
 
-/* NAV */
+// ===== NAV =====
 function goPage(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
@@ -682,7 +682,7 @@ function selTab(id,btn){
   btn.classList.add('active');
 }
 
-/* AI CHAT */
+// ===== AI CHAT =====
 let chatHistory=[],aiTone='profesionist';
 function selAiTone(btn){
   document.querySelectorAll('[data-aitone]').forEach(b=>b.classList.remove('active'));
@@ -695,13 +695,15 @@ function quickCmd(txt){
 }
 function clearChat(){
   chatHistory=[];
-  document.getElementById('chatMessages').innerHTML='<div style="text-align:center;padding:40px 20px"><div style="font-size:3rem;opacity:0.15;margin-bottom:12px">AI</div><div style="font-size:0.85rem;color:var(--muted);line-height:1.6;max-width:340px;margin:0 auto">Buna! Sunt asistentul tau AI pentru CeTrebuieSaStiiAzi. Scrie orice cerere.</div></div>';
+  const w=document.getElementById('chatMessages');
+  if(w)w.innerHTML='<div style="text-align:center;padding:40px 20px"><div style="font-size:3rem;opacity:0.15;margin-bottom:12px">AI</div><div style="font-size:0.85rem;color:var(--muted);line-height:1.6;max-width:340px;margin:0 auto">Scrie orice cerere pentru CeTrebuieSaStiiAzi.</div></div>';
 }
 function addChatMsg(role,text){
   const wrap=document.getElementById('chatMessages');
+  if(!wrap)return;
   const isUser=role==='user';
   const div=document.createElement('div');
-  div.style.cssText='display:flex;justify-content:'+(isUser?'flex-end':'flex-start')+';';
+  div.style.cssText='display:flex;justify-content:'+(isUser?'flex-end':'flex-start')+';margin-bottom:4px';
   const bubble=document.createElement('div');
   bubble.style.cssText='max-width:78%;padding:12px 16px;border-radius:'+(isUser?'14px 14px 4px 14px':'14px 14px 14px 4px')+';background:'+(isUser?'var(--accent)':'var(--card)')+';color:'+(isUser?'white':'var(--text)')+';font-size:0.83rem;line-height:1.7;white-space:pre-wrap;border:1px solid '+(isUser?'transparent':'var(--border)')+';';
   bubble.textContent=text;
@@ -709,7 +711,7 @@ function addChatMsg(role,text){
     const cb=document.createElement('button');
     cb.textContent='Copiaza';
     cb.style.cssText='display:block;margin-top:8px;padding:4px 12px;background:transparent;border:1px solid var(--border);border-radius:5px;color:var(--muted);font-family:Sora,sans-serif;font-size:0.7rem;cursor:pointer;';
-    cb.onclick=()=>navigator.clipboard.writeText(text).then(()=>{cb.textContent='Copiat!';cb.style.color='var(--green)';setTimeout(()=>{cb.textContent='Copiaza';cb.style.color='';},2000);});
+    cb.onclick=function(){navigator.clipboard.writeText(text).then(function(){cb.textContent='Copiat!';cb.style.color='var(--green)';setTimeout(function(){cb.textContent='Copiaza';cb.style.color='';},2000);});};
     bubble.appendChild(cb);
   }
   div.appendChild(bubble);
@@ -718,10 +720,10 @@ function addChatMsg(role,text){
 }
 function addTypingIndicator(){
   const wrap=document.getElementById('chatMessages');
+  if(!wrap)return;
   const div=document.createElement('div');
   div.id='typingIndicator';
-  div.style.cssText='display:flex;justify-content:flex-start;';
-  div.innerHTML='<div style="padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:14px 14px 14px 4px;display:flex;gap:5px;align-items:center"><span style="width:7px;height:7px;border-radius:50%;background:var(--muted);animation:pdot 1s infinite"></span><span style="width:7px;height:7px;border-radius:50%;background:var(--muted);animation:pdot 1s 0.2s infinite"></span><span style="width:7px;height:7px;border-radius:50%;background:var(--muted);animation:pdot 1s 0.4s infinite"></span></div>';
+  div.innerHTML='<div style="padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:14px;display:flex;gap:5px"><span style="width:7px;height:7px;border-radius:50%;background:var(--muted);animation:pdot 1s infinite;display:inline-block"></span><span style="width:7px;height:7px;border-radius:50%;background:var(--muted);animation:pdot 1s 0.2s infinite;display:inline-block"></span><span style="width:7px;height:7px;border-radius:50%;background:var(--muted);animation:pdot 1s 0.4s infinite;display:inline-block"></span></div>';
   wrap.appendChild(div);
   wrap.scrollTop=wrap.scrollHeight;
 }
@@ -736,40 +738,40 @@ async function sendChat(){
   chatHistory.push({role:'user',content:msg});
   addTypingIndicator();
   const tones={
-    profesionist:'Esti un expert in social media si jurnalism digital pentru Romania. Raspunzi profesionist, structurat si practic.',
-    casual:'Esti un prieten expert in social media din Romania. Raspunzi casual, prietenos si direct.',
-    creativ:'Esti un copywriter creativ specializat pe social media din Romania. Raspunzi cu idei originale.',
-    scurt:'Esti un expert in social media. Raspunzi SCURT, maxim 3-4 propozitii sau bullet points.'
+    profesionist:'Esti expert in social media si jurnalism digital pentru Romania. Raspunzi profesionist si practic.',
+    casual:'Esti prieten expert in social media din Romania. Raspunzi casual si direct.',
+    creativ:'Esti copywriter creativ pentru social media Romania. Raspunzi cu idei originale.',
+    scurt:'Esti expert in social media. Raspunzi SCURT, maxim 3-4 propozitii.'
   };
   const sys=tones[aiTone]||tones.profesionist;
   let ctx=sys+'\n\nCerere: '+msg;
   if(chatHistory.length>2){
-    const prev=chatHistory.slice(-5).map(m=>m.role+': '+m.content).join('\n');
+    const prev=chatHistory.slice(-6).map(function(m){return m.role+': '+m.content;}).join('\n');
     ctx=sys+'\n\nConversatie anterioara:\n'+prev+'\n\nCerere curenta: '+msg;
   }
   try{
     const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({max_tokens:1000,messages:[{role:'user',content:ctx}]})});
     const data=await res.json();
     const reply=data.content[0].text;
-    document.getElementById('typingIndicator')?.remove();
+    document.getElementById('typingIndicator')&&document.getElementById('typingIndicator').remove();
     addChatMsg('assistant',reply);
     chatHistory.push({role:'assistant',content:reply});
     if(chatHistory.length>20)chatHistory=chatHistory.slice(-20);
   }catch(e){
-    document.getElementById('typingIndicator')?.remove();
-    addChatMsg('assistant','Eroare de conexiune. Incearca din nou.');
+    document.getElementById('typingIndicator')&&document.getElementById('typingIndicator').remove();
+    addChatMsg('assistant','Eroare conexiune. Incearca din nou.');
   }
   btn.disabled=false;
 }
 
-/* REEL STATE */
-let reelNews=[],reelRatio='9:16',reelStyle='photorealistic news photography, ultra detailed 4k';
-let reelWordsPerFrame=10,reelFrameDur=3,reelTxtSize=6,reelQuality='standard';
-let audioMode='none',uploadedAudioUrl=null,audioVolume=0.7;
-let stories=[],allFrames=[],curFrame=0,isPlaying=false,playIv=null;
-let audioEl=null;
+// ===== REEL STATE =====
+var reelNews=[],reelRatio='9:16',reelStyle='photorealistic news photography, ultra detailed 4k';
+var reelWordsPerFrame=10,reelFrameDur=3,reelTxtSize=6,reelQuality='standard';
+var audioMode='none',uploadedAudioUrl=null,audioVolume=0.7;
+var stories=[],allFrames=[],curFrame=0,isPlaying=false,playIv=null,audioEl=null;
+var imgSourceIdx=0;
 
-(function(){addReelNews();addReelNews();addReelNews();})();
+addReelNews();addReelNews();addReelNews();
 
 function addReelNews(){
   if(reelNews.length>=5)return;
@@ -778,804 +780,665 @@ function addReelNews(){
 }
 function removeReelNews(id){
   if(reelNews.length<=1)return;
-  reelNews=reelNews.filter(n=>n.id!==id);
+  reelNews=reelNews.filter(function(n){return n.id!==id;});
   renderReelList();
 }
 function renderReelList(){
-  document.getElementById('reelNewsList').innerHTML=reelNews.map((item,i)=>`
-    <div class="news-item">
-      <div class="news-item-num">STIREA ${i+1}</div>
-      <textarea placeholder="Scrie stirea complet..." oninput="reelNews[${i}].text=this.value" rows="4">${item.text}</textarea>
-      ${reelNews.length>1?`<button class="news-remove" onclick="removeReelNews(${item.id})">x</button>`:''}
-    </div>`).join('');
+  var list=document.getElementById('reelNewsList');
+  if(!list)return;
+  list.innerHTML=reelNews.map(function(item,i){
+    return '<div class="news-item"><div class="news-item-num">STIREA '+(i+1)+'</div>'+
+      '<textarea placeholder="Scrie stirea complet..." oninput="reelNews['+i+'].text=this.value" rows="4">'+item.text+'</textarea>'+
+      (reelNews.length>1?'<button class="news-remove" onclick="removeReelNews('+item.id+')">x</button>':'')+
+      '</div>';
+  }).join('');
 }
-function selRatio(btn){document.querySelectorAll('[data-ratio]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');reelRatio=btn.dataset.ratio;}
-function selStyle(btn){document.querySelectorAll('[data-style]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');reelStyle=btn.dataset.style;}
-function selQuality(btn){document.querySelectorAll('[data-quality]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');reelQuality=btn.dataset.quality;}
-function setImgSrc(btn,idx){
-  document.querySelectorAll('[data-imgsrc]').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  imgSourceIdx=idx;
-  const notes=['AI genereaza imagini contextuale pe baza stirii tale.','Fotografii reale HD. Nu sunt legate de subiect dar arata profesional.','Incearca AI, daca esueaza trece automat la fotografii reale.'];
-  const note=document.getElementById('imgSrcNote');
-  if(note)note.textContent=notes[idx]||'';
-}
+function selRatio(btn){document.querySelectorAll('[data-ratio]').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');reelRatio=btn.dataset.ratio;}
+function selStyle(btn){document.querySelectorAll('[data-style]').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');reelStyle=btn.dataset.style;}
+function selQuality(btn){document.querySelectorAll('[data-quality]').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');reelQuality=btn.dataset.quality;}
 function updWords(v){reelWordsPerFrame=parseInt(v);document.getElementById('wordsVal').textContent=v+' cuv.';}
 function updDur(v){reelFrameDur=parseFloat(v);document.getElementById('durVal').textContent=v+'s';}
 function updTxtSize(v){reelTxtSize=parseInt(v);document.getElementById('txtSizeVal').textContent=v+'%';}
 function setAudioVol(v){
   audioVolume=parseInt(v)/100;
-  const v1=document.getElementById('audioVolVal');if(v1)v1.textContent=v+'%';
-  const v2=document.getElementById('audioVolVal2');if(v2)v2.textContent=v+'%';
+  var v1=document.getElementById('audioVolVal');if(v1)v1.textContent=v+'%';
+  var v2=document.getElementById('audioVolVal2');if(v2)v2.textContent=v+'%';
   if(audioEl)audioEl.volume=audioVolume;
 }
 function selAudio(btn){
-  document.querySelectorAll('[data-audio]').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('[data-audio]').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
   audioMode=btn.dataset.audio;
-  const uw=document.getElementById('audioUploadWrap');if(uw)uw.style.display=audioMode==='upload'?'block':'none';
-  const tw=document.getElementById('audioTtsWrap');if(tw)tw.style.display=audioMode==='tts'?'block':'none';
-  ['upload','tts','none'].forEach(m=>{
-    const el=document.getElementById('audioEdit'+m.charAt(0).toUpperCase()+m.slice(1));
-    if(el)el.style.display=audioMode===m?'block':'none';
+  var uw=document.getElementById('audioUploadWrap');if(uw)uw.style.display=audioMode==='upload'?'block':'none';
+  var tw=document.getElementById('audioTtsWrap');if(tw)tw.style.display=audioMode==='tts'?'block':'none';
+  ['Upload','Tts','None'].forEach(function(m){
+    var el=document.getElementById('audioEdit'+m);
+    if(el)el.style.display=(audioMode===m.toLowerCase())?'block':'none';
   });
   if(audioMode!=='upload')stopAudio();
   if(audioMode!=='tts')stopTTS();
 }
 function loadAudioFile(input){
-  const file=input.files[0];if(!file)return;
+  var file=input.files[0];if(!file)return;
   if(uploadedAudioUrl)URL.revokeObjectURL(uploadedAudioUrl);
   uploadedAudioUrl=URL.createObjectURL(file);
-  if(audioEl){audioEl.pause();}
+  if(audioEl)audioEl.pause();
   audioEl=new Audio(uploadedAudioUrl);
-  audioEl.loop=true;
-  audioEl.volume=audioVolume;
-  audioEl.load();
-  const fn=document.getElementById('audioFileName')||document.getElementById('audioFileName2');
+  audioEl.loop=true;audioEl.volume=audioVolume;audioEl.load();
+  var fn=document.getElementById('audioFileName')||document.getElementById('audioFileName2');
   if(fn)fn.textContent='Incarcat: '+file.name;
 }
 function playAudio(){
   if(audioMode==='upload'&&uploadedAudioUrl){
     if(!audioEl){audioEl=new Audio(uploadedAudioUrl);audioEl.loop=true;}
     audioEl.volume=audioVolume;
-    audioEl.play().catch(e=>console.log('audio:',e));
+    audioEl.play().catch(function(e){console.log('audio:',e);});
   }
 }
-function stopAudio(){
-  if(audioEl){audioEl.pause();audioEl.currentTime=0;}
-  stopTTS();
-}
+function stopAudio(){if(audioEl){audioEl.pause();audioEl.currentTime=0;}stopTTS();}
 function stopTTS(){if(window.speechSynthesis)window.speechSynthesis.cancel();}
 function playTTS(text){
   if(!window.speechSynthesis||!text)return;
   window.speechSynthesis.cancel();
-  const utt=new SpeechSynthesisUtterance(text);
+  var utt=new SpeechSynthesisUtterance(text);
   utt.lang='ro-RO';
-  utt.rate=parseFloat(document.getElementById('ttsRate')?.value||'0.9');
-  const doSpeak=()=>{
-    const voices=window.speechSynthesis.getVoices();
-    const ro=voices.find(v=>v.lang&&v.lang.startsWith('ro'));
+  var rate=document.getElementById('ttsRate');
+  utt.rate=rate?parseFloat(rate.value):0.9;
+  function doSpeak(){
+    var voices=window.speechSynthesis.getVoices();
+    var ro=voices.find(function(v){return v.lang&&v.lang.startsWith('ro');});
     if(ro)utt.voice=ro;
     window.speechSynthesis.speak(utt);
-  };
+  }
   if(window.speechSynthesis.getVoices().length===0){window.speechSynthesis.onvoiceschanged=doSpeak;}
   else doSpeak();
 }
-function testAudio(){stopAudio();playAudio();setTimeout(()=>stopAudio(),3000);}
-
+function testAudio(){stopAudio();playAudio();setTimeout(stopAudio,3000);}
+function setImgSrc(btn,idx){
+  document.querySelectorAll('[data-imgsrc]').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  imgSourceIdx=idx;
+  var notes=['AI genereaza imagini contextuale pe baza stirii.','Fotografii HD reale. Mereu disponibile, fara rate limit.','Incearca AI, daca esueaza trece la foto reale.'];
+  var note=document.getElementById('imgSrcNote');
+  if(note)note.textContent=notes[idx]||'';
+}
 function getDims(){
-  const hd=reelQuality==='hd';
+  var hd=reelQuality==='hd';
   if(reelRatio==='9:16')return{w:hd?720:540,h:hd?1280:960};
   if(reelRatio==='1:1')return{w:hd?1080:720,h:hd?1080:720};
   return{w:hd?1280:960,h:hd?720:540};
 }
 function splitChunks(text,n){
-  const words=text.trim().split(/\s+/);const chunks=[];
-  for(let i=0;i<words.length;i+=n)chunks.push(words.slice(i,i+n).join(' '));
+  var words=text.trim().split(/\s+/),chunks=[];
+  for(var i=0;i<words.length;i+=n)chunks.push(words.slice(i,i+n).join(' '));
   return chunks;
 }
 
+// ===== GENERATE REEL =====
 async function genReel(){
-  const valid=reelNews.filter(n=>n.text.trim().length>5);
+  var valid=reelNews.filter(function(n){return n.text.trim().length>5;});
   if(!valid.length)return;
-  const btn=document.getElementById('genReelBtn');btn.disabled=true;
+  var btn=document.getElementById('genReelBtn');btn.disabled=true;
   stories=[];allFrames=[];stopAudio();
-  const out=document.getElementById('reelOut');
+  var out=document.getElementById('reelOut');
   out.innerHTML='<div class="prog-wrap"><div class="prog-title">Se construieste reelul...</div>'+
     '<div class="prog-step" id="rs0"><div class="prog-dot"></div><span id="rs0t">Generez prompt-uri vizuale...</span></div>'+
     '<div class="prog-step" id="rs1"><div class="prog-dot"></div><span id="rs1t">Generez '+valid.length+' imagini AI...</span></div>'+
     '<div class="prog-step" id="rs2"><div class="prog-dot"></div><span id="rs2t">Randez cadrele...</span></div>'+
     '<div class="prog-step" id="rs3"><div class="prog-dot"></div><span id="rs3t">Gata!</span></div></div>';
-
-  function ss(i,s){const e=document.getElementById('rs'+i);if(e)e.className='prog-step '+s;}
-  function st(i,t){const e=document.getElementById('rs'+i+'t');if(e)e.textContent=t;}
-
+  function ss(i,s){var e=document.getElementById('rs'+i);if(e)e.className='prog-step '+s;}
+  function st(i,t){var e=document.getElementById('rs'+i+'t');if(e)e.textContent=t;}
   ss(0,'active');
-  const prompts=await genImgPrompts(valid);
-  ss(0,'done');
-
-  ss(1,'active');
-  const dims=getDims();
-  for(let i=0;i<valid.length;i++){
-    st(1,'Generez imagine '+(i+1)+'/'+valid.length+(reelQuality==='hd'?' (HD)':'')+'...');
-    // Try AI image first, fallback to other sources automatically
-    const img=await loadImgWithFallback(prompts[i],dims.w,dims.h);
-    const chunks=splitChunks(valid[i].text,reelWordsPerFrame);
-    stories.push({text:valid[i].text,chunks,img,idx:i});
+  var prompts=await genImgPrompts(valid);
+  ss(0,'done');ss(1,'active');
+  var dims=getDims();
+  for(var i=0;i<valid.length;i++){
+    st(1,'Generez imagine '+(i+1)+'/'+valid.length+'...');
+    var img=await loadImgSmart(prompts[i],dims.w,dims.h);
+    var chunks=splitChunks(valid[i].text,reelWordsPerFrame);
+    stories.push({text:valid[i].text,chunks:chunks,img:img,idx:i});
   }
-  ss(1,'done');
-
-  ss(2,'active');
-  for(let si=0;si<stories.length;si++){
-    const s=stories[si];
-    for(let ci=0;ci<s.chunks.length;ci++){
-      const cv=document.createElement('canvas');cv.width=dims.w;cv.height=dims.h;
+  ss(1,'done');ss(2,'active');
+  for(var si=0;si<stories.length;si++){
+    var s=stories[si];
+    for(var ci=0;ci<s.chunks.length;ci++){
+      var cv=document.createElement('canvas');cv.width=dims.w;cv.height=dims.h;
       drawFrame(cv.getContext('2d'),s,ci,dims);
-      allFrames.push({canvas:cv,dataUrl:cv.toDataURL('image/jpeg',reelQuality==='hd'?0.95:0.88),si,ci,dur:reelFrameDur});
+      allFrames.push({canvas:cv,dataUrl:cv.toDataURL('image/jpeg',reelQuality==='hd'?0.95:0.88),si:si,ci:ci,dur:reelFrameDur});
     }
   }
   ss(2,'done');ss(3,'active');
-  await new Promise(r=>setTimeout(r,150));ss(3,'done');
+  await new Promise(function(r){setTimeout(r,100);});
+  ss(3,'done');
   btn.disabled=false;
   showReelPreview();
 }
 
 async function genImgPrompts(arr){
   try{
-    const newsCtx=arr.map((n,i)=>(i+1)+'. '+n.text).join('\n');
-    const req='You are a visual director for Romanian news. For each story write ONE specific image prompt in English (10-15 words). Style: '+reelStyle+'. No text/watermarks.\n- Politics: parliament, politicians, government buildings Romania\n- Economy: money, markets, prices\n- Social: streets, protests, daily life Bucharest\n- Health: hospital, doctors\n\nStories:\n'+newsCtx+'\n\nRespond ONLY with JSON array: ["prompt1","prompt2"]';
-    const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({max_tokens:800,messages:[{role:'user',content:req}]})
-    });
-    const data=await res.json();
-    const raw=data.content[0].text.replace(/```json|```/g,'').trim();
-    const parsed=JSON.parse(raw);
+    var newsCtx=arr.map(function(n,i){return (i+1)+'. '+n.text;}).join('\n');
+    var req='You are a visual director for Romanian news. For each story write ONE specific image prompt in English (10-15 words max). Style: '+reelStyle+'. No text, no watermarks.\n- Politics/government: Romanian parliament, politicians\n- Economy: money, market, prices Romania\n- Social/protest: streets, crowd, Bucharest\n- Health: hospital, doctors Romania\n- International: world map, EU, flags\n\nStories:\n'+newsCtx+'\n\nRespond ONLY with valid JSON array of strings: ["prompt1","prompt2"]';
+    var res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({max_tokens:800,messages:[{role:'user',content:req}]})});
+    var data=await res.json();
+    var raw=data.content[0].text.replace(/```json|```/g,'').trim();
+    var parsed=JSON.parse(raw);
     if(Array.isArray(parsed)&&parsed.length===arr.length)return parsed;
     throw new Error('bad');
   }catch(e){
-    return arr.map(n=>{
-      const t=n.text.toLowerCase();
-      let ctx='Romania news ';
-      if(t.includes('politic')||t.includes('guvern'))ctx='Romanian parliament politicians meeting ';
-      else if(t.includes('econom')||t.includes('salar'))ctx='Romanian economy money market ';
-      else if(t.includes('protest'))ctx='street protest Bucharest crowd ';
+    return arr.map(function(n){
+      var t=n.text.toLowerCase();
+      var ctx='Romania news ';
+      if(t.indexOf('politic')>=0||t.indexOf('guvern')>=0)ctx='Romanian parliament politicians ';
+      else if(t.indexOf('econom')>=0||t.indexOf('salar')>=0)ctx='Romanian economy money market ';
+      else if(t.indexOf('protest')>=0)ctx='street protest Bucharest crowd ';
       return ctx+reelStyle+' cinematic no text';
     });
   }
 }
 
-/* buildImgUrl replaced by buildImgUrlFromSource */
-
-/* IMAGE SOURCES WITH FALLBACK */
-const IMG_SOURCES=['pollinations','picsum','gradient'];
-let imgSourceIdx=0;
-let imgFailCount=0;
-
-function buildImgUrlFromSource(prompt,w,h,source){
-  if(source==='pollinations'){
-    const full=prompt+', '+reelStyle+', no text, no watermark'+(reelQuality==='hd'?', ultra detailed 8k':'');
-    return IMG_API+'?prompt='+encodeURIComponent(full)+'&width='+w+'&height='+h+'&seed='+Math.floor(Math.random()*99999);
-  }
-  if(source==='picsum'){
-    // Lorem Picsum - random HD photos, always works
-    return 'https://picsum.photos/'+w+'/'+h+'?random='+Math.floor(Math.random()*1000);
-  }
-  return null; // gradient fallback = canvas
-}
-
-function loadImg(url){
-  return new Promise(resolve=>{
-    const img=new Image();img.crossOrigin='anonymous';
-    img.onload=()=>{imgFailCount=0;resolve(img);};
-    img.onerror=()=>{
-      imgFailCount++;
-      // After 2 failures, switch source
-      if(imgFailCount>=2){
-        imgSourceIdx=(imgSourceIdx+1)%2; // cycle between pollinations and picsum
-        imgFailCount=0;
-        console.log('Switching image source to:',IMG_SOURCES[imgSourceIdx]);
-      }
-      const d=getDims();const fc=document.createElement('canvas');fc.width=d.w;fc.height=d.h;
-      const ctx=fc.getContext('2d');
-      const g=ctx.createLinearGradient(0,0,d.w,d.h);g.addColorStop(0,'#1a1a2e');g.addColorStop(1,'#16213e');
-      ctx.fillStyle=g;ctx.fillRect(0,0,d.w,d.h);resolve(fc);
-    };
-    img.src=url;
-  });
-}
-
-async function loadImgWithFallback(prompt,w,h){
-  // Try current source first
-  // imgSourceIdx: 0=AI only (with fallback), 1=picsum only, 2=auto
-  const sources=imgSourceIdx===1?['picsum','pollinations']:['pollinations','picsum'];
-  for(let attempt=0;attempt<sources.length;attempt++){
-    const src=sources[attempt%sources.length];
-    const url=buildImgUrlFromSource(prompt,w,h,src);
-    if(!url)continue;
-    
-    const result=await new Promise(resolve=>{
-      const img=new Image();img.crossOrigin='anonymous';
-      const timeout=setTimeout(()=>{img.src='';resolve(null);},15000);
-      img.onload=()=>{clearTimeout(timeout);resolve(img);};
-      img.onerror=()=>{clearTimeout(timeout);resolve(null);};
+async function loadImgSmart(prompt,w,h){
+  var sources=imgSourceIdx===1?['picsum','pollinations']:['pollinations','picsum'];
+  for(var a=0;a<sources.length;a++){
+    var src=sources[a];
+    var url='';
+    if(src==='pollinations'){
+      var full=prompt+', '+reelStyle+', no text, no watermark'+(reelQuality==='hd'?', 8k':'');
+      url=IMG_API+'?prompt='+encodeURIComponent(full)+'&width='+w+'&height='+h+'&seed='+Math.floor(Math.random()*99999);
+    } else {
+      url='https://picsum.photos/'+w+'/'+h+'?random='+Math.floor(Math.random()*9999);
+    }
+    var result=await new Promise(function(resolve){
+      var img=new Image();img.crossOrigin='anonymous';
+      var timer=setTimeout(function(){img.src='';resolve(null);},14000);
+      img.onload=function(){clearTimeout(timer);resolve(img);};
+      img.onerror=function(){clearTimeout(timer);resolve(null);};
       img.src=url;
     });
-    
-    if(result){
-      if(attempt>0)imgSourceIdx=(imgSourceIdx+attempt)%sources.length;
-      return result;
-    }
-    console.log('Source',src,'failed, trying next...');
+    if(result)return result;
   }
-  
-  // All sources failed - return gradient canvas
-  const d={w,h};const fc=document.createElement('canvas');fc.width=w;fc.height=h;
-  const ctx=fc.getContext('2d');
-  const g=ctx.createLinearGradient(0,0,w,h);
-  g.addColorStop(0,'#1a1a2e');g.addColorStop(0.5,'#16213e');g.addColorStop(1,'#0f3460');
+  var fc=document.createElement('canvas');fc.width=w;fc.height=h;
+  var ctx=fc.getContext('2d');
+  var g=ctx.createLinearGradient(0,0,w,h);
+  g.addColorStop(0,'#1a1a2e');g.addColorStop(1,'#16213e');
   ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-  // Add text on fallback
-  ctx.font='bold '+Math.round(w*0.04)+'px Sora,sans-serif';
-  ctx.fillStyle='rgba(255,255,255,0.3)';ctx.textAlign='center';
-  ctx.fillText('Imagine indisponibila momentan',w/2,h/2);
   return fc;
 }
 
 function drawFrame(ctx,story,ci,dims){
-  const{w,h}=dims;
-  const src=story.img;
+  var w=dims.w,h=dims.h;
+  var src=story.img;
   if(src instanceof HTMLImageElement)ctx.drawImage(src,0,0,w,h);
   else ctx.drawImage(src,0,0,w,h);
-
-  const g=ctx.createLinearGradient(0,h*0.2,0,h);
+  var g=ctx.createLinearGradient(0,h*0.2,0,h);
   g.addColorStop(0,'rgba(0,0,0,0.05)');g.addColorStop(0.45,'rgba(0,0,0,0.52)');g.addColorStop(1,'rgba(0,0,0,0.91)');
   ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
   ctx.fillStyle='#e63946';ctx.fillRect(0,0,w,5);
-
-  ctx.font='600 '+Math.round(w*0.035)+'px Sora,sans-serif';
+  ctx.font='600 '+Math.round(w*0.032)+'px Sora,sans-serif';
   ctx.fillStyle='rgba(255,255,255,0.5)';ctx.textAlign='left';
   ctx.fillText('Ce Trebuie Sa Stii Azi',w*0.05,h*0.065);
-
-  ctx.font='500 '+Math.round(w*0.028)+'px Sora,sans-serif';
+  ctx.font='500 '+Math.round(w*0.026)+'px Sora,sans-serif';
   ctx.fillStyle='rgba(255,255,255,0.4)';ctx.textAlign='right';
-  ctx.fillText((story.idx+1)+'/'+stories.length,w*0.95,h*0.065);ctx.textAlign='left';
-
-  const total=story.chunks.length;
-  const ds=Math.min(w*0.014,6);const dg=ds*2.5;
-  const rowW=total*ds+(total-1)*(dg-ds);const startX=w*0.5-rowW*0.5;const dotY=h*0.105;
-  for(let i=0;i<total;i++){
+  ctx.fillText((story.idx+1)+'/'+stories.length,w*0.95,h*0.065);
+  ctx.textAlign='left';
+  var total=story.chunks.length;
+  var ds=Math.min(w*0.013,6),dg=ds*2.5;
+  var rowW=total*ds+(total-1)*(dg-ds),startX=w*0.5-rowW*0.5,dotY=h*0.108;
+  for(var i=0;i<total;i++){
     ctx.beginPath();ctx.arc(startX+i*dg,dotY,ds*0.5,0,Math.PI*2);
-    ctx.fillStyle=i<=ci?'rgba(255,255,255,0.95)':'rgba(255,255,255,0.28)';ctx.fill();
+    ctx.fillStyle=i<=ci?'rgba(255,255,255,0.95)':'rgba(255,255,255,0.25)';ctx.fill();
   }
-
-  const fSizePct=reelTxtSize/100;
-  const fSize=reelRatio==='16:9'?Math.round(w*(fSizePct*0.7)):Math.round(w*fSizePct);
+  var fSize=Math.round(w*(reelTxtSize/100)*(reelRatio==='16:9'?0.7:1));
   ctx.font='700 '+fSize+'px Sora,sans-serif';ctx.fillStyle='#ffffff';
-  const maxW=w*0.86;const lh=fSize*1.38;
-  const lines=wrapWords(ctx,story.chunks[ci],maxW);
-  const blockH=lines.length*lh;
-  let ty=h*0.72-blockH*0.5;
+  var maxW=w*0.86,lh=fSize*1.38;
+  var lines=wrapWords(ctx,story.chunks[ci]||'',maxW);
+  var blockH=lines.length*lh;
+  var ty=h*0.72-blockH*0.5;
   if(ty+blockH>h*0.88)ty=h*0.88-blockH;
   if(ty<h*0.5)ty=h*0.5;
-  lines.forEach((line,li)=>{const lw=ctx.measureText(line).width;ctx.fillText(line,(w-lw)*0.5,ty+li*lh);});
-
+  for(var li=0;li<lines.length;li++){var lw=ctx.measureText(lines[li]).width;ctx.fillText(lines[li],(w-lw)*0.5,ty+li*lh);}
   if(ci===total-1){
-    ctx.font='500 '+Math.round(w*0.028)+'px Sora,sans-serif';ctx.fillStyle='rgba(244,196,48,0.9)';
-    const cta=story.idx+1<stories.length?'Stirea urmatoare':'Urmareste @CeTrebuieSaStiiAzi';
-    const ctaW=ctx.measureText(cta).width;ctx.fillText(cta,(w-ctaW)*0.5,h*0.91);
+    ctx.font='500 '+Math.round(w*0.026)+'px Sora,sans-serif';ctx.fillStyle='rgba(244,196,48,0.9)';
+    var cta=story.idx+1<stories.length?'Stirea urmatoare':'Urmareste @CeTrebuieSaStiiAzi';
+    var ctaW=ctx.measureText(cta).width;ctx.fillText(cta,(w-ctaW)*0.5,h*0.91);
   }
   ctx.fillStyle='#e63946';ctx.fillRect(0,h-5,w,5);
 }
-
 function wrapWords(ctx,text,maxW){
-  const words=(text||'').split(' ');const lines=[];let line='';
-  for(let n=0;n<words.length;n++){
-    const test=line+words[n]+' ';
+  var words=(text||'').split(' '),lines=[],line='';
+  for(var n=0;n<words.length;n++){
+    var test=line+words[n]+' ';
     if(ctx.measureText(test).width>maxW&&n>0){lines.push(line.trim());line=words[n]+' ';}else line=test;
   }
   if(line.trim())lines.push(line.trim());
   return lines.slice(0,5);
 }
 
+// ===== PREVIEW =====
 function showReelPreview(){
   curFrame=0;isPlaying=false;
-  const previewHTML='<div class="preview-section fade-up" style="display:flex;flex-direction:column;gap:14px">'+
-  '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">'+
-  '<div style="font-family:Bebas Neue,sans-serif;font-size:1.1rem;letter-spacing:1px">'+allFrames.length+' CADRE</div>'+
-  '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
-  '<button class="secondary-btn" onclick="genReel()" style="font-size:0.72rem">Regenereaza</button>'+
-  '<button class="secondary-btn" id="expJpg" onclick="exportFramesPng()" style="border-color:#2ecc71;color:#2ecc71;font-size:0.72rem">JPG</button>'+
-  '<button class="secondary-btn" id="expVid" onclick="exportVid()" style="border-color:var(--gold);color:var(--gold);font-size:0.72rem">Descarca Video</button>'+
-  '</div></div>'+
-  '<div class="story-viewer" id="storyViewer">'+
-  '<div class="story-bars" id="sBars"></div>'+
-  '<div class="tap-l" onclick="prevFr()"></div>'+
-  '<div class="tap-r" onclick="nextFr()"></div>'+
-  '<canvas id="pCanvas"></canvas></div>'+
-  '<div class="story-ctrl">'+
-  '<button class="play-btn" id="playBtn" onclick="togglePlay()">&#9654;</button>'+
-  '<div class="ctrl-info"><strong id="ctrlT">Cadru 1 din '+allFrames.length+'</strong><span>Tap stanga/dreapta</span></div>'+
-  '<button onclick="stopAudio()" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:1rem">&#128263;</button>'+
-  '</div>'+
-  buildEditorHTML()+
-  '<div class="slides-overview"><div class="sov-title">Toate cadrele</div><div class="slide-rows" id="slideRows"></div></div>'+
-  '</div>';
-
-  document.getElementById('reelOut').innerHTML=previewHTML;
-
-  if(!document.getElementById('editorTabStyle')){
-    const s=document.createElement('style');s.id='editorTabStyle';
-    s.textContent='.editor-tab{padding:9px 14px;background:transparent;border:none;color:var(--muted);font-family:Sora,sans-serif;font-size:0.72rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;}.editor-tab.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(230,57,70,0.06);}';
+  var html='<div class="preview-section fade-up" style="display:flex;flex-direction:column;gap:14px">';
+  html+='<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">';
+  html+='<div style="font-family:Bebas Neue,sans-serif;font-size:1.1rem;letter-spacing:1px">'+allFrames.length+' CADRE</div>';
+  html+='<div style="display:flex;gap:6px;flex-wrap:wrap">';
+  html+='<button class="secondary-btn" onclick="genReel()" style="font-size:0.72rem">Regenereaza</button>';
+  html+='<button class="secondary-btn" onclick="exportFramesPng()" style="border-color:#2ecc71;color:#2ecc71;font-size:0.72rem">JPG</button>';
+  html+='<button class="secondary-btn" id="expVid" onclick="exportVid()" style="border-color:var(--gold);color:var(--gold);font-size:0.72rem">Descarca Video</button>';
+  html+='</div></div>';
+  html+='<div class="story-viewer"><div class="story-bars" id="sBars"></div>';
+  html+='<div class="tap-l" onclick="prevFr()"></div><div class="tap-r" onclick="nextFr()"></div>';
+  html+='<canvas id="pCanvas"></canvas></div>';
+  html+='<div class="story-ctrl">';
+  html+='<button class="play-btn" id="playBtn" onclick="togglePlay()">&#9654;</button>';
+  html+='<div class="ctrl-info"><strong id="ctrlT">Cadru 1 din '+allFrames.length+'</strong><span>Tap stanga/dreapta</span></div>';
+  html+='<button onclick="stopAudio()" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:1rem">&#128263;</button>';
+  html+='</div>';
+  html+=buildEditorHTML();
+  html+='<div class="slides-overview"><div class="sov-title">Toate cadrele</div><div class="slide-rows" id="slideRows"></div></div>';
+  html+='</div>';
+  document.getElementById('reelOut').innerHTML=html;
+  if(!document.getElementById('etStyle')){
+    var s=document.createElement('style');s.id='etStyle';
+    s.textContent='.editor-tab{padding:9px 14px;background:transparent;border:none;color:var(--muted);font-family:Sora,sans-serif;font-size:0.72rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s}.editor-tab.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(230,57,70,0.06)}';
     document.head.appendChild(s);
   }
-
-  const cv=document.getElementById('pCanvas');const d=getDims();cv.width=d.w;cv.height=d.h;
-  document.getElementById('sBars').innerHTML=allFrames.map((_,i)=>'<div class="story-bar"><div class="story-bar-fill" id="bf'+i+'"></div></div>').join('');
-  renderSlideRows();
-  goFr(0);
-  switchEditorTab('text');
+  var cv=document.getElementById('pCanvas'),d=getDims();cv.width=d.w;cv.height=d.h;
+  rebuildBars();renderSlideRows();goFr(0);switchEditorTab('text');
 }
-
 function buildEditorHTML(){
-  return '<div style="background:#14141f;border:1px solid #1e1e2e;border-radius:10px;overflow:hidden">'+
-  '<div style="display:flex;border-bottom:1px solid #1e1e2e">'+
-  '<button class="editor-tab" id="etab-text" onclick="switchEditorTab(\'text\')">Text</button>'+
-  '<button class="editor-tab" id="etab-audio" onclick="switchEditorTab(\'audio\')">Audio</button>'+
-  '<button class="editor-tab" id="etab-img" onclick="switchEditorTab(\'img\')">Imagine</button>'+
-  '<button class="editor-tab" id="etab-order" onclick="switchEditorTab(\'order\')">Ordine</button>'+
-  '</div>'+
-  '<div id="epane-text" style="padding:14px;display:none">'+
-  '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">'+
-  '<div><span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;display:block;margin-bottom:5px">Text cadru</span>'+
-  '<textarea id="editFrameText" rows="5" style="width:100%;background:#0f0f1a;border:1px solid #1e1e2e;border-radius:7px;padding:9px;color:#eeeef5;font-family:Sora,sans-serif;font-size:0.8rem;outline:none;resize:vertical;line-height:1.5"></textarea></div>'+
-  '<div style="display:flex;flex-direction:column;gap:10px">'+
-  '<div><span style="font-size:0.6rem;text-transform:uppercase;color:#55556a;font-weight:700;display:block;margin-bottom:4px">Durata cadru</span>'+
-  '<div style="display:flex;align-items:center;gap:6px"><input type="range" min="1" max="12" value="3" step="0.5" id="editFrameDur" oninput="document.getElementById(\'editDurVal\').textContent=this.value+\'s\'" style="flex:1;accent-color:#e63946"><span id="editDurVal" style="font-family:Bebas Neue,sans-serif;font-size:1rem;color:#e63946;min-width:30px">3s</span></div></div>'+
-  '<div><span style="font-size:0.6rem;text-transform:uppercase;color:#55556a;font-weight:700;display:block;margin-bottom:4px">Marime text</span>'+
-  '<div style="display:flex;align-items:center;gap:6px"><input type="range" min="2" max="12" value="'+reelTxtSize+'" id="editTxtSize" oninput="updateTxtSizeGlobal(this.value)" style="flex:1;accent-color:#f4c430"><span id="editTxtSizeVal" style="font-family:Bebas Neue,sans-serif;font-size:1rem;color:#f4c430;min-width:30px">'+reelTxtSize+'%</span></div></div>'+
-  '<div><span style="font-size:0.6rem;text-transform:uppercase;color:#55556a;font-weight:700;display:block;margin-bottom:4px">Cuvinte/cadru</span>'+
-  '<div style="display:flex;align-items:center;gap:6px"><input type="range" min="4" max="25" value="'+reelWordsPerFrame+'" id="editWords" oninput="document.getElementById(\'editWordsVal\').textContent=this.value+\' c.\'" style="flex:1;accent-color:#4361ee"><span id="editWordsVal" style="font-family:Bebas Neue,sans-serif;font-size:0.85rem;color:#4361ee;min-width:32px">'+reelWordsPerFrame+' c.</span></div></div>'+
-  '</div></div>'+
-  '<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px">'+
-  '<button class="secondary-btn" onclick="applyFrameEdit()" style="flex:1;border-color:#e63946;color:#e63946;font-size:0.78rem">Aplica</button>'+
-  '<button class="secondary-btn" onclick="rewordFrame()" style="flex:1;border-color:#7c3aed;color:#7c3aed;font-size:0.78rem">AI rescrie</button>'+
-  '</div>'+
-  '<button class="secondary-btn" onclick="rebuildAllText()" style="width:100%;border-color:#4361ee;color:#4361ee;font-size:0.78rem">Reimparte tot textul</button>'+
-  '</div>'+
-  '<div id="epane-audio" style="padding:14px;display:none">'+
-  '<div style="display:flex;gap:7px;margin-bottom:12px">'+
-  '<button class="chip '+(audioMode==='none'?'active':'')+'" data-audio="none" onclick="selAudio(this)">Fara</button>'+
-  '<button class="chip '+(audioMode==='upload'?'active':'')+'" data-audio="upload" onclick="selAudio(this)">Muzica</button>'+
-  '<button class="chip '+(audioMode==='tts'?'active':'')+'" data-audio="tts" onclick="selAudio(this)">Voiceover</button>'+
-  '</div>'+
-  '<div id="audioEditUpload" style="display:'+(audioMode==='upload'?'block':'none')+'">'+
-  '<input type="file" id="audioFileIn2" accept="audio/*" onchange="loadAudioFile(this)" style="display:none">'+
-  '<button class="secondary-btn" onclick="document.getElementById(\'audioFileIn2\').click()" style="width:100%;margin-bottom:8px">Alege MP3/WAV</button>'+
-  '<div id="audioFileName2" style="font-size:0.72rem;color:#55556a;margin-bottom:10px;text-align:center">'+(uploadedAudioUrl?'Fisier incarcat':'Niciun fisier')+'</div>'+
-  '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><input type="range" min="0" max="100" value="'+Math.round(audioVolume*100)+'" id="audioVolEdit" oninput="setAudioVol(this.value)" style="flex:1;accent-color:#2ecc71"><span id="audioVolVal2" style="font-family:Bebas Neue,sans-serif;color:#2ecc71;min-width:40px">'+Math.round(audioVolume*100)+'%</span></div>'+
-  '<button class="secondary-btn" onclick="testAudio()" style="width:100%;border-color:#2ecc71;color:#2ecc71">Test audio</button>'+
-  '</div>'+
-  '<div id="audioEditTts" style="display:'+(audioMode==='tts'?'block':'none')+'">'+
-  '<div style="font-size:0.78rem;color:#55556a;margin-bottom:10px">Browserul citeste textul fiecarui cadru.</div>'+
-  '<div style="display:flex;align-items:center;gap:8px"><input type="range" min="0.5" max="1.5" value="0.9" step="0.1" id="ttsRate" oninput="document.getElementById(\'ttsRateVal2\').textContent=this.value+\'x\'" style="flex:1;accent-color:#9b59b6"><span id="ttsRateVal2" style="font-family:Bebas Neue,sans-serif;color:#9b59b6;min-width:35px">0.9x</span></div>'+
-  '<button class="secondary-btn" style="width:100%;margin-top:10px" onclick="playTTS(stories[allFrames[curFrame]?.si]?.chunks[allFrames[curFrame]?.ci]||\'\')">Test voiceover</button>'+
-  '</div>'+
-  '<div id="audioEditNone" style="display:'+(audioMode==='none'?'block':'none')+';font-size:0.78rem;color:#55556a;padding:8px 0">Selecteaza Muzica sau Voiceover.</div>'+
-  '</div>'+
-  '<div id="epane-img" style="padding:14px;display:none">'+
-  '<div style="display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap">'+
-  '<button class="secondary-btn" onclick="regenerateFrameImg()" style="flex:1;border-color:#4361ee;color:#4361ee;font-size:0.78rem">Regenereaza cu AI</button>'+
-  '<button class="secondary-btn" onclick="document.getElementById(\'customImgIn\').click()" style="flex:1;font-size:0.78rem">Upload imagine</button>'+
-  '</div>'+
-  '<input type="file" id="customImgIn" accept="image/*" onchange="loadCustomImg(this)" style="display:none">'+
-  '<div style="font-size:0.72rem;color:#55556a;margin-bottom:8px">Adauga cadru nou cu imagine proprie:</div>'+
-  '<input type="file" id="newFrameImgIn" accept="image/*" onchange="addFrameWithImg(this)" style="display:none">'+
-  '<div style="display:flex;gap:7px;margin-bottom:12px">'+
-  '<button class="secondary-btn" onclick="document.getElementById(\'newFrameImgIn\').click()" style="flex:1;border-color:#f4c430;color:#f4c430;font-size:0.78rem">+ Cadru cu imagine</button>'+
-  '<button class="secondary-btn" onclick="addBlankFrame()" style="font-size:0.78rem">+ Cadru gol</button>'+
-  '</div>'+
-  '<div style="display:flex;gap:8px;align-items:center">'+
-  '<input type="color" id="frameBgColor" value="#0d0d12" style="width:42px;height:34px;border-radius:5px;border:1px solid #1e1e2e;cursor:pointer;padding:2px;background:#14141f">'+
-  '<button class="secondary-btn" onclick="applyBgColor()" style="flex:1;font-size:0.78rem">Aplica culoare fundal</button>'+
-  '</div></div>'+
-  '<div id="epane-order" style="padding:14px;display:none">'+
-  '<div style="display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap">'+
-  '<button class="secondary-btn" onclick="moveFrameUp()" style="flex:1">Sus</button>'+
-  '<button class="secondary-btn" onclick="moveFrameDown()" style="flex:1">Jos</button>'+
-  '<button class="secondary-btn" onclick="duplicateFrame()" style="flex:1;border-color:#f4c430;color:#f4c430">Duplica</button>'+
-  '<button class="secondary-btn" onclick="deleteFrame()" style="color:#55556a">Sterge</button>'+
-  '</div>'+
-  '<div id="orderInfo" style="font-size:0.75rem;color:#55556a;padding:8px 10px;background:#0f0f1a;border-radius:6px">Cadru curent: -</div>'+
-  '</div></div>';
+  var h='<div style="background:#14141f;border:1px solid #1e1e2e;border-radius:10px;overflow:hidden">';
+  h+='<div style="display:flex;border-bottom:1px solid #1e1e2e">';
+  h+='<button class="editor-tab" id="etab-text" onclick="switchEditorTab(\'text\')">Text</button>';
+  h+='<button class="editor-tab" id="etab-audio" onclick="switchEditorTab(\'audio\')">Audio</button>';
+  h+='<button class="editor-tab" id="etab-img" onclick="switchEditorTab(\'img\')">Imagine</button>';
+  h+='<button class="editor-tab" id="etab-order" onclick="switchEditorTab(\'order\')">Ordine</button>';
+  h+='</div>';
+  // TEXT TAB
+  h+='<div id="epane-text" style="padding:14px;display:none">';
+  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">';
+  h+='<div><span style="font-size:0.6rem;text-transform:uppercase;letter-spacing:1.5px;color:#55556a;font-weight:700;display:block;margin-bottom:5px">Text cadru</span>';
+  h+='<textarea id="editFrameText" rows="5" style="width:100%;background:#0f0f1a;border:1px solid #1e1e2e;border-radius:7px;padding:9px;color:#eeeef5;font-family:Sora,sans-serif;font-size:0.8rem;outline:none;resize:vertical;line-height:1.5"></textarea></div>';
+  h+='<div style="display:flex;flex-direction:column;gap:10px">';
+  h+='<div><span style="font-size:0.6rem;text-transform:uppercase;color:#55556a;font-weight:700;display:block;margin-bottom:4px">Durata cadru</span>';
+  h+='<div style="display:flex;align-items:center;gap:6px"><input type="range" min="1" max="12" value="3" step="0.5" id="editFrameDur" oninput="document.getElementById(\'editDurVal\').textContent=this.value+\'s\'" style="flex:1;accent-color:#e63946"><span id="editDurVal" style="font-family:Bebas Neue,sans-serif;font-size:1rem;color:#e63946;min-width:30px">3s</span></div></div>';
+  h+='<div><span style="font-size:0.6rem;text-transform:uppercase;color:#55556a;font-weight:700;display:block;margin-bottom:4px">Marime text</span>';
+  h+='<div style="display:flex;align-items:center;gap:6px"><input type="range" min="2" max="12" value="'+reelTxtSize+'" id="editTxtSize" oninput="updateTxtSizeGlobal(this.value)" style="flex:1;accent-color:#f4c430"><span id="editTxtSizeVal" style="font-family:Bebas Neue,sans-serif;font-size:1rem;color:#f4c430;min-width:30px">'+reelTxtSize+'%</span></div></div>';
+  h+='<div><span style="font-size:0.6rem;text-transform:uppercase;color:#55556a;font-weight:700;display:block;margin-bottom:4px">Cuvinte/cadru</span>';
+  h+='<div style="display:flex;align-items:center;gap:6px"><input type="range" min="4" max="25" value="'+reelWordsPerFrame+'" id="editWords" oninput="document.getElementById(\'editWordsVal\').textContent=this.value+\' c.\'" style="flex:1;accent-color:#4361ee"><span id="editWordsVal" style="font-family:Bebas Neue,sans-serif;font-size:0.85rem;color:#4361ee;min-width:32px">'+reelWordsPerFrame+' c.</span></div></div>';
+  h+='</div></div>';
+  h+='<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px">';
+  h+='<button class="secondary-btn" onclick="applyFrameEdit()" style="flex:1;border-color:#e63946;color:#e63946;font-size:0.78rem">Aplica</button>';
+  h+='<button class="secondary-btn" onclick="rewordFrame()" style="flex:1;border-color:#7c3aed;color:#7c3aed;font-size:0.78rem">AI rescrie</button>';
+  h+='</div>';
+  h+='<button class="secondary-btn" onclick="rebuildAllText()" style="width:100%;border-color:#4361ee;color:#4361ee;font-size:0.78rem">Reimparte tot textul</button>';
+  h+='</div>';
+  // AUDIO TAB
+  var vol=Math.round(audioVolume*100);
+  h+='<div id="epane-audio" style="padding:14px;display:none">';
+  h+='<div style="display:flex;gap:7px;margin-bottom:12px">';
+  h+='<button class="chip '+(audioMode==='none'?'active':'')+'" data-audio="none" onclick="selAudio(this)">Fara</button>';
+  h+='<button class="chip '+(audioMode==='upload'?'active':'')+'" data-audio="upload" onclick="selAudio(this)">Muzica</button>';
+  h+='<button class="chip '+(audioMode==='tts'?'active':'')+'" data-audio="tts" onclick="selAudio(this)">Voiceover</button>';
+  h+='</div>';
+  h+='<div id="audioEditUpload" style="display:'+(audioMode==='upload'?'block':'none')+'">';
+  h+='<input type="file" id="audioFileIn2" accept="audio/*" onchange="loadAudioFile(this)" style="display:none">';
+  h+='<button class="secondary-btn" onclick="document.getElementById(\'audioFileIn2\').click()" style="width:100%;margin-bottom:8px">Alege MP3/WAV</button>';
+  h+='<div id="audioFileName2" style="font-size:0.72rem;color:#55556a;margin-bottom:10px;text-align:center">'+(uploadedAudioUrl?'Fisier incarcat':'Niciun fisier')+'</div>';
+  h+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><input type="range" min="0" max="100" value="'+vol+'" id="audioVolEdit" oninput="setAudioVol(this.value)" style="flex:1;accent-color:#2ecc71"><span id="audioVolVal2" style="font-family:Bebas Neue,sans-serif;color:#2ecc71;min-width:40px">'+vol+'%</span></div>';
+  h+='<button class="secondary-btn" onclick="testAudio()" style="width:100%;border-color:#2ecc71;color:#2ecc71">Test audio</button></div>';
+  h+='<div id="audioEditTts" style="display:'+(audioMode==='tts'?'block':'none')+'">';
+  h+='<div style="font-size:0.78rem;color:#55556a;margin-bottom:10px">Browserul citeste textul fiecarui cadru in romana.</div>';
+  h+='<div style="display:flex;align-items:center;gap:8px"><input type="range" min="0.5" max="1.5" value="0.9" step="0.1" id="ttsRate" oninput="document.getElementById(\'ttsRateVal2\').textContent=this.value+\'x\'" style="flex:1;accent-color:#9b59b6"><span id="ttsRateVal2" style="font-family:Bebas Neue,sans-serif;color:#9b59b6;min-width:35px">0.9x</span></div>';
+  h+='<button class="secondary-btn" style="width:100%;margin-top:10px" onclick="if(allFrames[curFrame]&&stories[allFrames[curFrame].si])playTTS(stories[allFrames[curFrame].si].chunks[allFrames[curFrame].ci]||\'\')"  >Test voiceover</button></div>';
+  h+='<div id="audioEditNone" style="display:'+(audioMode==='none'?'block':'none')+';font-size:0.78rem;color:#55556a;padding:8px 0">Selecteaza Muzica sau Voiceover.</div>';
+  h+='</div>';
+  // IMG TAB
+  h+='<div id="epane-img" style="padding:14px;display:none">';
+  h+='<div style="display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap">';
+  h+='<button class="secondary-btn" onclick="regenerateFrameImg()" style="flex:1;border-color:#4361ee;color:#4361ee;font-size:0.78rem">Regenereaza cu AI</button>';
+  h+='<button class="secondary-btn" onclick="document.getElementById(\'customImgIn\').click()" style="flex:1;font-size:0.78rem">Upload imagine</button>';
+  h+='</div>';
+  h+='<input type="file" id="customImgIn" accept="image/*" onchange="loadCustomImg(this)" style="display:none">';
+  h+='<div style="font-size:0.72rem;color:#55556a;margin-bottom:8px">Adauga cadru nou:</div>';
+  h+='<input type="file" id="newFrameImgIn" accept="image/*" onchange="addFrameWithImg(this)" style="display:none">';
+  h+='<div style="display:flex;gap:7px;margin-bottom:12px">';
+  h+='<button class="secondary-btn" onclick="document.getElementById(\'newFrameImgIn\').click()" style="flex:1;border-color:#f4c430;color:#f4c430;font-size:0.78rem">+ Cadru cu imagine</button>';
+  h+='<button class="secondary-btn" onclick="addBlankFrame()" style="font-size:0.78rem">+ Gol</button>';
+  h+='</div>';
+  h+='<div style="display:flex;gap:8px;align-items:center">';
+  h+='<input type="color" id="frameBgColor" value="#0d0d12" style="width:42px;height:34px;border-radius:5px;border:1px solid #1e1e2e;cursor:pointer;padding:2px">';
+  h+='<button class="secondary-btn" onclick="applyBgColor()" style="flex:1;font-size:0.78rem">Aplica culoare fundal</button>';
+  h+='</div></div>';
+  // ORDER TAB
+  h+='<div id="epane-order" style="padding:14px;display:none">';
+  h+='<div style="display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap">';
+  h+='<button class="secondary-btn" onclick="moveFrameUp()" style="flex:1">Sus</button>';
+  h+='<button class="secondary-btn" onclick="moveFrameDown()" style="flex:1">Jos</button>';
+  h+='<button class="secondary-btn" onclick="duplicateFrame()" style="flex:1;border-color:#f4c430;color:#f4c430">Duplica</button>';
+  h+='<button class="secondary-btn" onclick="deleteFrame()" style="color:#55556a">Sterge</button>';
+  h+='</div>';
+  h+='<div id="orderInfo" style="font-size:0.75rem;color:#55556a;padding:8px 10px;background:#0f0f1a;border-radius:6px">Cadru curent: -</div>';
+  h+='</div></div>';
+  return h;
 }
-
 function switchEditorTab(tab){
-  ['text','audio','img','order'].forEach(t=>{
-    const btn=document.getElementById('etab-'+t);
-    const pane=document.getElementById('epane-'+t);
+  ['text','audio','img','order'].forEach(function(t){
+    var btn=document.getElementById('etab-'+t);
+    var pane=document.getElementById('epane-'+t);
     if(btn)btn.classList.toggle('active',t===tab);
     if(pane)pane.style.display=t===tab?'block':'none';
   });
 }
-
-function renderSlideRows(){
-  const c=document.getElementById('slideRows');if(!c)return;
-  c.innerHTML=allFrames.map((f,i)=>'<div class="slide-row '+(i===curFrame?'active':'')+'" id="row'+i+'" onclick="goFr('+i+')">'+
-    '<div class="sr-num">'+(i+1)+'</div>'+
-    '<div class="sr-text">'+(stories[f.si]?stories[f.si].chunks[f.ci]:'')+' </div>'+
-    '<div class="sr-badge">'+(f.dur||reelFrameDur)+'s</div></div>').join('');
+function rebuildBars(){
+  var el=document.getElementById('sBars');
+  if(!el)return;
+  el.innerHTML=allFrames.map(function(_,i){return '<div class="story-bar"><div class="story-bar-fill" id="bf'+i+'"></div></div>';}).join('');
 }
-
+function renderSlideRows(){
+  var c=document.getElementById('slideRows');if(!c)return;
+  c.innerHTML=allFrames.map(function(f,i){
+    return '<div class="slide-row '+(i===curFrame?'active':'')+'" id="row'+i+'" onclick="goFr('+i+')">'+'<div class="sr-num">'+(i+1)+'</div>'+'<div class="sr-text">'+(stories[f.si]?stories[f.si].chunks[f.ci]:'')+'</div>'+'<div class="sr-badge">'+(f.dur||reelFrameDur)+'s</div></div>';
+  }).join('');
+}
 function goFr(idx){
   if(idx<0||idx>=allFrames.length)return;
   curFrame=idx;
-  const cv=document.getElementById('pCanvas');if(!cv)return;
-  const f=allFrames[idx];
+  var cv=document.getElementById('pCanvas');if(!cv)return;
+  var f=allFrames[idx];
   drawFrame(cv.getContext('2d'),stories[f.si],f.ci,getDims());
-  allFrames.forEach((_,i)=>{const bf=document.getElementById('bf'+i);if(bf)bf.className='story-bar-fill'+(i<idx?' done':'');});
-  document.querySelectorAll('.slide-row').forEach((r,i)=>r.classList.toggle('active',i===idx));
-  const ct=document.getElementById('ctrlT');
-  if(ct)ct.textContent='Cadru '+(idx+1)+' din '+allFrames.length+' - Stirea '+(f.si+1);
-  const et=document.getElementById('editFrameText');if(et)et.value=stories[f.si]?stories[f.si].chunks[f.ci]:'';
-  const ed=document.getElementById('editFrameDur');if(ed){ed.value=f.dur||reelFrameDur;const dv=document.getElementById('editDurVal');if(dv)dv.textContent=(f.dur||reelFrameDur)+'s';}
-  const oi=document.getElementById('orderInfo');if(oi&&stories[f.si])oi.textContent='Cadru '+(idx+1)+' | Stirea '+(f.si+1)+': '+stories[f.si].text.substring(0,50);
+  allFrames.forEach(function(_,i){var bf=document.getElementById('bf'+i);if(bf)bf.className='story-bar-fill'+(i<idx?' done':'');});
+  document.querySelectorAll('.slide-row').forEach(function(r,i){r.classList.toggle('active',i===idx);});
+  var ct=document.getElementById('ctrlT');if(ct)ct.textContent='Cadru '+(idx+1)+' din '+allFrames.length+' - Stirea '+(f.si+1);
+  var et=document.getElementById('editFrameText');if(et)et.value=stories[f.si]?stories[f.si].chunks[f.ci]:'';
+  var ed=document.getElementById('editFrameDur');
+  if(ed){ed.value=f.dur||reelFrameDur;var dv=document.getElementById('editDurVal');if(dv)dv.textContent=(f.dur||reelFrameDur)+'s';}
+  var oi=document.getElementById('orderInfo');if(oi&&stories[f.si])oi.textContent='Cadru '+(idx+1)+' | Stirea '+(f.si+1)+': '+stories[f.si].text.substring(0,50);
   if(audioMode==='tts'&&stories[f.si])playTTS(stories[f.si].chunks[f.ci]);
 }
 function nextFr(){if(curFrame<allFrames.length-1)goFr(curFrame+1);else{stopPlay();stopAudio();}}
 function prevFr(){if(curFrame>0)goFr(curFrame-1);}
 function togglePlay(){isPlaying?stopPlay():startPlay();}
 function startPlay(){
-  isPlaying=true;const b=document.getElementById('playBtn');if(b)b.innerHTML='&#9646;&#9646;';
+  isPlaying=true;var b=document.getElementById('playBtn');if(b)b.innerHTML='&#9646;&#9646;';
   if(audioMode==='upload')playAudio();
-  const dur=(allFrames[curFrame]?.dur||reelFrameDur)*1000;
-  playIv=setInterval(()=>{
+  var dur=(allFrames[curFrame]?allFrames[curFrame].dur||reelFrameDur:reelFrameDur)*1000;
+  playIv=setInterval(function(){
     if(curFrame>=allFrames.length-1){stopPlay();stopAudio();return;}
     goFr(curFrame+1);
   },dur);
 }
-function stopPlay(){
-  isPlaying=false;const b=document.getElementById('playBtn');if(b)b.innerHTML='&#9654;';clearInterval(playIv);
-}
+function stopPlay(){isPlaying=false;var b=document.getElementById('playBtn');if(b)b.innerHTML='&#9654;';clearInterval(playIv);}
 
+// ===== EDITOR ACTIONS =====
 function applyFrameEdit(){
   if(curFrame<0||curFrame>=allFrames.length)return;
-  const newText=document.getElementById('editFrameText').value.trim();
-  const newDur=parseFloat(document.getElementById('editFrameDur').value);
-  const f=allFrames[curFrame];
+  var newText=document.getElementById('editFrameText').value.trim();
+  var newDur=parseFloat(document.getElementById('editFrameDur').value);
+  var f=allFrames[curFrame];
   if(newText&&stories[f.si])stories[f.si].chunks[f.ci]=newText;
   f.dur=newDur;
-  const dims=getDims();
-  const cv=document.createElement('canvas');cv.width=dims.w;cv.height=dims.h;
+  var dims=getDims(),cv=document.createElement('canvas');cv.width=dims.w;cv.height=dims.h;
   drawFrame(cv.getContext('2d'),stories[f.si],f.ci,dims);
   f.canvas=cv;f.dataUrl=cv.toDataURL('image/jpeg',0.92);
-  const pv=document.getElementById('pCanvas');if(pv)drawFrame(pv.getContext('2d'),stories[f.si],f.ci,dims);
+  var pv=document.getElementById('pCanvas');if(pv)drawFrame(pv.getContext('2d'),stories[f.si],f.ci,dims);
   renderSlideRows();
 }
 async function rewordFrame(){
   if(curFrame<0||curFrame>=allFrames.length)return;
-  const f=allFrames[curFrame];
-  const txt=stories[f.si]?.chunks[f.ci]||'';
-  const btn=event.target;btn.textContent='Se rescrie...';btn.disabled=true;
+  var f=allFrames[curFrame],txt=stories[f.si]?stories[f.si].chunks[f.ci]:'';
+  var btn=event.target;btn.textContent='Se rescrie...';btn.disabled=true;
   try{
-    const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({max_tokens:200,messages:[{role:'user',content:'Rescrie urmatorul text mai impactant si concis pentru un reel de stiri (max '+reelWordsPerFrame+' cuvinte): "'+txt+'"\n\nRaspunde DOAR cu textul rescris.'}]})
-    });
-    const data=await res.json();
-    const et=document.getElementById('editFrameText');
-    if(et)et.value=data.content[0].text.trim();
+    var res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({max_tokens:200,messages:[{role:'user',content:'Rescrie mai impactant si concis (max '+reelWordsPerFrame+' cuvinte): "'+txt+'"\n\nRaspunde DOAR cu textul rescris.'}]})});
+    var data=await res.json();
+    var et=document.getElementById('editFrameText');if(et)et.value=data.content[0].text.trim();
   }catch(e){}
   btn.textContent='AI rescrie';btn.disabled=false;
 }
 function updateTxtSizeGlobal(v){
   reelTxtSize=parseInt(v);
-  const ev=document.getElementById('editTxtSizeVal');if(ev)ev.textContent=v+'%';
-  const sv=document.getElementById('txtSizeVal');if(sv)sv.textContent=v+'%';
-  const ss=document.getElementById('txtSizeSlider');if(ss)ss.value=v;
-  const dims=getDims();
-  allFrames.forEach(f=>{
-    const c=document.createElement('canvas');c.width=dims.w;c.height=dims.h;
+  var ev=document.getElementById('editTxtSizeVal');if(ev)ev.textContent=v+'%';
+  var sv=document.getElementById('txtSizeVal');if(sv)sv.textContent=v+'%';
+  var ss=document.getElementById('txtSizeSlider');if(ss)ss.value=v;
+  var dims=getDims();
+  allFrames.forEach(function(f){
+    var c=document.createElement('canvas');c.width=dims.w;c.height=dims.h;
     drawFrame(c.getContext('2d'),stories[f.si],f.ci,dims);
     f.canvas=c;f.dataUrl=c.toDataURL('image/jpeg',0.9);
   });
-  const pv=document.getElementById('pCanvas');
-  if(pv)drawFrame(pv.getContext('2d'),stories[allFrames[curFrame].si],allFrames[curFrame].ci,getDims());
+  var pv=document.getElementById('pCanvas');
+  if(pv&&allFrames[curFrame])drawFrame(pv.getContext('2d'),stories[allFrames[curFrame].si],allFrames[curFrame].ci,getDims());
 }
 function rebuildAllText(){
-  const nw=parseInt(document.getElementById('editWords')?.value||reelWordsPerFrame);
+  var nw=parseInt(document.getElementById('editWords')?document.getElementById('editWords').value:reelWordsPerFrame);
   reelWordsPerFrame=nw;
-  const dims=getDims();allFrames=[];
-  stories.forEach((s,si)=>{
+  var dims=getDims();allFrames=[];
+  stories.forEach(function(s,si){
     s.chunks=splitChunks(s.text,nw);
-    s.chunks.forEach((chunk,ci)=>{
-      const c=document.createElement('canvas');c.width=dims.w;c.height=dims.h;
+    s.chunks.forEach(function(chunk,ci){
+      var c=document.createElement('canvas');c.width=dims.w;c.height=dims.h;
       drawFrame(c.getContext('2d'),s,ci,dims);
-      allFrames.push({canvas:c,dataUrl:c.toDataURL('image/jpeg',0.9),si,ci,dur:reelFrameDur});
+      allFrames.push({canvas:c,dataUrl:c.toDataURL('image/jpeg',0.9),si:si,ci:ci,dur:reelFrameDur});
     });
   });
-  document.getElementById('sBars').innerHTML=allFrames.map((_,i)=>'<div class="story-bar"><div class="story-bar-fill" id="bf'+i+'"></div></div>').join('');
-  renderSlideRows();goFr(0);
+  rebuildBars();renderSlideRows();goFr(0);
 }
 function deleteFrame(){
   if(allFrames.length<=1){alert('Nu poti sterge singurul cadru!');return;}
   allFrames.splice(curFrame,1);
-  document.getElementById('sBars').innerHTML=allFrames.map((_,i)=>'<div class="story-bar"><div class="story-bar-fill" id="bf'+i+'"></div></div>').join('');
-  renderSlideRows();goFr(Math.min(curFrame,allFrames.length-1));
+  rebuildBars();renderSlideRows();goFr(Math.min(curFrame,allFrames.length-1));
 }
-function moveFrameUp(){
-  if(curFrame<=0)return;
-  [allFrames[curFrame],allFrames[curFrame-1]]=[allFrames[curFrame-1],allFrames[curFrame]];
-  renderSlideRows();goFr(curFrame-1);
-}
-function moveFrameDown(){
-  if(curFrame>=allFrames.length-1)return;
-  [allFrames[curFrame],allFrames[curFrame+1]]=[allFrames[curFrame+1],allFrames[curFrame]];
-  renderSlideRows();goFr(curFrame+1);
-}
-function duplicateFrame(){
-  const f=allFrames[curFrame];
-  allFrames.splice(curFrame+1,0,{...f});
-  document.getElementById('sBars').innerHTML=allFrames.map((_,i)=>'<div class="story-bar"><div class="story-bar-fill" id="bf'+i+'"></div></div>').join('');
-  renderSlideRows();goFr(curFrame+1);
-}
+function moveFrameUp(){if(curFrame<=0)return;var t=allFrames[curFrame];allFrames[curFrame]=allFrames[curFrame-1];allFrames[curFrame-1]=t;rebuildBars();renderSlideRows();goFr(curFrame-1);}
+function moveFrameDown(){if(curFrame>=allFrames.length-1)return;var t=allFrames[curFrame];allFrames[curFrame]=allFrames[curFrame+1];allFrames[curFrame+1]=t;rebuildBars();renderSlideRows();goFr(curFrame+1);}
+function duplicateFrame(){var f=allFrames[curFrame];allFrames.splice(curFrame+1,0,{canvas:f.canvas,dataUrl:f.dataUrl,si:f.si,ci:f.ci,dur:f.dur||reelFrameDur});rebuildBars();renderSlideRows();goFr(curFrame+1);}
 function regenerateFrameImg(){
   if(curFrame<0||curFrame>=allFrames.length)return;
-  const f=allFrames[curFrame];const s=stories[f.si];
-  const btn=event.target;btn.textContent='Se genereaza...';btn.disabled=true;
-  genImgPrompts([{text:s.text}]).then(prompts=>{
-    const dims=getDims();
-    loadImgWithFallback(prompts[0],dims.w,dims.h).then(newImg=>{
+  var f=allFrames[curFrame],s=stories[f.si];
+  var btn=event.target;btn.textContent='Se genereaza...';btn.disabled=true;
+  genImgPrompts([{text:s.text}]).then(function(prompts){
+    loadImgSmart(prompts[0],getDims().w,getDims().h).then(function(newImg){
       s.img=newImg;
-      allFrames.forEach((fr,i)=>{
-        if(fr.si===f.si){
-          const c=document.createElement('canvas');c.width=dims.w;c.height=dims.h;
-          drawFrame(c.getContext('2d'),s,fr.ci,dims);
-          allFrames[i].canvas=c;allFrames[i].dataUrl=c.toDataURL('image/jpeg',0.92);
-        }
+      var dims=getDims();
+      allFrames.forEach(function(fr,i){
+        if(fr.si===f.si){var c=document.createElement('canvas');c.width=dims.w;c.height=dims.h;drawFrame(c.getContext('2d'),s,fr.ci,dims);allFrames[i].canvas=c;allFrames[i].dataUrl=c.toDataURL('image/jpeg',0.92);}
       });
-      const pv=document.getElementById('pCanvas');if(pv)drawFrame(pv.getContext('2d'),s,f.ci,dims);
+      var pv=document.getElementById('pCanvas');if(pv)drawFrame(pv.getContext('2d'),s,f.ci,dims);
       btn.textContent='Regenereaza cu AI';btn.disabled=false;
     });
-  }).catch(()=>{btn.textContent='Regenereaza cu AI';btn.disabled=false;});
+  }).catch(function(){btn.textContent='Regenereaza cu AI';btn.disabled=false;});
 }
 function loadCustomImg(input){
-  const file=input.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    const img=new Image();
-    img.onload=()=>{
-      const f=allFrames[curFrame];const s=stories[f.si];s.img=img;
-      const dims=getDims();
-      allFrames.forEach((fr,i)=>{
-        if(fr.si===f.si){
-          const c=document.createElement('canvas');c.width=dims.w;c.height=dims.h;
-          drawFrame(c.getContext('2d'),s,fr.ci,dims);allFrames[i].canvas=c;allFrames[i].dataUrl=c.toDataURL('image/jpeg',0.92);
-        }
-      });
-      const pv=document.getElementById('pCanvas');if(pv)drawFrame(pv.getContext('2d'),s,f.ci,dims);
+  var file=input.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      var f=allFrames[curFrame],s=stories[f.si];s.img=img;
+      var dims=getDims();
+      allFrames.forEach(function(fr,i){if(fr.si===f.si){var c=document.createElement('canvas');c.width=dims.w;c.height=dims.h;drawFrame(c.getContext('2d'),s,fr.ci,dims);allFrames[i].canvas=c;allFrames[i].dataUrl=c.toDataURL('image/jpeg',0.92);}});
+      var pv=document.getElementById('pCanvas');if(pv)drawFrame(pv.getContext('2d'),s,f.ci,dims);
     };img.src=e.target.result;
   };reader.readAsDataURL(file);
 }
 function addFrameWithImg(input){
-  const file=input.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    const img=new Image();
-    img.onload=()=>{
-      const dims=getDims();const nsi=stories.length;const text='Adauga textul tau';
-      stories.push({text,chunks:[text],img,idx:nsi});
-      const c=document.createElement('canvas');c.width=dims.w;c.height=dims.h;
+  var file=input.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      var dims=getDims(),nsi=stories.length,text='Adauga textul tau';
+      stories.push({text:text,chunks:[text],img:img,idx:nsi});
+      var c=document.createElement('canvas');c.width=dims.w;c.height=dims.h;
       drawFrame(c.getContext('2d'),stories[nsi],0,dims);
       allFrames.splice(curFrame+1,0,{canvas:c,dataUrl:c.toDataURL('image/jpeg',0.92),si:nsi,ci:0,dur:reelFrameDur});
-      document.getElementById('sBars').innerHTML=allFrames.map((_,i)=>'<div class="story-bar"><div class="story-bar-fill" id="bf'+i+'"></div></div>').join('');
-      renderSlideRows();goFr(curFrame+1);
+      rebuildBars();renderSlideRows();goFr(curFrame+1);
     };img.src=e.target.result;
   };reader.readAsDataURL(file);
 }
 function addBlankFrame(){
-  const dims=getDims();const nsi=stories.length;const text='Text cadru nou';
-  const bc=document.createElement('canvas');bc.width=dims.w;bc.height=dims.h;
-  const bctx=bc.getContext('2d');
-  const g=bctx.createLinearGradient(0,0,dims.w,dims.h);g.addColorStop(0,'#1a1a2e');g.addColorStop(1,'#0d0d12');
+  var dims=getDims(),nsi=stories.length,text='Text cadru nou';
+  var bc=document.createElement('canvas');bc.width=dims.w;bc.height=dims.h;
+  var bctx=bc.getContext('2d');
+  var g=bctx.createLinearGradient(0,0,dims.w,dims.h);g.addColorStop(0,'#1a1a2e');g.addColorStop(1,'#0d0d12');
   bctx.fillStyle=g;bctx.fillRect(0,0,dims.w,dims.h);
-  const fakeImg=new Image();fakeImg.src=bc.toDataURL();
-  stories.push({text,chunks:[text],img:fakeImg,idx:nsi});
-  const c=document.createElement('canvas');c.width=dims.w;c.height=dims.h;
+  var fakeImg=new Image();fakeImg.src=bc.toDataURL();
+  stories.push({text:text,chunks:[text],img:fakeImg,idx:nsi});
+  var c=document.createElement('canvas');c.width=dims.w;c.height=dims.h;
   drawFrame(c.getContext('2d'),stories[nsi],0,dims);
   allFrames.splice(curFrame+1,0,{canvas:c,dataUrl:c.toDataURL('image/jpeg',0.92),si:nsi,ci:0,dur:reelFrameDur});
-  document.getElementById('sBars').innerHTML=allFrames.map((_,i)=>'<div class="story-bar"><div class="story-bar-fill" id="bf'+i+'"></div></div>').join('');
-  renderSlideRows();goFr(curFrame+1);
+  rebuildBars();renderSlideRows();goFr(curFrame+1);
 }
 function applyBgColor(){
-  const color=document.getElementById('frameBgColor')?.value||'#0d0d12';
-  const f=allFrames[curFrame];const s=stories[f.si];const dims=getDims();
-  const bc=document.createElement('canvas');bc.width=dims.w;bc.height=dims.h;
+  var color=document.getElementById('frameBgColor')?document.getElementById('frameBgColor').value:'#0d0d12';
+  var f=allFrames[curFrame],s=stories[f.si],dims=getDims();
+  var bc=document.createElement('canvas');bc.width=dims.w;bc.height=dims.h;
   bc.getContext('2d').fillStyle=color;bc.getContext('2d').fillRect(0,0,dims.w,dims.h);
-  const img=new Image();
-  img.onload=()=>{
+  var img=new Image();
+  img.onload=function(){
     s.img=img;
-    allFrames.forEach((fr,i)=>{
-      if(fr.si===f.si){
-        const c=document.createElement('canvas');c.width=dims.w;c.height=dims.h;
-        drawFrame(c.getContext('2d'),s,fr.ci,dims);allFrames[i].canvas=c;allFrames[i].dataUrl=c.toDataURL('image/jpeg',0.92);
-      }
-    });
-    const pv=document.getElementById('pCanvas');if(pv)drawFrame(pv.getContext('2d'),s,f.ci,dims);
-  };
-  img.src=bc.toDataURL();
+    allFrames.forEach(function(fr,i){if(fr.si===f.si){var c=document.createElement('canvas');c.width=dims.w;c.height=dims.h;drawFrame(c.getContext('2d'),s,fr.ci,dims);allFrames[i].canvas=c;allFrames[i].dataUrl=c.toDataURL('image/jpeg',0.92);}});
+    var pv=document.getElementById('pCanvas');if(pv)drawFrame(pv.getContext('2d'),s,f.ci,dims);
+  };img.src=bc.toDataURL();
 }
 
+// ===== EXPORT =====
 function exportFramesPng(){
-  allFrames.forEach((f,i)=>{
-    const a=document.createElement('a');a.href=f.dataUrl;a.download='ctsaz-cadru-'+(i+1)+'.jpg';
+  allFrames.forEach(function(f,i){
+    var a=document.createElement('a');a.href=f.dataUrl;a.download='ctsaz-cadru-'+(i+1)+'.jpg';
     document.body.appendChild(a);a.click();document.body.removeChild(a);
   });
 }
 async function exportVid(){
-  const btn=document.getElementById('expVid');
+  var btn=document.getElementById('expVid');
   if(btn){btn.textContent='Se exporta...';btn.disabled=true;}
   stopPlay();stopAudio();stopTTS();
-
-  const FPS=30;
-  const d=getDims();
-
-  // Calculate exact frame counts
-  const frameCounts=allFrames.map(f=>Math.round((f.dur||reelFrameDur)*FPS));
-  const totalFrames=frameCounts.reduce((a,b)=>a+b,0);
-  const totalSec=(totalFrames/FPS).toFixed(1);
-
-  const progDiv=document.createElement('div');
+  var FPS=30,d=getDims();
+  // Exact frame counts per slide
+  var frameCounts=allFrames.map(function(f){return Math.round((f.dur||reelFrameDur)*FPS);});
+  var totalFrames=frameCounts.reduce(function(a,b){return a+b;},0);
+  var totalSec=(totalFrames/FPS).toFixed(1);
+  var progDiv=document.createElement('div');
   progDiv.id='exportProg';
   progDiv.style.cssText='margin-top:8px;padding:10px 14px;background:#14141f;border:1px solid #1e1e2e;border-radius:7px;font-size:0.75rem;color:#aaa;line-height:1.6';
-  progDiv.textContent='Pregatesc imaginile (video va fi '+totalSec+'s)...';
+  progDiv.textContent='Pregatesc imaginile (video: '+totalSec+'s)...';
   if(btn)btn.parentNode.insertAdjacentElement('afterend',progDiv);
-
-  // Pre-load all images
-  const imgs=[];
-  for(let i=0;i<allFrames.length;i++){
-    progDiv.textContent='Incarc imagine '+(i+1)+' din '+allFrames.length+'...';
-    await new Promise(resolve=>{
-      const img=new Image();
-      img.onload=()=>{imgs.push(img);resolve();};
-      img.onerror=()=>{imgs.push(null);resolve();};
+  // Pre-load images
+  var imgs=[];
+  for(var i=0;i<allFrames.length;i++){
+    progDiv.textContent='Incarc imaginea '+(i+1)+' din '+allFrames.length+'...';
+    await new Promise(function(resolve){
+      var idx=imgs.length;
+      var img=new Image();
+      img.onload=function(){imgs.push(img);resolve();};
+      img.onerror=function(){imgs.push(null);resolve();};
       img.src=allFrames[i].dataUrl;
     });
   }
-
-  // Setup canvas recorder
-  const ec=document.createElement('canvas');
-  ec.width=d.w;ec.height=d.h;
-  const ctx=ec.getContext('2d');
-
-  // Draw first frame before starting stream
+  var ec=document.createElement('canvas');ec.width=d.w;ec.height=d.h;
+  var ctx=ec.getContext('2d');
   if(imgs[0])ctx.drawImage(imgs[0],0,0,d.w,d.h);
   else{ctx.fillStyle='#0d0d12';ctx.fillRect(0,0,d.w,d.h);}
-
-  await new Promise(r=>setTimeout(r,200));
-
-  const stream=ec.captureStream(FPS);
-  const mimes=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];
-  const mime=mimes.find(m=>MediaRecorder.isTypeSupported(m))||'video/webm';
-  const rec=new MediaRecorder(stream,{
-    mimeType:mime,
-    videoBitsPerSecond:reelQuality==='hd'?8000000:4000000
-  });
-  const chunks=[];
-  rec.ondataavailable=e=>{if(e.data&&e.data.size>0)chunks.push(e.data);};
-
-  rec.onstop=()=>{
-    document.getElementById('exportProg')?.remove();
-    const blob=new Blob(chunks,{type:mime});
-    if(blob.size<5000){
-      if(btn){btn.textContent='Descarca Video';btn.disabled=false;}
-      alert('Export esuat. Incearca descarcarea JPG.');
-      return;
-    }
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;
-    a.download='reel-ctsaz-'+Date.now()+'.webm';
+  await new Promise(function(r){setTimeout(r,200);});
+  var stream=ec.captureStream(FPS);
+  var mimes=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];
+  var mime=mimes.find(function(m){return MediaRecorder.isTypeSupported(m);})||'video/webm';
+  var rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:reelQuality==='hd'?8000000:4000000});
+  var chunks=[];
+  rec.ondataavailable=function(e){if(e.data&&e.data.size>0)chunks.push(e.data);};
+  rec.onstop=function(){
+    var el=document.getElementById('exportProg');if(el)el.remove();
+    var blob=new Blob(chunks,{type:mime});
+    if(blob.size<5000){if(btn){btn.textContent='Descarca Video';btn.disabled=false;}alert('Export esuat.');return;}
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');a.href=url;a.download='reel-ctsaz-'+Date.now()+'.webm';
     document.body.appendChild(a);a.click();document.body.removeChild(a);
-    setTimeout(()=>URL.revokeObjectURL(url),8000);
+    setTimeout(function(){URL.revokeObjectURL(url);},8000);
     if(btn){btn.textContent='Descarca Video';btn.disabled=false;}
-    const tip=document.createElement('div');
+    var tip=document.createElement('div');
     tip.style.cssText='margin-top:8px;padding:10px 14px;background:#0f1a0f;border:1px solid #2ecc71;border-radius:7px;font-size:0.75rem;color:#2ecc71;line-height:1.6';
-    tip.innerHTML='Descarcat: '+totalSec+'s video.<br><span style="color:#55556a">MP4: cloudconvert.com (gratuit)</span>';
+    tip.innerHTML='Video descarcat: '+totalSec+'s<br><span style="color:#55556a">MP4: cloudconvert.com (gratuit)</span>';
     if(btn)btn.parentNode.insertAdjacentElement('afterend',tip);
-    setTimeout(()=>tip.remove(),10000);
+    setTimeout(function(){tip.remove();},10000);
   };
-
   rec.start();
-
-  // Draw each slide exactly frameCounts[i] times at FPS rate
-  // Use a promise-based frame pump synchronized with captureStream
-  let drawn=0;
-  for(let si=0;si<imgs.length;si++){
-    const count=frameCounts[si];
-    progDiv.textContent='Cadru '+(si+1)+'/'+imgs.length+' | '+Math.round((drawn/totalFrames)*100)+'% din '+totalSec+'s...';
-    for(let f=0;f<count;f++){
+  // Draw each slide exactly frameCounts[i] frames at FPS timing
+  for(var si=0;si<imgs.length;si++){
+    var count=frameCounts[si];
+    var drawn=frameCounts.slice(0,si).reduce(function(a,b){return a+b;},0);
+    progDiv.textContent='Cadru '+(si+1)+'/'+imgs.length+' | '+Math.round((drawn/totalFrames)*100)+'% ('+totalSec+'s total)...';
+    for(var f=0;f<count;f++){
       if(imgs[si])ctx.drawImage(imgs[si],0,0,d.w,d.h);
       else{ctx.fillStyle='#0d0d12';ctx.fillRect(0,0,d.w,d.h);}
-      drawn++;
-      // Yield to browser every frame so captureStream can capture it
-      await new Promise(r=>setTimeout(r,Math.round(1000/FPS)));
+      await new Promise(function(r){setTimeout(r,Math.round(1000/FPS));});
     }
   }
-
-  await new Promise(r=>setTimeout(r,500));
+  await new Promise(function(r){setTimeout(r,500);});
   rec.stop();
 }
 
-/* HASHTAG FUNCTIONS */
+// ===== HASHTAG =====
 function copyHash(el){
-  navigator.clipboard.writeText(el.textContent).then(()=>{
-    const s={bg:el.style.background,bc:el.style.borderColor,c:el.style.color};
+  navigator.clipboard.writeText(el.textContent).then(function(){
+    var s={bg:el.style.background,bc:el.style.borderColor,c:el.style.color};
     el.style.background='rgba(46,204,113,0.15)';el.style.borderColor='#2ecc71';el.style.color='#2ecc71';
-    setTimeout(()=>{el.style.background=s.bg;el.style.borderColor=s.bc;el.style.color=s.c;},700);
+    setTimeout(function(){el.style.background=s.bg;el.style.borderColor=s.bc;el.style.color=s.c;},700);
   });
 }
 function copyCombo(id,btn){
-  const el=document.getElementById(id);if(!el)return;
-  navigator.clipboard.writeText(el.textContent).then(()=>{
+  var el=document.getElementById(id);if(!el)return;
+  navigator.clipboard.writeText(el.textContent).then(function(){
     btn.textContent='Copiat!';btn.style.color='var(--green)';
-    setTimeout(()=>{btn.textContent='Copiaza combo';btn.style.color='';},2000);
+    setTimeout(function(){btn.textContent='Copiaza combo';btn.style.color='';},2000);
   });
 }
 
-/* CUSTOM TEMPLATES */
-let customTemplates=JSON.parse(localStorage.getItem('ctsaz_templates')||'[]');
-let customCombos=JSON.parse(localStorage.getItem('ctsaz_combos')||'[]');
-
+// ===== CUSTOM TEMPLATES & COMBOS =====
+var customTemplates=JSON.parse(localStorage.getItem('ctsaz_templates')||'[]');
+var customCombos=JSON.parse(localStorage.getItem('ctsaz_combos')||'[]');
 function renderCustomTemplates(){
-  const c=document.getElementById('customTemplates');if(!c)return;
+  var c=document.getElementById('customTemplates');if(!c)return;
   if(!customTemplates.length){c.innerHTML='<div style="font-size:0.75rem;color:#55556a;padding:6px 0">Niciun template salvat.</div>';return;}
-  c.innerHTML=customTemplates.map((t,i)=>'<div style="background:#0f0f1a;border:1px solid #1e1e2e;border-radius:7px;padding:10px;display:flex;align-items:center;gap:10px">'+
-    '<div style="width:28px;height:28px;border-radius:4px;background:'+t.bg+';border:2px solid '+t.accent+';flex-shrink:0"></div>'+
-    '<div style="flex:1"><div style="font-size:0.8rem;font-weight:700">'+t.name+'</div>'+
-    '<div style="font-size:0.68rem;color:#55556a;margin-top:2px">BG:'+t.bg+' Accent:'+t.accent+'</div></div>'+
-    '<button onclick="delTpl('+i+')" style="background:transparent;border:none;color:#55556a;cursor:pointer">x</button></div>').join('');
+  c.innerHTML=customTemplates.map(function(t,i){
+    return '<div style="background:#0f0f1a;border:1px solid #1e1e2e;border-radius:7px;padding:10px;display:flex;align-items:center;gap:10px">'+'<div style="width:28px;height:28px;border-radius:4px;background:'+t.bg+';border:2px solid '+t.accent+';flex-shrink:0"></div>'+'<div style="flex:1"><div style="font-size:0.8rem;font-weight:700">'+t.name+'</div><div style="font-size:0.68rem;color:#55556a">BG:'+t.bg+' Accent:'+t.accent+'</div></div>'+'<button onclick="delTpl('+i+')" style="background:transparent;border:none;color:#55556a;cursor:pointer">x</button></div>';
+  }).join('');
 }
 function addCustomTpl(){
-  const name=document.getElementById('tplName')?.value.trim();
+  var name=document.getElementById('tplName')?document.getElementById('tplName').value.trim():'';
   if(!name){alert('Adauga un nume!');return;}
-  customTemplates.push({name,bg:document.getElementById('tplBg')?.value||'#0d0d0d',accent:document.getElementById('tplAccent')?.value||'#e63946',font:document.getElementById('tplFont')?.value||'Bebas Neue',notes:document.getElementById('tplNotes')?.value||''});
+  customTemplates.push({name:name,bg:document.getElementById('tplBg')?document.getElementById('tplBg').value:'#0d0d0d',accent:document.getElementById('tplAccent')?document.getElementById('tplAccent').value:'#e63946',notes:document.getElementById('tplNotes')?document.getElementById('tplNotes').value:''});
   localStorage.setItem('ctsaz_templates',JSON.stringify(customTemplates));
   renderCustomTemplates();
-  ['tplName','tplFont','tplNotes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['tplName','tplFont','tplNotes'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
 }
 function delTpl(i){customTemplates.splice(i,1);localStorage.setItem('ctsaz_templates',JSON.stringify(customTemplates));renderCustomTemplates();}
-
 function renderCustomCombos(){
-  const c=document.getElementById('customCombos');if(!c)return;
+  var c=document.getElementById('customCombos');if(!c)return;
   if(!customCombos.length){c.innerHTML='<div style="font-size:0.75rem;color:#55556a;padding:4px 0">Niciun combo salvat.</div>';return;}
-  c.innerHTML=customCombos.map((cb,i)=>'<div class="combo-card">'+
-    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">'+
-    '<div class="combo-title" style="margin-bottom:0">'+cb.name+'</div>'+
-    '<button onclick="delCombo('+i+')" style="background:transparent;border:none;color:#55556a;cursor:pointer;font-size:0.8rem">x</button></div>'+
-    '<div class="combo-body" id="cc'+i+'">'+cb.tags+'</div>'+
-    '<button class="secondary-btn" onclick="copyCombo('cc'+i+'',this)">Copiaza</button></div>').join('');
+  c.innerHTML=customCombos.map(function(cb,i){
+    return '<div class="combo-card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div class="combo-title" style="margin-bottom:0">'+cb.name+'</div><button onclick="delCombo('+i+')" style="background:transparent;border:none;color:#55556a;cursor:pointer;font-size:0.8rem">x</button></div><div class="combo-body" id="cc'+i+'">'+cb.tags+'</div><button class="secondary-btn" onclick="copyCombo(\'cc'+i+'\',this)">Copiaza</button></div>';
+  }).join('');
 }
 function addCustomCombo(){
-  const name=document.getElementById('comboNameIn')?.value.trim();
-  const tags=document.getElementById('comboTagsIn')?.value.trim();
+  var name=document.getElementById('comboNameIn')?document.getElementById('comboNameIn').value.trim():'';
+  var tags=document.getElementById('comboTagsIn')?document.getElementById('comboTagsIn').value.trim():'';
   if(!name||!tags){alert('Completeaza numele si hashtag-urile!');return;}
-  customCombos.push({name,tags});
+  customCombos.push({name:name,tags:tags});
   localStorage.setItem('ctsaz_combos',JSON.stringify(customCombos));
   renderCustomCombos();
   document.getElementById('comboNameIn').value='';document.getElementById('comboTagsIn').value='';
 }
 function delCombo(i){customCombos.splice(i,1);localStorage.setItem('ctsaz_combos',JSON.stringify(customCombos));renderCustomCombos();}
 async function genHashAI(){
-  const topic=prompt('Despre ce subiect vrei hashtag-uri?');if(!topic)return;
-  const btn=event.target;btn.textContent='Generez...';btn.disabled=true;
+  var topic=prompt('Despre ce subiect vrei hashtag-uri?');if(!topic)return;
+  var btn=event.target;btn.textContent='Generez...';btn.disabled=true;
   try{
-    const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({max_tokens:200,messages:[{role:'user',content:'Genereaza 20 hashtag-uri pentru Instagram/Facebook despre: "'+topic+'". Focus Romania. Raspunde DOAR cu hashtag-urile separate prin spatiu.'}]})});
-    const data=await res.json();
-    document.getElementById('comboTagsIn').value=data.content[0].text.trim();
-    document.getElementById('comboNameIn').value=topic;
+    var res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({max_tokens:200,messages:[{role:'user',content:'Genereaza 20 hashtag-uri pentru Instagram/Facebook despre: "'+topic+'". Focus Romania. Raspunde DOAR cu hashtag-urile separate prin spatiu.'}]})});
+    var data=await res.json();
+    var ci=document.getElementById('comboTagsIn');if(ci)ci.value=data.content[0].text.trim();
+    var ni=document.getElementById('comboNameIn');if(ni)ni.value=topic;
   }catch(e){alert('Eroare. Incearca din nou.');}
   btn.textContent='AI sugereaza';btn.disabled=false;
 }
 
-setTimeout(()=>{renderCustomTemplates();renderCustomCombos();},200);
-</script></body>
+setTimeout(function(){renderCustomTemplates();renderCustomCombos();},300);
+</script>
+</body>
 </html>
