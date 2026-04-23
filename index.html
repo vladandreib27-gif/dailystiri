@@ -388,6 +388,16 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
       </div>
 
       <div class="ctrl-section">
+        <span class="ctrl-label">Sursa imagini</span>
+        <div class="chip-wrap">
+          <button class="chip active" data-imgsrc="0" onclick="setImgSrc(this,0)" title="Imagini AI generate pe baza stirilor">🤖 AI (Pollinations)</button>
+          <button class="chip" data-imgsrc="1" onclick="setImgSrc(this,1)" title="Fotografii reale HD random">📷 Foto reale</button>
+          <button class="chip" data-imgsrc="2" onclick="setImgSrc(this,2)" title="Alterna automat daca una esueaza">🔄 Auto-fallback</button>
+        </div>
+        <div id="imgSrcNote" style="font-size:0.68rem;color:#55556a;margin-top:6px;line-height:1.5">AI genereaza imagini contextuale pe baza stirii tale.</div>
+      </div>
+
+      <div class="ctrl-section">
         <span class="ctrl-label">🎵 Audio fundal</span>
         <div class="chip-wrap" style="margin-bottom:8px">
           <button class="chip active" data-audio="none" onclick="selAudio(this)">🔇 Fără</button>
@@ -782,6 +792,14 @@ function renderReelList(){
 function selRatio(btn){document.querySelectorAll('[data-ratio]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');reelRatio=btn.dataset.ratio;}
 function selStyle(btn){document.querySelectorAll('[data-style]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');reelStyle=btn.dataset.style;}
 function selQuality(btn){document.querySelectorAll('[data-quality]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');reelQuality=btn.dataset.quality;}
+function setImgSrc(btn,idx){
+  document.querySelectorAll('[data-imgsrc]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  imgSourceIdx=idx;
+  const notes=['AI genereaza imagini contextuale pe baza stirii tale.','Fotografii reale HD. Nu sunt legate de subiect dar arata profesional.','Incearca AI, daca esueaza trece automat la fotografii reale.'];
+  const note=document.getElementById('imgSrcNote');
+  if(note)note.textContent=notes[idx]||'';
+}
 function updWords(v){reelWordsPerFrame=parseInt(v);document.getElementById('wordsVal').textContent=v+' cuv.';}
 function updDur(v){reelFrameDur=parseFloat(v);document.getElementById('durVal').textContent=v+'s';}
 function updTxtSize(v){reelTxtSize=parseInt(v);document.getElementById('txtSizeVal').textContent=v+'%';}
@@ -880,8 +898,8 @@ async function genReel(){
   const dims=getDims();
   for(let i=0;i<valid.length;i++){
     st(1,'Generez imagine '+(i+1)+'/'+valid.length+(reelQuality==='hd'?' (HD)':'')+'...');
-    const url=buildImgUrl(prompts[i],dims.w,dims.h);
-    const img=await loadImg(url);
+    // Try AI image first, fallback to other sources automatically
+    const img=await loadImgWithFallback(prompts[i],dims.w,dims.h);
     const chunks=splitChunks(valid[i].text,reelWordsPerFrame);
     stories.push({text:valid[i].text,chunks,img,idx:i});
   }
@@ -926,16 +944,37 @@ async function genImgPrompts(arr){
   }
 }
 
-function buildImgUrl(prompt,w,h){
-  const full=prompt+', '+reelStyle+', no text, no watermark'+(reelQuality==='hd'?', ultra detailed 8k':'');
-  return IMG_API+'?prompt='+encodeURIComponent(full)+'&width='+w+'&height='+h+'&seed='+Math.floor(Math.random()*99999);
+/* buildImgUrl replaced by buildImgUrlFromSource */
+
+/* IMAGE SOURCES WITH FALLBACK */
+const IMG_SOURCES=['pollinations','picsum','gradient'];
+let imgSourceIdx=0;
+let imgFailCount=0;
+
+function buildImgUrlFromSource(prompt,w,h,source){
+  if(source==='pollinations'){
+    const full=prompt+', '+reelStyle+', no text, no watermark'+(reelQuality==='hd'?', ultra detailed 8k':'');
+    return IMG_API+'?prompt='+encodeURIComponent(full)+'&width='+w+'&height='+h+'&seed='+Math.floor(Math.random()*99999);
+  }
+  if(source==='picsum'){
+    // Lorem Picsum - random HD photos, always works
+    return 'https://picsum.photos/'+w+'/'+h+'?random='+Math.floor(Math.random()*1000);
+  }
+  return null; // gradient fallback = canvas
 }
 
 function loadImg(url){
   return new Promise(resolve=>{
     const img=new Image();img.crossOrigin='anonymous';
-    img.onload=()=>resolve(img);
+    img.onload=()=>{imgFailCount=0;resolve(img);};
     img.onerror=()=>{
+      imgFailCount++;
+      // After 2 failures, switch source
+      if(imgFailCount>=2){
+        imgSourceIdx=(imgSourceIdx+1)%2; // cycle between pollinations and picsum
+        imgFailCount=0;
+        console.log('Switching image source to:',IMG_SOURCES[imgSourceIdx]);
+      }
       const d=getDims();const fc=document.createElement('canvas');fc.width=d.w;fc.height=d.h;
       const ctx=fc.getContext('2d');
       const g=ctx.createLinearGradient(0,0,d.w,d.h);g.addColorStop(0,'#1a1a2e');g.addColorStop(1,'#16213e');
@@ -943,6 +982,43 @@ function loadImg(url){
     };
     img.src=url;
   });
+}
+
+async function loadImgWithFallback(prompt,w,h){
+  // Try current source first
+  // imgSourceIdx: 0=AI only (with fallback), 1=picsum only, 2=auto
+  const sources=imgSourceIdx===1?['picsum','pollinations']:['pollinations','picsum'];
+  for(let attempt=0;attempt<sources.length;attempt++){
+    const src=sources[attempt%sources.length];
+    const url=buildImgUrlFromSource(prompt,w,h,src);
+    if(!url)continue;
+    
+    const result=await new Promise(resolve=>{
+      const img=new Image();img.crossOrigin='anonymous';
+      const timeout=setTimeout(()=>{img.src='';resolve(null);},15000);
+      img.onload=()=>{clearTimeout(timeout);resolve(img);};
+      img.onerror=()=>{clearTimeout(timeout);resolve(null);};
+      img.src=url;
+    });
+    
+    if(result){
+      if(attempt>0)imgSourceIdx=(imgSourceIdx+attempt)%sources.length;
+      return result;
+    }
+    console.log('Source',src,'failed, trying next...');
+  }
+  
+  // All sources failed - return gradient canvas
+  const d={w,h};const fc=document.createElement('canvas');fc.width=w;fc.height=h;
+  const ctx=fc.getContext('2d');
+  const g=ctx.createLinearGradient(0,0,w,h);
+  g.addColorStop(0,'#1a1a2e');g.addColorStop(0.5,'#16213e');g.addColorStop(1,'#0f3460');
+  ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+  // Add text on fallback
+  ctx.font='bold '+Math.round(w*0.04)+'px Sora,sans-serif';
+  ctx.fillStyle='rgba(255,255,255,0.3)';ctx.textAlign='center';
+  ctx.fillText('Imagine indisponibila momentan',w/2,h/2);
+  return fc;
 }
 
 function drawFrame(ctx,story,ci,dims){
@@ -1247,7 +1323,7 @@ function regenerateFrameImg(){
   const btn=event.target;btn.textContent='Se genereaza...';btn.disabled=true;
   genImgPrompts([{text:s.text}]).then(prompts=>{
     const dims=getDims();
-    loadImg(buildImgUrl(prompts[0],dims.w,dims.h)).then(newImg=>{
+    loadImgWithFallback(prompts[0],dims.w,dims.h).then(newImg=>{
       s.img=newImg;
       allFrames.forEach((fr,i)=>{
         if(fr.si===f.si){
@@ -1454,6 +1530,77 @@ async function exportVid(){
 
   await new Promise(r=>setTimeout(r,200));
   rec.stop();
+}
+
+/* HASHTAG FUNCTIONS */
+function copyHash(el){
+  navigator.clipboard.writeText(el.textContent).then(()=>{
+    const s={bg:el.style.background,bc:el.style.borderColor,c:el.style.color};
+    el.style.background='rgba(46,204,113,0.15)';el.style.borderColor='#2ecc71';el.style.color='#2ecc71';
+    setTimeout(()=>{el.style.background=s.bg;el.style.borderColor=s.bc;el.style.color=s.c;},700);
+  });
+}
+function copyCombo(id,btn){
+  const el=document.getElementById(id);if(!el)return;
+  navigator.clipboard.writeText(el.textContent).then(()=>{
+    btn.textContent='Copiat!';btn.style.color='var(--green)';
+    setTimeout(()=>{btn.textContent='Copiaza combo';btn.style.color='';},2000);
+  });
+}
+
+/* CUSTOM TEMPLATES */
+let customTemplates=JSON.parse(localStorage.getItem('ctsaz_templates')||'[]');
+let customCombos=JSON.parse(localStorage.getItem('ctsaz_combos')||'[]');
+
+function renderCustomTemplates(){
+  const c=document.getElementById('customTemplates');if(!c)return;
+  if(!customTemplates.length){c.innerHTML='<div style="font-size:0.75rem;color:#55556a;padding:6px 0">Niciun template salvat.</div>';return;}
+  c.innerHTML=customTemplates.map((t,i)=>'<div style="background:#0f0f1a;border:1px solid #1e1e2e;border-radius:7px;padding:10px;display:flex;align-items:center;gap:10px">'+
+    '<div style="width:28px;height:28px;border-radius:4px;background:'+t.bg+';border:2px solid '+t.accent+';flex-shrink:0"></div>'+
+    '<div style="flex:1"><div style="font-size:0.8rem;font-weight:700">'+t.name+'</div>'+
+    '<div style="font-size:0.68rem;color:#55556a;margin-top:2px">BG:'+t.bg+' Accent:'+t.accent+'</div></div>'+
+    '<button onclick="delTpl('+i+')" style="background:transparent;border:none;color:#55556a;cursor:pointer">x</button></div>').join('');
+}
+function addCustomTpl(){
+  const name=document.getElementById('tplName')?.value.trim();
+  if(!name){alert('Adauga un nume!');return;}
+  customTemplates.push({name,bg:document.getElementById('tplBg')?.value||'#0d0d0d',accent:document.getElementById('tplAccent')?.value||'#e63946',font:document.getElementById('tplFont')?.value||'Bebas Neue',notes:document.getElementById('tplNotes')?.value||''});
+  localStorage.setItem('ctsaz_templates',JSON.stringify(customTemplates));
+  renderCustomTemplates();
+  ['tplName','tplFont','tplNotes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function delTpl(i){customTemplates.splice(i,1);localStorage.setItem('ctsaz_templates',JSON.stringify(customTemplates));renderCustomTemplates();}
+
+function renderCustomCombos(){
+  const c=document.getElementById('customCombos');if(!c)return;
+  if(!customCombos.length){c.innerHTML='<div style="font-size:0.75rem;color:#55556a;padding:4px 0">Niciun combo salvat.</div>';return;}
+  c.innerHTML=customCombos.map((cb,i)=>'<div class="combo-card">'+
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">'+
+    '<div class="combo-title" style="margin-bottom:0">'+cb.name+'</div>'+
+    '<button onclick="delCombo('+i+')" style="background:transparent;border:none;color:#55556a;cursor:pointer;font-size:0.8rem">x</button></div>'+
+    '<div class="combo-body" id="cc'+i+'">'+cb.tags+'</div>'+
+    '<button class="secondary-btn" onclick="copyCombo('cc'+i+'',this)">Copiaza</button></div>').join('');
+}
+function addCustomCombo(){
+  const name=document.getElementById('comboNameIn')?.value.trim();
+  const tags=document.getElementById('comboTagsIn')?.value.trim();
+  if(!name||!tags){alert('Completeaza numele si hashtag-urile!');return;}
+  customCombos.push({name,tags});
+  localStorage.setItem('ctsaz_combos',JSON.stringify(customCombos));
+  renderCustomCombos();
+  document.getElementById('comboNameIn').value='';document.getElementById('comboTagsIn').value='';
+}
+function delCombo(i){customCombos.splice(i,1);localStorage.setItem('ctsaz_combos',JSON.stringify(customCombos));renderCustomCombos();}
+async function genHashAI(){
+  const topic=prompt('Despre ce subiect vrei hashtag-uri?');if(!topic)return;
+  const btn=event.target;btn.textContent='Generez...';btn.disabled=true;
+  try{
+    const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({max_tokens:200,messages:[{role:'user',content:'Genereaza 20 hashtag-uri pentru Instagram/Facebook despre: "'+topic+'". Focus Romania. Raspunde DOAR cu hashtag-urile separate prin spatiu.'}]})});
+    const data=await res.json();
+    document.getElementById('comboTagsIn').value=data.content[0].text.trim();
+    document.getElementById('comboNameIn').value=topic;
+  }catch(e){alert('Eroare. Incearca din nou.');}
+  btn.textContent='AI sugereaza';btn.disabled=false;
 }
 
 setTimeout(()=>{renderCustomTemplates();renderCustomCombos();},200);
