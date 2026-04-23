@@ -1415,55 +1415,59 @@ async function exportVid(){
   if(btn){btn.textContent='Se exporta...';btn.disabled=true;}
   stopPlay();stopAudio();stopTTS();
 
-  // Reset to first frame before export
-  curFrame=0;
-
+  const FPS=30;
   const d=getDims();
+
+  // Calculate exact frame counts
+  const frameCounts=allFrames.map(f=>Math.round((f.dur||reelFrameDur)*FPS));
+  const totalFrames=frameCounts.reduce((a,b)=>a+b,0);
+  const totalSec=(totalFrames/FPS).toFixed(1);
+
   const progDiv=document.createElement('div');
   progDiv.id='exportProg';
   progDiv.style.cssText='margin-top:8px;padding:10px 14px;background:#14141f;border:1px solid #1e1e2e;border-radius:7px;font-size:0.75rem;color:#aaa;line-height:1.6';
-  progDiv.innerHTML='Pregatesc imaginile...';
+  progDiv.textContent='Pregatesc imaginile (video va fi '+totalSec+'s)...';
   if(btn)btn.parentNode.insertAdjacentElement('afterend',progDiv);
 
-  // Pre-load ALL frame images first
+  // Pre-load all images
   const imgs=[];
   for(let i=0;i<allFrames.length;i++){
-    progDiv.innerHTML='Incarc imaginea '+(i+1)+' din '+allFrames.length+'...';
+    progDiv.textContent='Incarc imagine '+(i+1)+' din '+allFrames.length+'...';
     await new Promise(resolve=>{
       const img=new Image();
-      img.onload=()=>{imgs.push({img,dur:allFrames[i].dur||reelFrameDur});resolve();};
-      img.onerror=()=>{imgs.push({img:null,dur:allFrames[i].dur||reelFrameDur});resolve();};
+      img.onload=()=>{imgs.push(img);resolve();};
+      img.onerror=()=>{imgs.push(null);resolve();};
       img.src=allFrames[i].dataUrl;
     });
   }
 
-  // Calculate total video duration in ms
-  const totalDurMs=imgs.reduce((sum,f)=>sum+(f.dur*1000),0);
-  const totalSec=(totalDurMs/1000).toFixed(1);
-  progDiv.innerHTML='Durata totala video: '+totalSec+'s. Inregistrez...';
-
-  // Setup canvas and recorder
-  const ec=document.createElement('canvas');ec.width=d.w;ec.height=d.h;
+  // Setup canvas recorder
+  const ec=document.createElement('canvas');
+  ec.width=d.w;ec.height=d.h;
   const ctx=ec.getContext('2d');
 
-  // Draw first frame before stream starts
-  if(imgs[0]?.img)ctx.drawImage(imgs[0].img,0,0,d.w,d.h);
-  await new Promise(r=>setTimeout(r,100));
+  // Draw first frame before starting stream
+  if(imgs[0])ctx.drawImage(imgs[0],0,0,d.w,d.h);
+  else{ctx.fillStyle='#0d0d12';ctx.fillRect(0,0,d.w,d.h);}
 
-  const stream=ec.captureStream(30);
-  const tryMimes=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];
-  const mime=tryMimes.find(m=>MediaRecorder.isTypeSupported(m))||'video/webm';
-  const bitrate=reelQuality==='hd'?10000000:6000000;
-  const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:bitrate});
+  await new Promise(r=>setTimeout(r,200));
+
+  const stream=ec.captureStream(FPS);
+  const mimes=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];
+  const mime=mimes.find(m=>MediaRecorder.isTypeSupported(m))||'video/webm';
+  const rec=new MediaRecorder(stream,{
+    mimeType:mime,
+    videoBitsPerSecond:reelQuality==='hd'?8000000:4000000
+  });
   const chunks=[];
   rec.ondataavailable=e=>{if(e.data&&e.data.size>0)chunks.push(e.data);};
 
   rec.onstop=()=>{
-    progDiv.remove();
+    document.getElementById('exportProg')?.remove();
     const blob=new Blob(chunks,{type:mime});
     if(blob.size<5000){
       if(btn){btn.textContent='Descarca Video';btn.disabled=false;}
-      alert('Export esuat. Descarca JPG in schimb.');
+      alert('Export esuat. Incearca descarcarea JPG.');
       return;
     }
     const url=URL.createObjectURL(blob);
@@ -1473,62 +1477,31 @@ async function exportVid(){
     document.body.appendChild(a);a.click();document.body.removeChild(a);
     setTimeout(()=>URL.revokeObjectURL(url),8000);
     if(btn){btn.textContent='Descarca Video';btn.disabled=false;}
-
-    // Show conversion tip
     const tip=document.createElement('div');
-    tip.style.cssText='margin-top:8px;padding:10px 14px;background:#0f1a0f;border:1px solid #2ecc71;border-radius:7px;font-size:0.75rem;color:#2ecc71;line-height:1.7';
-    tip.innerHTML='Video descarcat ('+totalSec+'s, '+mime.split(';')[0]+').<br><span style="color:#55556a">Pentru MP4: cloudconvert.com (gratuit, incarca fisierul .webm)</span>';
+    tip.style.cssText='margin-top:8px;padding:10px 14px;background:#0f1a0f;border:1px solid #2ecc71;border-radius:7px;font-size:0.75rem;color:#2ecc71;line-height:1.6';
+    tip.innerHTML='Descarcat: '+totalSec+'s video.<br><span style="color:#55556a">MP4: cloudconvert.com (gratuit)</span>';
     if(btn)btn.parentNode.insertAdjacentElement('afterend',tip);
-    setTimeout(()=>tip.remove(),12000);
+    setTimeout(()=>tip.remove(),10000);
   };
 
-  // Use requestAnimationFrame for precise frame timing
-  rec.start(100);
+  rec.start();
 
-  await new Promise(resolve=>{
-    let frameIdx=0;
-    let frameElapsed=0;
-    let lastTime=null;
-
-    function renderLoop(timestamp){
-      if(lastTime===null)lastTime=timestamp;
-      const delta=timestamp-lastTime;
-      lastTime=timestamp;
-
-      if(frameIdx>=imgs.length){
-        resolve();
-        return;
-      }
-
-      const{img,dur}=imgs[frameIdx];
-      const frameDurMs=dur*1000;
-
-      // Draw current frame
-      if(img){
-        ctx.drawImage(img,0,0,d.w,d.h);
-      } else {
-        ctx.fillStyle='#0d0d12';
-        ctx.fillRect(0,0,d.w,d.h);
-      }
-
-      frameElapsed+=delta;
-
-      // Show progress
-      const pct=Math.round(((frameIdx+(frameElapsed/frameDurMs))/imgs.length)*100);
-      if(progDiv.isConnected)progDiv.innerHTML='Inregistrez cadrul '+(frameIdx+1)+' din '+imgs.length+' ('+pct+'%)...';
-
-      if(frameElapsed>=frameDurMs){
-        frameElapsed=0;
-        frameIdx++;
-      }
-
-      requestAnimationFrame(renderLoop);
+  // Draw each slide exactly frameCounts[i] times at FPS rate
+  // Use a promise-based frame pump synchronized with captureStream
+  let drawn=0;
+  for(let si=0;si<imgs.length;si++){
+    const count=frameCounts[si];
+    progDiv.textContent='Cadru '+(si+1)+'/'+imgs.length+' | '+Math.round((drawn/totalFrames)*100)+'% din '+totalSec+'s...';
+    for(let f=0;f<count;f++){
+      if(imgs[si])ctx.drawImage(imgs[si],0,0,d.w,d.h);
+      else{ctx.fillStyle='#0d0d12';ctx.fillRect(0,0,d.w,d.h);}
+      drawn++;
+      // Yield to browser every frame so captureStream can capture it
+      await new Promise(r=>setTimeout(r,Math.round(1000/FPS)));
     }
+  }
 
-    requestAnimationFrame(renderLoop);
-  });
-
-  await new Promise(r=>setTimeout(r,200));
+  await new Promise(r=>setTimeout(r,500));
   rec.stop();
 }
 
