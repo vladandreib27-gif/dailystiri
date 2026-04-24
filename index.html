@@ -257,32 +257,6 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
   .nav-tab{padding:0 12px;font-size:0.7rem;}
 }
 </style>
-<script>
-// Load ffmpeg.wasm lazily when needed
-var ffmpegLoaded=false,ffmpegLoading=false,ffmpegInstance=null;
-async function loadFFmpeg(){
-  if(ffmpegLoaded)return ffmpegInstance;
-  if(ffmpegLoading)return new Promise(function(r){setTimeout(function(){r(loadFFmpeg());},200);});
-  ffmpegLoading=true;
-  try{
-    var script1=document.createElement('script');
-    script1.src='https://unpkg.com/@ffmpeg/ffmpeg@0.12.6/dist/umd/ffmpeg.js';
-    document.head.appendChild(script1);
-    await new Promise(function(r,j){script1.onload=r;script1.onerror=j;});
-    var script2=document.createElement('script');
-    script2.src='https://unpkg.com/@ffmpeg/util@0.12.1/dist/umd/index.js';
-    document.head.appendChild(script2);
-    await new Promise(function(r,j){script2.onload=r;script2.onerror=j;});
-    var ff=new FFmpeg();
-    await ff.load({
-      coreURL:'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',
-      wasmURL:'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm'
-    });
-    ffmpegInstance=ff;ffmpegLoaded=true;ffmpegLoading=false;
-    return ff;
-  }catch(e){ffmpegLoading=false;throw e;}
-}
-</script>
 </head>
 <body>
 
