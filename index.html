@@ -257,6 +257,32 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
   .nav-tab{padding:0 12px;font-size:0.7rem;}
 }
 </style>
+<script>
+// Load ffmpeg.wasm lazily when needed
+var ffmpegLoaded=false,ffmpegLoading=false,ffmpegInstance=null;
+async function loadFFmpeg(){
+  if(ffmpegLoaded)return ffmpegInstance;
+  if(ffmpegLoading)return new Promise(function(r){setTimeout(function(){r(loadFFmpeg());},200);});
+  ffmpegLoading=true;
+  try{
+    var script1=document.createElement('script');
+    script1.src='https://unpkg.com/@ffmpeg/ffmpeg@0.12.6/dist/umd/ffmpeg.js';
+    document.head.appendChild(script1);
+    await new Promise(function(r,j){script1.onload=r;script1.onerror=j;});
+    var script2=document.createElement('script');
+    script2.src='https://unpkg.com/@ffmpeg/util@0.12.1/dist/umd/index.js';
+    document.head.appendChild(script2);
+    await new Promise(function(r,j){script2.onload=r;script2.onerror=j;});
+    var ff=new FFmpeg();
+    await ff.load({
+      coreURL:'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',
+      wasmURL:'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm'
+    });
+    ffmpegInstance=ff;ffmpegLoaded=true;ffmpegLoading=false;
+    return ff;
+  }catch(e){ffmpegLoading=false;throw e;}
+}
+</script>
 </head>
 <body>
 
@@ -273,7 +299,7 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
 
 <!-- ═══════════ PAGE: POSTARE ═══════════ -->
 <div class="page active" id="page-postare">
-  <div style="display:grid;grid-template-columns:320px 1fr;min-height:calc(100vh - 56px)">
+  <div style="display:grid;grid-template-columns:320px 1fr 260px;min-height:calc(100vh - 56px)">
     <div class="panel-l">
       <h2 class="ptitle">AI<br><em>Asistent</em></h2>
       <p class="psub">Cere orice — postări, idei, analize, strategii, scripturi, hashtag-uri, titluri.</p>
@@ -323,12 +349,21 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
         <div style="font-size:0.65rem;color:var(--muted);margin-top:6px">Enter = trimite • Shift+Enter = linie nouă</div>
       </div>
     </div>
+
+    <!-- HISTORY SIDEBAR -->
+    <div style="background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;height:calc(100vh - 56px);overflow:hidden">
+      <div style="padding:16px;border-bottom:1px solid var(--border)">
+        <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold);font-weight:700;margin-bottom:10px">Conversatii salvate</div>
+        <button onclick="saveChatHistory()" class="secondary-btn" style="width:100%;font-size:0.75rem;border-color:var(--gold);color:var(--gold)">+ Salveaza conversatia</button>
+      </div>
+      <div id="chatHistoryList" style="flex:1;overflow-y:auto;padding:10px"></div>
+    </div>
   </div>
 </div>
 
 <!-- ═══════════ PAGE: REEL ═══════════ -->
 <div class="page" id="page-reel">
-  <div class="split">
+  <div style="display:grid;grid-template-columns:340px 1fr 260px;min-height:calc(100vh - 56px)">
     <div class="panel-l">
       <h2 class="ptitle">Reel<br><em>Generator</em></h2>
       <p class="psub">O imagine AI per știre. Textul apare progresiv pe mai multe cadre.</p>
@@ -434,6 +469,17 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
         <p class="ph-text">Adaugă știrile, configurează opțiunile și apasă Generează Reel.</p>
         <p style="font-size:0.72rem;margin-top:6px;color:var(--muted)">Imagini AI generate • Text progresiv • Export MP4/WebM</p>
       </div>
+    </div>
+  </div>
+
+
+    <!-- REEL HISTORY SIDEBAR -->
+    <div style="background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;height:calc(100vh - 56px);overflow:hidden">
+      <div style="padding:16px;border-bottom:1px solid var(--border)">
+        <div style="font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;color:var(--gold);font-weight:700;margin-bottom:10px">Reeluri salvate</div>
+        <button onclick="saveCurrentReel()" class="secondary-btn" style="width:100%;font-size:0.75rem;border-color:var(--gold);color:var(--gold)">+ Salveaza reelul curent</button>
+      </div>
+      <div id="reelHistoryList" style="flex:1;overflow-y:auto;padding:10px"></div>
     </div>
   </div>
 </div>
@@ -1022,7 +1068,7 @@ function showReelPreview(){
   html+='<div style="display:flex;gap:6px;flex-wrap:wrap">';
   html+='<button class="secondary-btn" onclick="genReel()" style="font-size:0.72rem">Regenereaza</button>';
   html+='<button class="secondary-btn" onclick="exportFramesPng()" style="border-color:#2ecc71;color:#2ecc71;font-size:0.72rem">JPG</button>';
-  html+='<button class="secondary-btn" id="expVid" onclick="exportVid()" style="border-color:var(--gold);color:var(--gold);font-size:0.72rem">Descarca Video</button>';
+  html+='<button class="secondary-btn" id="expWebm" onclick="exportVid(false)" style="border-color:var(--gold);color:var(--gold);font-size:0.72rem">&#8595; WebM</button>'+'<button class="secondary-btn" id="expMp4" onclick="exportVid(true)" style="border-color:#e63946;color:#e63946;font-size:0.72rem">&#8595; MP4</button>';
   html+='</div></div>';
   html+='<div class="story-viewer"><div class="story-bars" id="sBars"></div>';
   html+='<div class="tap-l" onclick="prevFr()"></div><div class="tap-r" onclick="nextFr()"></div>';
@@ -1306,71 +1352,139 @@ function exportFramesPng(){
     document.body.appendChild(a);a.click();document.body.removeChild(a);
   });
 }
-async function exportVid(){
-  var btn=document.getElementById('expVid');
+async function exportVid(wantMp4){
+  var btnId=wantMp4?'expMp4':'expWebm';
+  var btn=document.getElementById(btnId);
   if(btn){btn.textContent='Se exporta...';btn.disabled=true;}
+  var btn2=document.getElementById(wantMp4?'expWebm':'expMp4');
+  if(btn2)btn2.disabled=true;
   stopPlay();stopAudio();stopTTS();
+
   var FPS=30,d=getDims();
-  // Exact frame counts per slide
-  var frameCounts=allFrames.map(function(f){return Math.round((f.dur||reelFrameDur)*FPS);});
-  var totalFrames=frameCounts.reduce(function(a,b){return a+b;},0);
-  var totalSec=(totalFrames/FPS).toFixed(1);
+  var totalSec=allFrames.reduce(function(a,f){return a+(f.dur||reelFrameDur);},0);
+
   var progDiv=document.createElement('div');
   progDiv.id='exportProg';
-  progDiv.style.cssText='margin-top:8px;padding:10px 14px;background:#14141f;border:1px solid #1e1e2e;border-radius:7px;font-size:0.75rem;color:#aaa;line-height:1.6';
-  progDiv.textContent='Pregatesc imaginile (video: '+totalSec+'s)...';
+  progDiv.style.cssText='margin-top:8px;padding:10px 14px;background:#14141f;border:1px solid #1e1e2e;border-radius:7px;font-size:0.75rem;color:#aaa;line-height:1.7';
+  progDiv.textContent='Pregatesc imaginile... ('+totalSec+'s video)';
   if(btn)btn.parentNode.insertAdjacentElement('afterend',progDiv);
-  // Pre-load images
+
+  function cleanup(){
+    var el=document.getElementById('exportProg');if(el)el.remove();
+    if(btn){btn.textContent=wantMp4?'↓ MP4':'↓ WebM';btn.disabled=false;}
+    if(btn2)btn2.disabled=false;
+  }
+
+  // Pre-load all frame images
   var imgs=[];
   for(var i=0;i<allFrames.length;i++){
-    progDiv.textContent='Incarc imaginea '+(i+1)+' din '+allFrames.length+'...';
     await new Promise(function(resolve){
-      var idx=imgs.length;
       var img=new Image();
       img.onload=function(){imgs.push(img);resolve();};
       img.onerror=function(){imgs.push(null);resolve();};
       img.src=allFrames[i].dataUrl;
     });
   }
+
+  // Setup recording canvas
   var ec=document.createElement('canvas');ec.width=d.w;ec.height=d.h;
   var ctx=ec.getContext('2d');
   if(imgs[0])ctx.drawImage(imgs[0],0,0,d.w,d.h);
-  else{ctx.fillStyle='#0d0d12';ctx.fillRect(0,0,d.w,d.h);}
   await new Promise(function(r){setTimeout(r,200);});
+
   var stream=ec.captureStream(FPS);
   var mimes=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];
   var mime=mimes.find(function(m){return MediaRecorder.isTypeSupported(m);})||'video/webm';
   var rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:reelQuality==='hd'?8000000:4000000});
   var chunks=[];
   rec.ondataavailable=function(e){if(e.data&&e.data.size>0)chunks.push(e.data);};
-  rec.onstop=function(){
-    var el=document.getElementById('exportProg');if(el)el.remove();
-    var blob=new Blob(chunks,{type:mime});
-    if(blob.size<5000){if(btn){btn.textContent='Descarca Video';btn.disabled=false;}alert('Export esuat.');return;}
-    var url=URL.createObjectURL(blob);
-    var a=document.createElement('a');a.href=url;a.download='reel-ctsaz-'+Date.now()+'.webm';
-    document.body.appendChild(a);a.click();document.body.removeChild(a);
-    setTimeout(function(){URL.revokeObjectURL(url);},8000);
-    if(btn){btn.textContent='Descarca Video';btn.disabled=false;}
-    var tip=document.createElement('div');
-    tip.style.cssText='margin-top:8px;padding:10px 14px;background:#0f1a0f;border:1px solid #2ecc71;border-radius:7px;font-size:0.75rem;color:#2ecc71;line-height:1.6';
-    tip.innerHTML='Video descarcat: '+totalSec+'s<br><span style="color:#55556a">MP4: cloudconvert.com (gratuit)</span>';
-    if(btn)btn.parentNode.insertAdjacentElement('afterend',tip);
-    setTimeout(function(){tip.remove();},10000);
+
+  rec.onstop=async function(){
+    var webmBlob=new Blob(chunks,{type:mime});
+    if(webmBlob.size<5000){cleanup();alert('Export esuat. Incearca descarcarea JPG.');return;}
+
+    if(!wantMp4){
+      // Download as WebM directly
+      var url=URL.createObjectURL(webmBlob);
+      var a=document.createElement('a');a.href=url;a.download='reel-ctsaz-'+Date.now()+'.webm';
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+      setTimeout(function(){URL.revokeObjectURL(url);},8000);
+      cleanup();
+      return;
+    }
+
+    // Convert to MP4 using ffmpeg.wasm
+    progDiv.textContent='Convertesc in MP4... (poate dura 30-60s prima data)';
+    try{
+      var ff=await loadFFmpeg();
+      ff.on('progress',function(p){
+        if(p.ratio)progDiv.textContent='Convertesc MP4: '+Math.round(p.ratio*100)+'%...';
+      });
+
+      // Write webm to ffmpeg virtual FS
+      var webmArr=new Uint8Array(await webmBlob.arrayBuffer());
+      await ff.writeFile('input.webm',webmArr);
+
+      // Convert to mp4
+      await ff.exec([
+        '-i','input.webm',
+        '-c:v','libx264',
+        '-preset','fast',
+        '-crf','23',
+        '-pix_fmt','yuv420p',
+        '-movflags','+faststart',
+        'output.mp4'
+      ]);
+
+      var mp4Data=await ff.readFile('output.mp4');
+      await ff.deleteFile('input.webm');
+      await ff.deleteFile('output.mp4');
+
+      var mp4Blob=new Blob([mp4Data],{type:'video/mp4'});
+      var url=URL.createObjectURL(mp4Blob);
+      var a=document.createElement('a');a.href=url;a.download='reel-ctsaz-'+Date.now()+'.mp4';
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+      setTimeout(function(){URL.revokeObjectURL(url);},8000);
+      cleanup();
+
+      var tip=document.createElement('div');
+      tip.style.cssText='margin-top:8px;padding:10px 14px;background:#0f1a0f;border:1px solid #2ecc71;border-radius:7px;font-size:0.75rem;color:#2ecc71';
+      tip.textContent='MP4 descarcat! '+totalSec+'s, '+Math.round(mp4Blob.size/1024/1024*10)/10+'MB';
+      if(btn)btn.parentNode.insertAdjacentElement('afterend',tip);
+      setTimeout(function(){tip.remove();},8000);
+
+    }catch(e){
+      console.error('ffmpeg error:',e);
+      // Fallback: download as WebM if ffmpeg fails
+      progDiv.textContent='ffmpeg indisponibil, descarc WebM...';
+      var url=URL.createObjectURL(webmBlob);
+      var a=document.createElement('a');a.href=url;a.download='reel-ctsaz-'+Date.now()+'.webm';
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+      setTimeout(function(){URL.revokeObjectURL(url);},8000);
+      cleanup();
+      var tip2=document.createElement('div');
+      tip2.style.cssText='margin-top:8px;padding:10px 14px;background:#1a0f0f;border:1px solid #e63946;border-radius:7px;font-size:0.75rem;color:#e63946;line-height:1.6';
+      tip2.innerHTML='MP4 indisponibil in browser. S-a descarcat WebM.<br><span style="color:#55556a">Converteste gratuit pe cloudconvert.com</span>';
+      if(btn)btn.parentNode.insertAdjacentElement('afterend',tip2);
+      setTimeout(function(){tip2.remove();},10000);
+    }
   };
+
   rec.start();
-  // Draw each slide exactly frameCounts[i] frames at FPS timing
+  await new Promise(function(r){setTimeout(r,100);});
+
+  // Record all frames
   for(var si=0;si<imgs.length;si++){
-    var count=frameCounts[si];
-    var drawn=frameCounts.slice(0,si).reduce(function(a,b){return a+b;},0);
-    progDiv.textContent='Cadru '+(si+1)+'/'+imgs.length+' | '+Math.round((drawn/totalFrames)*100)+'% ('+totalSec+'s total)...';
-    for(var f=0;f<count;f++){
+    var frameDurMs=(allFrames[si].dur||reelFrameDur)*1000;
+    progDiv.textContent='Inregistrez cadrul '+(si+1)+'/'+imgs.length+' | '+Math.round((si/imgs.length)*100)+'%...';
+    var t0=performance.now();
+    while(performance.now()-t0<frameDurMs){
       if(imgs[si])ctx.drawImage(imgs[si],0,0,d.w,d.h);
       else{ctx.fillStyle='#0d0d12';ctx.fillRect(0,0,d.w,d.h);}
-      await new Promise(function(r){setTimeout(r,Math.round(1000/FPS));});
+      await new Promise(function(r){setTimeout(r,0);});
     }
   }
-  await new Promise(function(r){setTimeout(r,500);});
+  await new Promise(function(r){setTimeout(r,300);});
   rec.stop();
 }
 
@@ -1438,7 +1552,164 @@ async function genHashAI(){
   btn.textContent='AI sugereaza';btn.disabled=false;
 }
 
-setTimeout(function(){renderCustomTemplates();renderCustomCombos();},300);
+setTimeout(function(){renderCustomTemplates();renderCustomCombos();renderChatHistoryList();renderReelHistoryList();},300);
+
+// ===== CHAT HISTORY =====
+var chatSessions = JSON.parse(localStorage.getItem('ctsaz_chat_sessions')||'[]');
+
+function saveChatHistory(){
+  if(!chatHistory||chatHistory.length<2){alert('Conversatia e goala!');return;}
+  var title=chatHistory[0]?chatHistory[0].content.substring(0,50):'Conversatie';
+  chatSessions.unshift({
+    id:Date.now(),
+    title:title,
+    date:new Date().toLocaleDateString('ro-RO',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}),
+    messages:JSON.parse(JSON.stringify(chatHistory))
+  });
+  if(chatSessions.length>30)chatSessions=chatSessions.slice(0,30);
+  localStorage.setItem('ctsaz_chat_sessions',JSON.stringify(chatSessions));
+  renderChatHistoryList();
+  var btn=document.querySelector('[onclick="saveChatHistory()"]');
+  if(btn){btn.textContent='Salvat!';btn.style.color='var(--green)';setTimeout(function(){btn.textContent='+ Salveaza conversatia';btn.style.color='';},1500);}
+}
+
+function loadChatSession(id){
+  var session=chatSessions.find(function(s){return s.id===id;});
+  if(!session)return;
+  chatHistory=JSON.parse(JSON.stringify(session.messages));
+  var wrap=document.getElementById('chatMessages');
+  if(!wrap)return;
+  wrap.innerHTML='';
+  chatHistory.forEach(function(m){addChatMsg(m.role,m.content);});
+}
+
+function deleteChatSession(id,e){
+  e.stopPropagation();
+  chatSessions=chatSessions.filter(function(s){return s.id!==id;});
+  localStorage.setItem('ctsaz_chat_sessions',JSON.stringify(chatSessions));
+  renderChatHistoryList();
+}
+
+function renderChatHistoryList(){
+  var list=document.getElementById('chatHistoryList');
+  if(!list)return;
+  if(!chatSessions.length){
+    list.innerHTML='<div style="font-size:0.75rem;color:var(--muted);padding:12px;text-align:center;line-height:1.6">Nicio conversatie salvata.<br>Apasa + Salveaza dupa o conversatie.</div>';
+    return;
+  }
+  list.innerHTML=chatSessions.map(function(s){
+    return '<div onclick="loadChatSession('+s.id+')" style="padding:10px 12px;border-radius:7px;border:1px solid var(--border);margin-bottom:6px;cursor:pointer;transition:all 0.2s;background:var(--card)" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">'
+      +'<div style="font-size:0.78rem;font-weight:600;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+s.title+'</div>'
+      +'<div style="display:flex;align-items:center;justify-content:space-between">'
+      +'<div style="font-size:0.65rem;color:var(--muted)">'+s.date+' &bull; '+s.messages.length+' mesaje</div>'
+      +'<button onclick="deleteChatSession('+s.id+',event)" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:0.7rem;padding:2px 4px" title="Sterge">&#10005;</button>'
+      +'</div></div>';
+  }).join('');
+}
+
+// ===== REEL HISTORY =====
+var reelSessions = JSON.parse(localStorage.getItem('ctsaz_reel_sessions')||'[]');
+
+function saveCurrentReel(){
+  if(!allFrames||!allFrames.length){alert('Nu exista un reel generat!');return;}
+  var title=stories[0]?stories[0].text.substring(0,50):'Reel '+new Date().toLocaleDateString('ro-RO');
+  // Save thumbnails (first 3 frames as small jpgs)
+  var thumbs=allFrames.slice(0,3).map(function(f){
+    var tc=document.createElement('canvas');tc.width=80;tc.height=80;
+    var tctx=tc.getContext('2d');
+    var img=new Image();img.src=f.dataUrl;
+    tctx.drawImage(img,0,0,80,80);
+    return tc.toDataURL('image/jpeg',0.5);
+  });
+  // Save frame data (dataUrls compressed)
+  var saved={
+    id:Date.now(),
+    title:title,
+    date:new Date().toLocaleDateString('ro-RO',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}),
+    frameCount:allFrames.length,
+    ratio:reelRatio,
+    thumbs:thumbs,
+    frames:allFrames.map(function(f){return {dataUrl:f.dataUrl,si:f.si,ci:f.ci,dur:f.dur||reelFrameDur};}),
+    stories:stories.map(function(s){return {text:s.text,chunks:s.chunks,idx:s.idx};})
+  };
+  reelSessions.unshift(saved);
+  // Keep max 10 reels (they're large)
+  if(reelSessions.length>10)reelSessions=reelSessions.slice(0,10);
+  try{
+    localStorage.setItem('ctsaz_reel_sessions',JSON.stringify(reelSessions));
+    renderReelHistoryList();
+    var btn=document.querySelector('[onclick="saveCurrentReel()"]');
+    if(btn){btn.textContent='Salvat!';btn.style.color='var(--green)';setTimeout(function(){btn.textContent='+ Salveaza reelul curent';btn.style.color='';},1500);}
+  }catch(e){
+    alert('Reel prea mare pentru storage. Descarca JPG-urile in schimb.');
+  }
+}
+
+function loadReelSession(id){
+  var session=reelSessions.find(function(s){return s.id===id;});
+  if(!session)return;
+  // Restore stories (without images - just text)
+  stories=session.stories.map(function(s,i){return {text:s.text,chunks:s.chunks,idx:i,img:null};});
+  // Restore frames from saved dataUrls
+  allFrames=[];
+  var loaded=0;
+  session.frames.forEach(function(f,fi){
+    var img=new Image();
+    img.onload=function(){
+      allFrames[fi]={canvas:null,dataUrl:f.dataUrl,si:f.si,ci:f.ci,dur:f.dur};
+      loaded++;
+      if(loaded===session.frames.length){
+        // Restore story images from frames
+        stories.forEach(function(s,si){
+          var firstFrame=allFrames.find(function(f){return f.si===si;});
+          if(firstFrame){
+            var simg=new Image();simg.src=firstFrame.dataUrl;s.img=simg;
+          }
+        });
+        showReelPreview();
+      }
+    };
+    img.onerror=function(){
+      allFrames[fi]={canvas:null,dataUrl:f.dataUrl,si:f.si,ci:f.ci,dur:f.dur};
+      loaded++;
+      if(loaded===session.frames.length)showReelPreview();
+    };
+    img.src=f.dataUrl;
+    allFrames.push({canvas:null,dataUrl:f.dataUrl,si:f.si,ci:f.ci,dur:f.dur});
+  });
+  // Switch to reel tab
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active');});
+  document.getElementById('page-reel').classList.add('active');
+  var tabs=document.querySelectorAll('.nav-tab');
+  tabs.forEach(function(t){if(t.textContent.indexOf('Reel')>=0)t.classList.add('active');});
+}
+
+function deleteReelSession(id,e){
+  e.stopPropagation();
+  reelSessions=reelSessions.filter(function(s){return s.id!==id;});
+  localStorage.setItem('ctsaz_reel_sessions',JSON.stringify(reelSessions));
+  renderReelHistoryList();
+}
+
+function renderReelHistoryList(){
+  var list=document.getElementById('reelHistoryList');
+  if(!list)return;
+  if(!reelSessions.length){
+    list.innerHTML='<div style="font-size:0.75rem;color:var(--muted);padding:12px;text-align:center;line-height:1.6">Niciun reel salvat.<br>Genereaza un reel si apasa + Salveaza.</div>';
+    return;
+  }
+  list.innerHTML=reelSessions.map(function(s){
+    var thumbsHtml=s.thumbs?s.thumbs.map(function(t){return '<img src="'+t+'" style="width:50px;height:50px;object-fit:cover;border-radius:4px;border:1px solid var(--border)">';}).join(''):'';
+    return '<div onclick="loadReelSession('+s.id+')" style="padding:10px 12px;border-radius:7px;border:1px solid var(--border);margin-bottom:6px;cursor:pointer;transition:all 0.2s;background:var(--card)" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">'
+      +'<div style="font-size:0.78rem;font-weight:600;color:var(--text);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+s.title+'</div>'
+      +'<div style="display:flex;gap:4px;margin-bottom:5px">'+thumbsHtml+'</div>'
+      +'<div style="display:flex;align-items:center;justify-content:space-between">'
+      +'<div style="font-size:0.65rem;color:var(--muted)">'+s.date+' &bull; '+s.frameCount+' cadre &bull; '+s.ratio+'</div>'
+      +'<button onclick="deleteReelSession('+s.id+',event)" style="background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:0.7rem;padding:2px 4px" title="Sterge">&#10005;</button>'
+      +'</div></div>';
+  }).join('');
+}
 </script>
 </body>
 </html>
