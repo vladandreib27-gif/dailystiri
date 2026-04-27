@@ -406,14 +406,26 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
       </div>
 
       <div class="ctrl-section">
-        <span class="ctrl-label">Sursa imagini AI</span>
-        <div class="chip-wrap" style="margin-bottom:6px">
-          <button class="chip active" data-imgsrc="0" onclick="setImgSrc(this,0)">🔄 Auto</button>
-          <button class="chip" data-imgsrc="1" onclick="setImgSrc(this,1)">🌸 Pollinations</button>
-          <button class="chip" data-imgsrc="2" onclick="setImgSrc(this,2)">🤗 HuggingFace</button>
-          <button class="chip" data-imgsrc="3" onclick="setImgSrc(this,3)">📷 Foto reale</button>
+        <span class="ctrl-label">Sursa imagini</span>
+        <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:8px">
+          <button class="pill-btn active" data-imgsrc="0" onclick="setImgSrc(this,0)" style="text-align:left;padding:8px 12px">
+            <span style="font-size:0.85rem">🔄</span> <strong>Auto-fallback</strong>
+            <span style="font-size:0.65rem;color:var(--muted);display:block;margin-top:1px">Incearca toate in ordine automat</span>
+          </button>
+          <button class="pill-btn" data-imgsrc="1" onclick="setImgSrc(this,1)" style="text-align:left;padding:8px 12px">
+            <span style="font-size:0.85rem">🌸</span> <strong>Pollinations AI</strong>
+            <span style="font-size:0.65rem;color:var(--muted);display:block;margin-top:1px">Imagini AI pe contextul stirii</span>
+          </button>
+          <button class="pill-btn" data-imgsrc="2" onclick="setImgSrc(this,2)" style="text-align:left;padding:8px 12px">
+            <span style="font-size:0.85rem">🤗</span> <strong>HuggingFace SDXL</strong>
+            <span style="font-size:0.65rem;color:var(--muted);display:block;margin-top:1px">Stable Diffusion gratuit, ~15s</span>
+          </button>
+          <button class="pill-btn" data-imgsrc="3" onclick="setImgSrc(this,3)" style="text-align:left;padding:8px 12px">
+            <span style="font-size:0.85rem">📷</span> <strong>Foto reale (Picsum)</strong>
+            <span style="font-size:0.65rem;color:var(--muted);display:block;margin-top:1px">Fotografii HD, mereu disponibile</span>
+          </button>
         </div>
-        <div id="imgSrcNote" style="font-size:0.68rem;color:#55556a;line-height:1.5">Auto: incearca Pollinations, apoi HuggingFace, apoi foto reale.</div>
+        <div id="imgSrcNote" style="font-size:0.68rem;color:#55556a;line-height:1.5;padding:6px 10px;background:var(--card);border-radius:6px;border:1px solid var(--border)">Auto: incearca Pollinations, apoi HuggingFace, apoi foto reale.</div>
       </div>
 
       <div class="ctrl-section">
