@@ -269,15 +269,6 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
     <button class="nav-tab" onclick="goPage('calendar',this)"><span class="ti">📅</span>Calendar</button>
     <button class="nav-tab" onclick="goPage('template',this)"><span class="ti">🎨</span>Template Canva</button>
   </div>
-  <div style="display:flex;align-items:center;gap:8px;padding:0 12px;border-left:1px solid var(--border)">
-    <span style="font-size:0.62rem;color:var(--muted);white-space:nowrap">Model AI:</span>
-    <select id="aiModelSelect" onchange="setAiModel(this.value)" style="background:var(--card);border:1px solid var(--border);border-radius:5px;color:var(--text);font-family:Sora,sans-serif;font-size:0.7rem;padding:4px 8px;cursor:pointer;outline:none">
-      <option value="groq-llama" selected>⚡ Llama 3.3 (Groq)</option>
-      <option value="groq-mixtral">🔥 Mixtral (Groq)</option>
-      <option value="groq-gemma">💎 Gemma2 (Groq)</option>
-      <option value="claude">🤖 Claude (Anthropic)</option>
-    </select>
-  </div>
 </nav>
 
 <!-- ═══════════ PAGE: POSTARE ═══════════ -->
@@ -407,25 +398,12 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
 
       <div class="ctrl-section">
         <span class="ctrl-label">Sursa imagini</span>
-        <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:8px">
-          <button class="pill-btn active" data-imgsrc="0" onclick="setImgSrc(this,0)" style="text-align:left;padding:8px 12px">
-            <span style="font-size:0.85rem">🔄</span> <strong>Auto-fallback</strong>
-            <span style="font-size:0.65rem;color:var(--muted);display:block;margin-top:1px">Incearca toate in ordine automat</span>
-          </button>
-          <button class="pill-btn" data-imgsrc="1" onclick="setImgSrc(this,1)" style="text-align:left;padding:8px 12px">
-            <span style="font-size:0.85rem">🌸</span> <strong>Pollinations AI</strong>
-            <span style="font-size:0.65rem;color:var(--muted);display:block;margin-top:1px">Imagini AI pe contextul stirii</span>
-          </button>
-          <button class="pill-btn" data-imgsrc="2" onclick="setImgSrc(this,2)" style="text-align:left;padding:8px 12px">
-            <span style="font-size:0.85rem">🤗</span> <strong>HuggingFace SDXL</strong>
-            <span style="font-size:0.65rem;color:var(--muted);display:block;margin-top:1px">Stable Diffusion gratuit, ~15s</span>
-          </button>
-          <button class="pill-btn" data-imgsrc="3" onclick="setImgSrc(this,3)" style="text-align:left;padding:8px 12px">
-            <span style="font-size:0.85rem">📷</span> <strong>Foto reale (Picsum)</strong>
-            <span style="font-size:0.65rem;color:var(--muted);display:block;margin-top:1px">Fotografii HD, mereu disponibile</span>
-          </button>
+        <div class="chip-wrap">
+          <button class="chip active" data-imgsrc="0" onclick="setImgSrc(this,0)" title="Imagini AI generate pe baza stirilor">🤖 AI (Pollinations)</button>
+          <button class="chip" data-imgsrc="1" onclick="setImgSrc(this,1)" title="Fotografii reale HD random">📷 Foto reale</button>
+          <button class="chip" data-imgsrc="2" onclick="setImgSrc(this,2)" title="Alterna automat daca una esueaza">🔄 Auto-fallback</button>
         </div>
-        <div id="imgSrcNote" style="font-size:0.68rem;color:#55556a;line-height:1.5;padding:6px 10px;background:var(--card);border-radius:6px;border:1px solid var(--border)">Auto: incearca Pollinations, apoi HuggingFace, apoi foto reale.</div>
+        <div id="imgSrcNote" style="font-size:0.68rem;color:#55556a;margin-top:6px;line-height:1.5">AI genereaza imagini contextuale pe baza stirii tale.</div>
       </div>
 
       <div class="ctrl-section">
@@ -569,62 +547,43 @@ textarea.txt-input{resize:vertical;line-height:1.5;}
 
 <!-- ═══════════ PAGE: CALENDAR ═══════════ -->
 <div class="page" id="page-calendar">
-  <div style="display:grid;grid-template-columns:300px 1fr;min-height:calc(100vh - 56px)">
-
-    <!-- LEFT: controls -->
-    <div class="panel-l" style="display:flex;flex-direction:column;gap:16px">
-      <h2 class="ptitle">Calendar<br><em>Editorial</em></h2>
-      <p class="psub">Personalizeaza calendarul sau lasa AI-ul sa genereze unul pentru tine.</p>
-
-      <div class="ctrl-section">
-        <span class="ctrl-label">Nisa contului</span>
-        <input class="txt-input" id="calNisa" placeholder="Ex: stiri Romania, sport, economie..." value="stiri generale Romania">
+  <div style="padding:24px">
+    <h2 class="ptitle" style="margin-bottom:4px">Calendar<br><em>Editorial</em></h2>
+    <p class="psub">21 postări/săptămână • ore fixe de trafic maxim</p>
+    <div class="cal-wrap">
+      <div class="week-grid">
+        <div class="day-hdr"></div>
+        <div class="day-hdr">Luni</div><div class="day-hdr">Marți</div><div class="day-hdr">Miercuri</div>
+        <div class="day-hdr">Joi</div><div class="day-hdr">Vineri</div><div class="day-hdr">Sâmbătă</div><div class="day-hdr">Duminică</div>
+        <!-- 08:00 -->
+        <div class="time-lbl"><span>08:00</span><span class="tl-slot">☀️ dimineață</span></div>
+        <div class="post-cell"><div class="post-card morning"><div class="post-type">Top 3 știri</div><div class="post-title">Rezumat weekend</div><div class="post-hint">Ce s-a întâmplat sâmbătă-duminică</div></div></div>
+        <div class="post-cell"><div class="post-card morning"><div class="post-type">Economie</div><div class="post-title">Știre economică</div><div class="post-hint">Curs, prețuri, salarii, taxe</div></div></div>
+        <div class="post-cell"><div class="post-card morning"><div class="post-type">Politică</div><div class="post-title">Știre politică</div><div class="post-hint">Decizii guvern, parlament</div></div></div>
+        <div class="post-cell"><div class="post-card morning"><div class="post-type">Internațional</div><div class="post-title">România în lume</div><div class="post-hint">UE, NATO, vecini</div></div></div>
+        <div class="post-cell"><div class="post-card morning"><div class="post-type">Cifra zilei</div><div class="post-title">Statistică</div><div class="post-hint">Un număr important, vizual</div></div></div>
+        <div class="post-cell"><div class="post-card morning"><div class="post-type">Weekend</div><div class="post-title">Știre ușoară</div><div class="post-hint">Subiect relaxat, pozitiv</div></div></div>
+        <div class="post-cell"><div class="post-card morning"><div class="post-type">Preview</div><div class="post-title">Ce urmează</div><div class="post-hint">Agenda săptămânii viitoare</div></div></div>
+        <!-- 13:00 -->
+        <div class="time-lbl"><span>13:00</span><span class="tl-slot">🔴 prânz</span></div>
+        <div class="post-cell"><div class="post-card noon"><div class="post-type">Breaking</div><div class="post-title">Cea mai mare știre</div><div class="post-hint">Hook puternic, ton urgent</div></div></div>
+        <div class="post-cell"><div class="post-card noon"><div class="post-type">Breaking</div><div class="post-title">Știre fierbinte</div><div class="post-hint">Ce discută toată lumea azi</div></div></div>
+        <div class="post-cell"><div class="post-card noon"><div class="post-type">Breaking</div><div class="post-title">Update important</div><div class="post-hint">Dezvoltare subiect anterior</div></div></div>
+        <div class="post-cell"><div class="post-card noon"><div class="post-type">Breaking</div><div class="post-title">Anunț oficial</div><div class="post-hint">Eveniment neprevăzut</div></div></div>
+        <div class="post-cell"><div class="post-card noon"><div class="post-type">Recapitulare</div><div class="post-title">Top 5 ale săptămânii</div><div class="post-hint">Carousel, performează bine</div></div></div>
+        <div class="post-cell"><div class="post-card noon"><div class="post-type">Sondaj</div><div class="post-title">Tu ce crezi?</div><div class="post-hint">Engagement maxim sâmbătă</div></div></div>
+        <div class="post-cell"><div class="post-card noon"><div class="post-type">Culise</div><div class="post-title">Behind the scenes</div><div class="post-hint">Cum funcționează contul</div></div></div>
+        <!-- 20:00 -->
+        <div class="time-lbl"><span>20:00</span><span class="tl-slot">🌙 seară</span></div>
+        <div class="post-cell"><div class="post-card evening"><div class="post-type">Rezumat zilei</div><div class="post-title">Ce s-a întâmplat azi</div><div class="post-hint">3 știri din ziua curentă</div></div></div>
+        <div class="post-cell"><div class="post-card evening"><div class="post-type">Analiză</div><div class="post-title">De ce contează</div><div class="post-hint">Impactul știrii principale</div></div></div>
+        <div class="post-cell"><div class="post-card evening"><div class="post-type">Rezumat zilei</div><div class="post-title">Știrile serii</div><div class="post-hint">3 puncte cheie</div></div></div>
+        <div class="post-cell"><div class="post-card evening"><div class="post-type">Dezbatere</div><div class="post-title">Tu ce crezi?</div><div class="post-hint">2 perspective, invită comentarii</div></div></div>
+        <div class="post-cell"><div class="post-card evening"><div class="post-type">Vineri seară</div><div class="post-title">Știre pozitivă</div><div class="post-hint">O veste bună din România</div></div></div>
+        <div class="post-cell"><div class="post-card evening"><div class="post-type">Rezumat</div><div class="post-title">Știrile de sâmbătă</div><div class="post-hint">Ce s-a întâmplat important</div></div></div>
+        <div class="post-cell"><div class="post-card evening"><div class="post-type">Preview luni</div><div class="post-title">Ce urmează</div><div class="post-hint">Creezi așteptare pentru mâine</div></div></div>
       </div>
-
-      <div class="ctrl-section">
-        <span class="ctrl-label">Postari pe zi</span>
-        <div class="row3">
-          <button class="pill-btn" data-calpost="1" onclick="selCalPost(this)"><span class="bi">1️⃣</span>1/zi</button>
-          <button class="pill-btn active" data-calpost="3" onclick="selCalPost(this)"><span class="bi">3️⃣</span>3/zi</button>
-          <button class="pill-btn" data-calpost="5" onclick="selCalPost(this)"><span class="bi">5️⃣</span>5/zi</button>
-        </div>
-      </div>
-
-      <div class="ctrl-section">
-        <span class="ctrl-label">Ton continut</span>
-        <div class="chip-wrap">
-          <button class="chip active" data-calton="informativ" onclick="selCalTon(this)">📰 Informativ</button>
-          <button class="chip" data-calton="dinamic" onclick="selCalTon(this)">⚡ Dinamic</button>
-          <button class="chip" data-calton="educational" onclick="selCalTon(this)">📚 Educational</button>
-          <button class="chip" data-calton="entertainment" onclick="selCalTon(this)">🎭 Entertainment</button>
-        </div>
-      </div>
-
-      <button class="primary-btn" id="genCalBtn" onclick="genCalendar()">✨ Genereaza cu AI</button>
-
-      <div style="border-top:1px solid var(--border);padding-top:16px">
-        <span class="ctrl-label" style="display:block;margin-bottom:10px">Editeaza manual un slot</span>
-        <div style="font-size:0.75rem;color:var(--muted);margin-bottom:8px">Click pe orice celula din calendar pentru a o edita.</div>
-        <div id="calEditWrap" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px">
-          <div style="font-size:0.7rem;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px" id="calEditLabel">-</div>
-          <input class="txt-input" id="calEditType" placeholder="Tip postare (ex: Breaking, Analiza...)" style="margin-bottom:6px">
-          <input class="txt-input" id="calEditTitle" placeholder="Titlu slot" style="margin-bottom:6px">
-          <textarea class="txt-input" id="calEditHint" placeholder="Descriere / hint" rows="2" style="margin-bottom:8px"></textarea>
-          <div style="display:flex;gap:6px">
-            <button class="secondary-btn" onclick="applyCalEdit()" style="flex:1;border-color:var(--accent);color:var(--accent)">Salveaza</button>
-            <button class="secondary-btn" onclick="resetCalSlot()" style="color:var(--muted)">Reset</button>
-          </div>
-        </div>
-      </div>
-
-      <button class="secondary-btn" onclick="exportCalendar()" style="margin-top:auto">⬇ Exporta calendar</button>
     </div>
-
-    <!-- RIGHT: calendar grid -->
-    <div style="padding:20px;overflow:auto">
-      <div id="calendarGrid"></div>
-    </div>
-
   </div>
 </div>
 
@@ -919,12 +878,7 @@ function setImgSrc(btn,idx){
   document.querySelectorAll('[data-imgsrc]').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
   imgSourceIdx=idx;
-  var notes=[
-    'Auto: Pollinations AI → HuggingFace SDXL → Foto reale. Fallback automat.',
-    'Pollinations AI: imagini generate pe contextul stirii. Poate da 429 la multe cereri.',
-    'HuggingFace SDXL: Stable Diffusion gratuit. Mai lent (~10-20s) dar fara rate limit.',
-    'Foto reale HD: Picsum Photos. Mereu disponibil, nu e legat de subiect.'
-  ];
+  var notes=['AI genereaza imagini contextuale pe baza stirii.','Fotografii HD reale. Mereu disponibile, fara rate limit.','Incearca AI, daca esueaza trece la foto reale.'];
   var note=document.getElementById('imgSrcNote');
   if(note)note.textContent=notes[idx]||'';
 }
@@ -1002,106 +956,31 @@ async function genImgPrompts(arr){
   }
 }
 
-// ===== IMAGE SOURCES =====
-// 0=auto(all), 1=pollinations, 2=huggingface, 3=picsum
-var imgProviders=['auto','pollinations','huggingface','picsum'];
-
-function buildPromptUrl(src, prompt, w, h){
-  var seed=Math.floor(Math.random()*99999);
-  var fullPrompt=prompt+', '+reelStyle+', high quality, no text, no watermark, no logo'+(reelQuality==='hd'?', ultra detailed 8k':'');
-  if(src==='pollinations'){
-    return IMG_API+'?prompt='+encodeURIComponent(fullPrompt)+'&width='+w+'&height='+h+'&seed='+seed+'&enhance=true';
-  }
-  if(src==='huggingface'){
-    // Hugging Face Inference API - no key needed for public models
-    return 'https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0';
-  }
-  if(src==='picsum'){
-    return 'https://picsum.photos/'+w+'/'+h+'?random='+seed;
-  }
-  return null;
-}
-
-async function fetchHuggingFace(prompt, w, h){
-  try{
-    var fullPrompt=prompt+', '+reelStyle+', high quality, no text, photorealistic'+(reelQuality==='hd'?', ultra detailed':'');
-    var res=await fetch('https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        inputs:fullPrompt,
-        parameters:{width:Math.min(w,1024),height:Math.min(h,1024),num_inference_steps:20,guidance_scale:7.5}
-      })
-    });
-    if(!res.ok)throw new Error('HF status '+res.status);
-    var blob=await res.blob();
-    if(blob.size<1000)throw new Error('too small');
-    return await new Promise(function(resolve,reject){
-      var img=new Image();
-      var url=URL.createObjectURL(blob);
-      img.onload=function(){resolve(img);};
-      img.onerror=function(){URL.revokeObjectURL(url);reject(new Error('load failed'));};
+async function loadImgSmart(prompt,w,h){
+  var sources=imgSourceIdx===1?['picsum','pollinations']:['pollinations','picsum'];
+  for(var a=0;a<sources.length;a++){
+    var src=sources[a];
+    var url='';
+    if(src==='pollinations'){
+      var full=prompt+', '+reelStyle+', no text, no watermark'+(reelQuality==='hd'?', 8k':'');
+      url=IMG_API+'?prompt='+encodeURIComponent(full)+'&width='+w+'&height='+h+'&seed='+Math.floor(Math.random()*99999);
+    } else {
+      url='https://picsum.photos/'+w+'/'+h+'?random='+Math.floor(Math.random()*9999);
+    }
+    var result=await new Promise(function(resolve){
+      var img=new Image();img.crossOrigin='anonymous';
+      var timer=setTimeout(function(){img.src='';resolve(null);},14000);
+      img.onload=function(){clearTimeout(timer);resolve(img);};
+      img.onerror=function(){clearTimeout(timer);resolve(null);};
       img.src=url;
     });
-  }catch(e){
-    console.log('HuggingFace failed:',e.message);
-    return null;
+    if(result)return result;
   }
-}
-
-async function fetchPollinations(prompt, w, h){
-  var fullPrompt=prompt+', '+reelStyle+', high quality, no text, no watermark'+(reelQuality==='hd'?', 8k':'');
-  var seed=Math.floor(Math.random()*99999);
-  var url=IMG_API+'?prompt='+encodeURIComponent(fullPrompt)+'&width='+w+'&height='+h+'&seed='+seed+'&enhance=true&nologo=true';
-  return new Promise(function(resolve){
-    var img=new Image();img.crossOrigin='anonymous';
-    var timer=setTimeout(function(){img.src='';resolve(null);},15000);
-    img.onload=function(){clearTimeout(timer);resolve(img);};
-    img.onerror=function(){clearTimeout(timer);resolve(null);};
-    img.src=url;
-  });
-}
-
-async function fetchPicsum(w, h){
-  var url='https://picsum.photos/'+w+'/'+h+'?random='+Math.floor(Math.random()*9999);
-  return new Promise(function(resolve){
-    var img=new Image();img.crossOrigin='anonymous';
-    var timer=setTimeout(function(){img.src='';resolve(null);},8000);
-    img.onload=function(){clearTimeout(timer);resolve(img);};
-    img.onerror=function(){clearTimeout(timer);resolve(null);};
-    img.src=url;
-  });
-}
-
-async function loadImgSmart(prompt,w,h){
-  // Build source order based on selection
-  var order;
-  if(imgSourceIdx===1) order=['pollinations','huggingface','picsum'];
-  else if(imgSourceIdx===2) order=['huggingface','pollinations','picsum'];
-  else if(imgSourceIdx===3) order=['picsum','pollinations'];
-  else order=['pollinations','huggingface','picsum']; // auto
-
-  for(var a=0;a<order.length;a++){
-    var src=order[a];
-    var result=null;
-    console.log('Trying image source:',src);
-    if(src==='pollinations') result=await fetchPollinations(prompt,w,h);
-    else if(src==='huggingface') result=await fetchHuggingFace(prompt,w,h);
-    else if(src==='picsum') result=await fetchPicsum(w,h);
-    if(result){console.log('Success with:',src);return result;}
-    console.log('Failed:',src,', trying next...');
-  }
-
-  // All failed - gradient fallback
   var fc=document.createElement('canvas');fc.width=w;fc.height=h;
   var ctx=fc.getContext('2d');
   var g=ctx.createLinearGradient(0,0,w,h);
-  g.addColorStop(0,'#1a1a2e');g.addColorStop(0.5,'#16213e');g.addColorStop(1,'#0f3460');
+  g.addColorStop(0,'#1a1a2e');g.addColorStop(1,'#16213e');
   ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
-  ctx.font='bold '+Math.round(w*0.035)+'px Sora,sans-serif';
-  ctx.fillStyle='rgba(255,255,255,0.25)';ctx.textAlign='center';
-  ctx.fillText('Imagine indisponibila',w/2,h/2-10);
-  ctx.fillText('Incearca alta sursa',w/2,h/2+30);
   return fc;
 }
 
@@ -1646,237 +1525,6 @@ async function genHashAI(){
   }catch(e){alert('Eroare. Incearca din nou.');}
   btn.textContent='AI sugereaza';btn.disabled=false;
 }
-
-// ===== AI MODEL =====
-var currentAiModel = 'groq-llama';
-function setAiModel(val){
-  currentAiModel = val;
-  console.log('AI model set to:', val);
-}
-
-async function callAI(messages, maxTokens){
-  maxTokens = maxTokens || 1000;
-  // All models route through Vercel proxy which uses Groq
-  // We pass model preference in the request
-  var modelMap = {
-    'groq-llama': 'llama-3.3-70b-versatile',
-    'groq-mixtral': 'mixtral-8x7b-32768',
-    'groq-gemma': 'gemma2-9b-it',
-    'claude': 'claude-sonnet-4-20250514'
-  };
-  var model = modelMap[currentAiModel] || 'llama-3.3-70b-versatile';
-
-  // For Claude, use Anthropic API via proxy
-  if(currentAiModel === 'claude'){
-    var res = await fetch('https://dailystiri.vercel.app/api/generate', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({max_tokens:maxTokens, messages:messages})
-    });
-    var data = await res.json();
-    return data.content[0].text;
-  }
-
-  // For Groq models, use Groq API via proxy
-  var res = await fetch('https://dailystiri.vercel.app/api/generate', {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({max_tokens:maxTokens, messages:messages, model:model})
-  });
-  var data = await res.json();
-  return data.content[0].text;
-}
-
-// ===== CALENDAR =====
-var calPostari = 3;
-var calTon = 'informativ';
-var calData = null; // stores current calendar data
-var calEditSlot = null; // {zi, ora, idx}
-
-// Default calendar data
-var defaultCalData = {
-  ore: ['08:00','13:00','20:00'],
-  zile: ['Luni','Marti','Miercuri','Joi','Vineri','Sambata','Duminica'],
-  slots: {
-    '08:00': [
-      {tip:'Top 3 stiri',titlu:'Rezumat weekend',hint:'Ce s-a intamplat sambata-duminica'},
-      {tip:'Economie',titlu:'Stire economica',hint:'Curs, preturi, salarii'},
-      {tip:'Politica',titlu:'Stire politica',hint:'Decizii guvern, parlament'},
-      {tip:'International',titlu:'Romania in lume',hint:'UE, NATO, vecini'},
-      {tip:'Cifra zilei',titlu:'Statistica',hint:'Un numar important, vizual'},
-      {tip:'Weekend',titlu:'Stire usoara',hint:'Subiect relaxat, pozitiv'},
-      {tip:'Preview',titlu:'Ce urmeaza',hint:'Agenda saptamanii viitoare'}
-    ],
-    '13:00': [
-      {tip:'Breaking',titlu:'Cea mai mare stire',hint:'Hook puternic, ton urgent'},
-      {tip:'Breaking',titlu:'Stire fierbinte',hint:'Ce discuta toata lumea azi'},
-      {tip:'Breaking',titlu:'Update important',hint:'Dezvoltare subiect anterior'},
-      {tip:'Breaking',titlu:'Anunt oficial',hint:'Eveniment neprevazut'},
-      {tip:'Recapitulare',titlu:'Top 5 ale saptamanii',hint:'Carousel, performeaza bine'},
-      {tip:'Sondaj',titlu:'Tu ce crezi?',hint:'Engagement maxim sambata'},
-      {tip:'Culise',titlu:'Behind the scenes',hint:'Cum functioneaza contul'}
-    ],
-    '20:00': [
-      {tip:'Rezumat zilei',titlu:'Ce s-a intamplat azi',hint:'3 stiri din ziua curenta'},
-      {tip:'Analiza',titlu:'De ce conteaza',hint:'Impactul stirii principale'},
-      {tip:'Rezumat zilei',titlu:'Stirile serii',hint:'3 puncte cheie'},
-      {tip:'Dezbatere',titlu:'Tu ce crezi?',hint:'2 perspective, invita comentarii'},
-      {tip:'Vineri seara',titlu:'Stire pozitiva',hint:'O veste buna din Romania'},
-      {tip:'Rezumat',titlu:'Stirile de sambata',hint:'Ce s-a intamplat important'},
-      {tip:'Preview luni',titlu:'Ce urmeaza',hint:'Crezi asteptare pentru maine'}
-    ]
-  }
-};
-
-function selCalPost(btn){
-  document.querySelectorAll('[data-calpost]').forEach(function(b){b.classList.remove('active');});
-  btn.classList.add('active');
-  calPostari = parseInt(btn.dataset.calpost);
-}
-function selCalTon(btn){
-  document.querySelectorAll('[data-calton]').forEach(function(b){b.classList.remove('active');});
-  btn.classList.add('active');
-  calTon = btn.dataset.calton;
-}
-
-function renderCalendar(data){
-  calData = data || defaultCalData;
-  var postariCount = calPostari === 1 ? 1 : calPostari === 5 ? 5 : 3;
-  var ore = calData.ore.slice(0, postariCount);
-  var grid = document.getElementById('calendarGrid');
-  if(!grid) return;
-
-  var colorMap = {'08:00':'var(--gold)','09:00':'var(--gold)','13:00':'var(--accent)','14:00':'var(--accent)','20:00':'var(--blue)','21:00':'var(--blue)'};
-  var bgMap = {'08:00':'rgba(244,196,48,0.06)','13:00':'rgba(230,57,70,0.06)','20:00':'rgba(67,97,238,0.06)'};
-
-  var rows = '';
-  ore.forEach(function(ora){
-    var color = colorMap[ora] || 'var(--text)';
-    var bg = bgMap[ora] || 'var(--card)';
-    var cells = '';
-    var slotsForOra = calData.slots[ora] || [];
-    slotsForOra.forEach(function(slot, zi_idx){
-      var td = document.createElement('td');
-      td.style.cssText = 'padding:0;vertical-align:top';
-      var inner = document.createElement('div');
-      inner.style.cssText = 'background:'+bg+';border:1px solid var(--border);border-left:3px solid '+color+';border-radius:6px;padding:8px 10px;cursor:pointer;min-height:85px;transition:all 0.15s';
-      inner.onmouseover = function(){this.style.borderColor='var(--accent)';};
-      inner.onmouseout = function(){this.style.borderColor='var(--border)';};
-      inner.onclick = (function(o,z){return function(){editCalSlot(o,z);};})(ora, zi_idx);
-      var tipEl = document.createElement('div');
-      tipEl.style.cssText = 'font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:'+color+';margin-bottom:4px';
-      tipEl.textContent = slot.tip;
-      var titluEl = document.createElement('div');
-      titluEl.style.cssText = 'font-size:0.75rem;font-weight:700;line-height:1.25;margin-bottom:3px;color:var(--text)';
-      titluEl.textContent = slot.titlu;
-      var hintEl = document.createElement('div');
-      hintEl.style.cssText = 'font-size:0.67rem;color:var(--muted);line-height:1.35';
-      hintEl.textContent = slot.hint;
-      inner.appendChild(tipEl);inner.appendChild(titluEl);inner.appendChild(hintEl);
-      td.appendChild(inner);
-      cells += td.outerHTML;
-    });
-    rows += '<tr><td style="padding:8px;text-align:center;background:var(--surface);border-radius:6px;vertical-align:middle"><div style="font-family:Bebas Neue,sans-serif;font-size:1.1rem;color:'+color+'">'+ora+'</div></td>'+cells+'</tr>';
-  });
-
-  var headerCells = calData.zile.map(function(zi){
-    return '<th style="padding:10px;background:var(--surface);border-radius:6px;font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted)">'+zi+'</th>';
-  }).join('');
-
-  grid.innerHTML = '<div style="overflow-x:auto"><table style="width:100%;border-collapse:separate;border-spacing:3px;min-width:700px"><tr><th style="padding:10px;background:var(--surface);border-radius:6px;font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);width:70px">Ora</th>'+headerCells+'</tr>'+rows+'</table></div>';
-}
-
-async function genCalendar(){
-  var btn = document.getElementById('genCalBtn');
-  btn.textContent = 'Se genereaza...'; btn.disabled = true;
-  var nisaEl = document.getElementById('calNisa');
-  var nisa = nisaEl ? nisaEl.value : 'stiri generale Romania';
-  var prompt = 'Genereaza un calendar editorial saptamanal pentru un cont de social media despre: ' + nisa + '. Ton: ' + calTon + '. Postari pe zi: ' + calPostari + '. Returneaza DOAR un JSON cu aceasta structura exacta: {"ore":["08:00","13:00","20:00"],"zile":["Luni","Marti","Miercuri","Joi","Vineri","Sambata","Duminica"],"slots":{"08:00":[{"tip":"...","titlu":"...","hint":"..."},{"tip":"...","titlu":"...","hint":"..."},{"tip":"...","titlu":"...","hint":"..."},{"tip":"...","titlu":"...","hint":"..."},{"tip":"...","titlu":"...","hint":"..."},{"tip":"...","titlu":"...","hint":"..."},{"tip":"...","titlu":"...","hint":"..."}],"13:00":[x7],"20:00":[x7]}}. Fiecare ora are exact 7 obiecte. tip=max 15 chars, titlu=max 30 chars, hint=max 60 chars. Raspunde DOAR cu JSON valid.';
-
-  try {
-    var text = await callAI([{role:'user', content:prompt}], 1500);
-    var raw = text.replace(/```json|```/g,'').trim();
-    var data = JSON.parse(raw);
-    renderCalendar(data);
-  } catch(e) {
-    alert('Eroare la generare. Se incarca calendarul default.');
-    console.log('Calendar gen error:', e);
-    renderCalendar(defaultCalData);
-  }
-  btn.textContent = 'Genereaza cu AI'; btn.disabled = false;
-}
-
-function editCalSlot(ora, ziIdx){
-  calEditSlot = {ora: ora, ziIdx: ziIdx};
-  var slot = calData.slots[ora][ziIdx];
-  var zi = calData.zile[ziIdx];
-  var wrap = document.getElementById('calEditWrap');
-  var label = document.getElementById('calEditLabel');
-  if(label) label.textContent = zi + ' ' + ora;
-  var et = document.getElementById('calEditType'); if(et) et.value = slot.tip;
-  var etit = document.getElementById('calEditTitle'); if(etit) etit.value = slot.titlu;
-  var eh = document.getElementById('calEditHint'); if(eh) eh.value = slot.hint;
-  if(wrap) wrap.style.display = 'block';
-  wrap.scrollIntoView({behavior:'smooth', block:'nearest'});
-}
-
-function applyCalEdit(){
-  if(!calEditSlot || !calData) return;
-  var ora = calEditSlot.ora, ziIdx = calEditSlot.ziIdx;
-  calData.slots[ora][ziIdx] = {
-    tip: document.getElementById('calEditType').value || calData.slots[ora][ziIdx].tip,
-    titlu: document.getElementById('calEditTitle').value || calData.slots[ora][ziIdx].titlu,
-    hint: document.getElementById('calEditHint').value || calData.slots[ora][ziIdx].hint
-  };
-  renderCalendar(calData);
-  var wrap = document.getElementById('calEditWrap');
-  if(wrap) wrap.style.display = 'none';
-  calEditSlot = null;
-}
-
-function resetCalSlot(){
-  var wrap = document.getElementById('calEditWrap');
-  if(wrap) wrap.style.display = 'none';
-  calEditSlot = null;
-}
-
-function exportCalendar(){
-  if(!calData) return;
-  var text = 'CALENDAR EDITORIAL - CeTrebuieSaStiiAzi
-';
-  text += '==========================================
-
-';
-  calData.ore.forEach(function(ora){
-    text += 'ORA ' + ora + '
-';
-    text += '---------
-';
-    calData.zile.forEach(function(zi, i){
-      var s = calData.slots[ora][i];
-      text += zi + ': [' + s.tip + '] ' + s.titlu + ' - ' + s.hint + '
-';
-    });
-    text += '
-';
-  });
-  var blob = new Blob([text], {type:'text/plain'});
-  var url = URL.createObjectURL(blob);
-  var a = document.createElement('a');
-  a.href = url; a.download = 'calendar-ctsaz.txt';
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
-// Update sendChat and genReel to use callAI
-// Patch sendChat to use callAI
-var _origSendChat = sendChat;
-
-// Init calendar on load
-setTimeout(function(){
-  renderCalendar(defaultCalData);
-}, 400);
-
 
 setTimeout(function(){renderCustomTemplates();renderCustomCombos();},300);
 
