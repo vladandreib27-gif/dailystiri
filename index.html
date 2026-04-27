@@ -1741,50 +1741,49 @@ function selCalTon(btn){
 
 function renderCalendar(data){
   calData = data || defaultCalData;
-  var ore = calData.ore.slice(0, calPostari === 1 ? 1 : calPostari === 5 ? 5 : 3);
+  var postariCount = calPostari === 1 ? 1 : calPostari === 5 ? 5 : 3;
+  var ore = calData.ore.slice(0, postariCount);
   var grid = document.getElementById('calendarGrid');
   if(!grid) return;
 
-  var colorMap = {
-    '08:00':'var(--gold)','09:00':'var(--gold)','10:00':'var(--gold)',
-    '13:00':'var(--accent)','14:00':'var(--accent)',
-    '20:00':'var(--blue)','21:00':'var(--blue)'
-  };
-  var bgMap = {
-    '08:00':'rgba(244,196,48,0.06)',
-    '13:00':'rgba(230,57,70,0.06)',
-    '20:00':'rgba(67,97,238,0.06)'
-  };
+  var colorMap = {'08:00':'var(--gold)','09:00':'var(--gold)','13:00':'var(--accent)','14:00':'var(--accent)','20:00':'var(--blue)','21:00':'var(--blue)'};
+  var bgMap = {'08:00':'rgba(244,196,48,0.06)','13:00':'rgba(230,57,70,0.06)','20:00':'rgba(67,97,238,0.06)'};
 
-  var html = '<div style="overflow-x:auto"><table style="width:100%;border-collapse:separate;border-spacing:3px;min-width:700px">';
-  // Header
-  html += '<tr><th style="padding:10px;background:var(--surface);border-radius:6px;font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);width:70px">Ora</th>';
-  calData.zile.forEach(function(zi){
-    html += '<th style="padding:10px;background:var(--surface);border-radius:6px;font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted)">' + zi + '</th>';
-  });
-  html += '</tr>';
-
+  var rows = '';
   ore.forEach(function(ora){
     var color = colorMap[ora] || 'var(--text)';
     var bg = bgMap[ora] || 'var(--card)';
-    html += '<tr>';
-    html += '<td style="padding:8px;text-align:center;background:var(--surface);border-radius:6px;vertical-align:middle">';
-    html += '<div style="font-family:Bebas Neue,sans-serif;font-size:1.1rem;color:'+color+'">'+ora+'</div>';
-    html += '</td>';
+    var cells = '';
     var slotsForOra = calData.slots[ora] || [];
     slotsForOra.forEach(function(slot, zi_idx){
-      html += '<td style="padding:0;vertical-align:top">';
-      html += '<div onclick="editCalSlot(''+ora+'','+zi_idx+')" style="background:'+bg+';border:1px solid var(--border);border-left:3px solid '+color+';border-radius:6px;padding:8px 10px;cursor:pointer;min-height:85px;transition:all 0.15s" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">';
-      html += '<div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:'+color+';margin-bottom:4px">'+slot.tip+'</div>';
-      html += '<div style="font-size:0.75rem;font-weight:700;line-height:1.25;margin-bottom:3px;color:var(--text)">'+slot.titlu+'</div>';
-      html += '<div style="font-size:0.67rem;color:var(--muted);line-height:1.35">'+slot.hint+'</div>';
-      html += '</div></td>';
+      var td = document.createElement('td');
+      td.style.cssText = 'padding:0;vertical-align:top';
+      var inner = document.createElement('div');
+      inner.style.cssText = 'background:'+bg+';border:1px solid var(--border);border-left:3px solid '+color+';border-radius:6px;padding:8px 10px;cursor:pointer;min-height:85px;transition:all 0.15s';
+      inner.onmouseover = function(){this.style.borderColor='var(--accent)';};
+      inner.onmouseout = function(){this.style.borderColor='var(--border)';};
+      inner.onclick = (function(o,z){return function(){editCalSlot(o,z);};})(ora, zi_idx);
+      var tipEl = document.createElement('div');
+      tipEl.style.cssText = 'font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:'+color+';margin-bottom:4px';
+      tipEl.textContent = slot.tip;
+      var titluEl = document.createElement('div');
+      titluEl.style.cssText = 'font-size:0.75rem;font-weight:700;line-height:1.25;margin-bottom:3px;color:var(--text)';
+      titluEl.textContent = slot.titlu;
+      var hintEl = document.createElement('div');
+      hintEl.style.cssText = 'font-size:0.67rem;color:var(--muted);line-height:1.35';
+      hintEl.textContent = slot.hint;
+      inner.appendChild(tipEl);inner.appendChild(titluEl);inner.appendChild(hintEl);
+      td.appendChild(inner);
+      cells += td.outerHTML;
     });
-    html += '</tr>';
+    rows += '<tr><td style="padding:8px;text-align:center;background:var(--surface);border-radius:6px;vertical-align:middle"><div style="font-family:Bebas Neue,sans-serif;font-size:1.1rem;color:'+color+'">'+ora+'</div></td>'+cells+'</tr>';
   });
 
-  html += '</table></div>';
-  grid.innerHTML = html;
+  var headerCells = calData.zile.map(function(zi){
+    return '<th style="padding:10px;background:var(--surface);border-radius:6px;font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted)">'+zi+'</th>';
+  }).join('');
+
+  grid.innerHTML = '<div style="overflow-x:auto"><table style="width:100%;border-collapse:separate;border-spacing:3px;min-width:700px"><tr><th style="padding:10px;background:var(--surface);border-radius:6px;font-size:0.65rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);width:70px">Ora</th>'+headerCells+'</tr>'+rows+'</table></div>';
 }
 
 async function genCalendar(){
