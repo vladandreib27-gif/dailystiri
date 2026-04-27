@@ -1789,19 +1789,9 @@ function renderCalendar(data){
 async function genCalendar(){
   var btn = document.getElementById('genCalBtn');
   btn.textContent = 'Se genereaza...'; btn.disabled = true;
-  var nisa = document.getElementById('calNisa') ? document.getElementById('calNisa').value : 'stiri generale Romania';
-  var prompt = 'Genereaza un calendar editorial saptamanal pentru un cont de social media despre: "' + nisa + '".
-' +
-    'Ton: ' + calTon + '. Postari pe zi: ' + calPostari + '.
-
-' +
-    'Returneaza DOAR un JSON cu aceasta structura exacta:
-' +
-    '{"ore":["08:00","13:00","20:00"],"zile":["Luni","Marti","Miercuri","Joi","Vineri","Sambata","Duminica"],"slots":{"08:00":[{"tip":"...","titlu":"...","hint":"..."},x7],"13:00":[x7],"20:00":[x7]}}
-' +
-    'Fiecare ora are exact 7 obiecte (unul per zi). tip=max 15 caractere, titlu=max 30 caractere, hint=max 60 caractere.
-' +
-    'Raspunde DOAR cu JSON valid, fara explicatii.';
+  var nisaEl = document.getElementById('calNisa');
+  var nisa = nisaEl ? nisaEl.value : 'stiri generale Romania';
+  var prompt = 'Genereaza un calendar editorial saptamanal pentru un cont de social media despre: ' + nisa + '. Ton: ' + calTon + '. Postari pe zi: ' + calPostari + '. Returneaza DOAR un JSON cu aceasta structura exacta: {"ore":["08:00","13:00","20:00"],"zile":["Luni","Marti","Miercuri","Joi","Vineri","Sambata","Duminica"],"slots":{"08:00":[{"tip":"...","titlu":"...","hint":"..."},{"tip":"...","titlu":"...","hint":"..."},{"tip":"...","titlu":"...","hint":"..."},{"tip":"...","titlu":"...","hint":"..."},{"tip":"...","titlu":"...","hint":"..."},{"tip":"...","titlu":"...","hint":"..."},{"tip":"...","titlu":"...","hint":"..."}],"13:00":[x7],"20:00":[x7]}}. Fiecare ora are exact 7 obiecte. tip=max 15 chars, titlu=max 30 chars, hint=max 60 chars. Raspunde DOAR cu JSON valid.';
 
   try {
     var text = await callAI([{role:'user', content:prompt}], 1500);
@@ -1809,7 +1799,7 @@ async function genCalendar(){
     var data = JSON.parse(raw);
     renderCalendar(data);
   } catch(e) {
-    alert('Eroare la generare. Incearca din nou.');
+    alert('Eroare la generare. Se incarca calendarul default.');
     console.log('Calendar gen error:', e);
     renderCalendar(defaultCalData);
   }
